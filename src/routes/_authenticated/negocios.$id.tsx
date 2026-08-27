@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { actualizarNegocio, cambiarEstatus, obtenerNegocio } from "@/lib/negocios.functions";
+import { pedidosDeNegocio } from "@/lib/productos.functions";
 import {
   MUNICIPIOS_YUCATAN,
   TIPOS_NEGOCIO,
