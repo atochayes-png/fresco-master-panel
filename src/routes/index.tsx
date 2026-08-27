@@ -130,20 +130,14 @@ function Inicio() {
 
         <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-sm">
           <p className="text-sm font-semibold">Para mostrarte lo más cercano</p>
-          <Button
-            variant={ubicacion ? "secondary" : "default"}
-            onClick={usarUbicacion}
-            disabled={buscandoUbi}
-            className="h-13 w-full text-base font-semibold"
-          >
-            {buscandoUbi ? (
-              <Loader2 className="size-5 animate-spin" />
-            ) : (
-              <>
-                <MapPin className="size-5" /> {ubicacion ? "Ubicación activada" : "Usar mi ubicación"}
-              </>
-            )}
-          </Button>
+          <SelectorUbicacion
+            ubicacion={ubicacion}
+            zona={zona}
+            onCambio={(ubi, nombre) => {
+              setUbicacion(ubi);
+              setZona(nombre);
+            }}
+          />
           <div>
             <label htmlFor="mun" className="text-sm text-muted-foreground">
               O elige un municipio
