@@ -28,6 +28,8 @@ export type PerfilRow = {
   precio_desde: number | null;
   duracion: string | null;
   punto_salida: string | null;
+  salida_latitud: number | null;
+  salida_longitud: number | null;
   precio_noche: number | null;
   capacidad: number | null;
   tipo_servicio: string | null;
@@ -174,6 +176,8 @@ export const guardarPerfil = createServerFn({ method: "POST" })
       "precio_desde",
       "duracion",
       "punto_salida",
+      "salida_latitud",
+      "salida_longitud",
       "precio_noche",
       "capacidad",
       "tipo_servicio",
