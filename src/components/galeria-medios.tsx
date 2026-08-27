@@ -26,11 +26,7 @@ export function GaleriaMedios({ medios, nombre }: { medios: MedioPublico[]; nomb
             className="relative h-32 w-48 shrink-0 overflow-hidden rounded-2xl bg-secondary"
           >
             <img
-              src={
-                m.tipo === "video"
-                  ? posterVideo(m.url, "tarjeta")
-                  : urlImagen(m.url, "tarjeta")
-              }
+              src={m.tipo === "video" ? posterVideo(m.url, "tarjeta") : urlImagen(m.url, "tarjeta")}
               alt={`${m.tipo === "video" ? "Video" : "Foto"} de ${nombre}`}
               loading="lazy"
               decoding="async"

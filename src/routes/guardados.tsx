@@ -15,7 +15,8 @@ export const Route = createFileRoute("/guardados")({
       { title: "Mis lugares guardados — Tomar el Fresco en Yucatán" },
       {
         name: "description",
-        content: "Consulta los negocios y experiencias de Yucatán que guardaste para visitar después.",
+        content:
+          "Consulta los negocios y experiencias de Yucatán que guardaste para visitar después.",
       },
       { property: "og:title", content: "Mis lugares guardados — Tomar el Fresco" },
       {

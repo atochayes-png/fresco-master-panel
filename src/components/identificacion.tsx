@@ -84,7 +84,11 @@ export function Identificacion({
         {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
 
         <div className="space-y-2">
-          <Button onClick={continuar} disabled={cargando} className="h-14 w-full text-base font-semibold">
+          <Button
+            onClick={continuar}
+            disabled={cargando}
+            className="h-14 w-full text-base font-semibold"
+          >
             {cargando ? <Loader2 className="size-5 animate-spin" /> : "CONTINUAR"}
           </Button>
           <Button variant="ghost" onClick={onCancelar} className="h-12 w-full">

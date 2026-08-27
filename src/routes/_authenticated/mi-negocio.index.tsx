@@ -148,7 +148,6 @@ function MiNegocio() {
         </Link>
       </div>
 
-
       <TarjetaPlan negocio={negocio} dias={dias} />
     </div>
   );

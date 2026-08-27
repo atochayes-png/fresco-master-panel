@@ -69,7 +69,9 @@ function Pedidos() {
             <li key={p.id} className="rounded-2xl border border-border bg-card p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="font-bold">{p.folio}</span>
-                <span className="text-sm font-semibold text-primary">{pesos(p.total_estimado)}</span>
+                <span className="text-sm font-semibold text-primary">
+                  {pesos(p.total_estimado)}
+                </span>
               </div>
               <p className="text-sm">{p.cliente_nombre}</p>
               <p className="text-xs text-muted-foreground">

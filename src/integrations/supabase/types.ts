@@ -1,739 +1,727 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.17"
-  }
+    PostgrestVersion: "14.17";
+  };
   public: {
     Tables: {
       guardados: {
         Row: {
-          creado_en: string
-          id: string
-          negocio_id: string
-          telefono: string
-        }
+          creado_en: string;
+          id: string;
+          negocio_id: string;
+          telefono: string;
+        };
         Insert: {
-          creado_en?: string
-          id?: string
-          negocio_id: string
-          telefono: string
-        }
+          creado_en?: string;
+          id?: string;
+          negocio_id: string;
+          telefono: string;
+        };
         Update: {
-          creado_en?: string
-          id?: string
-          negocio_id?: string
-          telefono?: string
-        }
+          creado_en?: string;
+          id?: string;
+          negocio_id?: string;
+          telefono?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "guardados_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "guardados_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       medios_pendientes_borrado: {
         Row: {
-          creado_en: string
-          id: string
-          procesado: boolean
-          public_id: string
-          resource_type: string
-        }
+          creado_en: string;
+          id: string;
+          procesado: boolean;
+          public_id: string;
+          resource_type: string;
+        };
         Insert: {
-          creado_en?: string
-          id?: string
-          procesado?: boolean
-          public_id: string
-          resource_type?: string
-        }
+          creado_en?: string;
+          id?: string;
+          procesado?: boolean;
+          public_id: string;
+          resource_type?: string;
+        };
         Update: {
-          creado_en?: string
-          id?: string
-          procesado?: boolean
-          public_id?: string
-          resource_type?: string
-        }
-        Relationships: []
-      }
+          creado_en?: string;
+          id?: string;
+          procesado?: boolean;
+          public_id?: string;
+          resource_type?: string;
+        };
+        Relationships: [];
+      };
       negocio_fotos: {
         Row: {
-          actualizado_en: string
-          creado_en: string
-          id: string
-          negocio_id: string
-          orden: number
-          ruta: string
-          url: string
-        }
+          actualizado_en: string;
+          creado_en: string;
+          id: string;
+          negocio_id: string;
+          orden: number;
+          ruta: string;
+          url: string;
+        };
         Insert: {
-          actualizado_en?: string
-          creado_en?: string
-          id?: string
-          negocio_id: string
-          orden?: number
-          ruta: string
-          url: string
-        }
+          actualizado_en?: string;
+          creado_en?: string;
+          id?: string;
+          negocio_id: string;
+          orden?: number;
+          ruta: string;
+          url: string;
+        };
         Update: {
-          actualizado_en?: string
-          creado_en?: string
-          id?: string
-          negocio_id?: string
-          orden?: number
-          ruta?: string
-          url?: string
-        }
+          actualizado_en?: string;
+          creado_en?: string;
+          id?: string;
+          negocio_id?: string;
+          orden?: number;
+          ruta?: string;
+          url?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "negocio_fotos_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "negocio_fotos_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       negocio_horarios: {
         Row: {
-          abierto: boolean
-          actualizado_en: string
-          apertura: string | null
-          cierre: string | null
-          creado_en: string
-          dia: number
-          id: string
-          negocio_id: string
-        }
+          abierto: boolean;
+          actualizado_en: string;
+          apertura: string | null;
+          cierre: string | null;
+          creado_en: string;
+          dia: number;
+          id: string;
+          negocio_id: string;
+        };
         Insert: {
-          abierto?: boolean
-          actualizado_en?: string
-          apertura?: string | null
-          cierre?: string | null
-          creado_en?: string
-          dia: number
-          id?: string
-          negocio_id: string
-        }
+          abierto?: boolean;
+          actualizado_en?: string;
+          apertura?: string | null;
+          cierre?: string | null;
+          creado_en?: string;
+          dia: number;
+          id?: string;
+          negocio_id: string;
+        };
         Update: {
-          abierto?: boolean
-          actualizado_en?: string
-          apertura?: string | null
-          cierre?: string | null
-          creado_en?: string
-          dia?: number
-          id?: string
-          negocio_id?: string
-        }
+          abierto?: boolean;
+          actualizado_en?: string;
+          apertura?: string | null;
+          cierre?: string | null;
+          creado_en?: string;
+          dia?: number;
+          id?: string;
+          negocio_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "negocio_horarios_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "negocio_horarios_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       negocio_medios: {
         Row: {
-          actualizado_en: string
-          bytes: number | null
-          created_at: string
-          duration: number | null
-          es_destacado: boolean
-          es_portada: boolean
-          format: string | null
-          height: number | null
-          id: string
-          negocio_id: string
-          orden: number
-          public_id: string
-          resource_type: string
-          secure_url: string
-          tipo: string
-          width: number | null
-        }
+          actualizado_en: string;
+          bytes: number | null;
+          created_at: string;
+          duration: number | null;
+          es_destacado: boolean;
+          es_portada: boolean;
+          format: string | null;
+          height: number | null;
+          id: string;
+          negocio_id: string;
+          orden: number;
+          public_id: string;
+          resource_type: string;
+          secure_url: string;
+          tipo: string;
+          width: number | null;
+        };
         Insert: {
-          actualizado_en?: string
-          bytes?: number | null
-          created_at?: string
-          duration?: number | null
-          es_destacado?: boolean
-          es_portada?: boolean
-          format?: string | null
-          height?: number | null
-          id?: string
-          negocio_id: string
-          orden?: number
-          public_id: string
-          resource_type?: string
-          secure_url: string
-          tipo: string
-          width?: number | null
-        }
+          actualizado_en?: string;
+          bytes?: number | null;
+          created_at?: string;
+          duration?: number | null;
+          es_destacado?: boolean;
+          es_portada?: boolean;
+          format?: string | null;
+          height?: number | null;
+          id?: string;
+          negocio_id: string;
+          orden?: number;
+          public_id: string;
+          resource_type?: string;
+          secure_url: string;
+          tipo: string;
+          width?: number | null;
+        };
         Update: {
-          actualizado_en?: string
-          bytes?: number | null
-          created_at?: string
-          duration?: number | null
-          es_destacado?: boolean
-          es_portada?: boolean
-          format?: string | null
-          height?: number | null
-          id?: string
-          negocio_id?: string
-          orden?: number
-          public_id?: string
-          resource_type?: string
-          secure_url?: string
-          tipo?: string
-          width?: number | null
-        }
+          actualizado_en?: string;
+          bytes?: number | null;
+          created_at?: string;
+          duration?: number | null;
+          es_destacado?: boolean;
+          es_portada?: boolean;
+          format?: string | null;
+          height?: number | null;
+          id?: string;
+          negocio_id?: string;
+          orden?: number;
+          public_id?: string;
+          resource_type?: string;
+          secure_url?: string;
+          tipo?: string;
+          width?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "negocio_medios_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "negocio_medios_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       negocio_perfil: {
         Row: {
-          actualizado_en: string
-          capacidad: number | null
-          codigo_postal: string | null
-          colonia: string | null
-          costo_entrega: number | null
-          costo_entrega_tipo: string | null
-          creado_en: string
-          descripcion: string | null
-          direccion: string | null
-          distancia_km: number | null
-          domicilio: boolean | null
-          duracion: string | null
-          facebook: string | null
-          foto_principal: string | null
-          instagram: string | null
-          latitud: number | null
-          longitud: number | null
-          menu_tipo: string | null
-          menu_url: string | null
-          negocio_id: string
-          notas_entrega: string | null
-          paso_actual: number
-          precio_desde: number | null
-          precio_noche: number | null
-          precio_promedio: number | null
-          punto_salida: string | null
-          recibe_clientes: boolean | null
-          recibe_pedidos: boolean
-          salida_latitud: number | null
-          salida_longitud: number | null
-          sitio_web: string | null
-          solo_reservacion: boolean
-          tipo_servicio: string | null
-          whatsapp_activo: boolean
-          whatsapp_numero: string | null
-        }
+          actualizado_en: string;
+          capacidad: number | null;
+          codigo_postal: string | null;
+          colonia: string | null;
+          costo_entrega: number | null;
+          costo_entrega_tipo: string | null;
+          creado_en: string;
+          descripcion: string | null;
+          direccion: string | null;
+          distancia_km: number | null;
+          domicilio: boolean | null;
+          duracion: string | null;
+          facebook: string | null;
+          foto_principal: string | null;
+          instagram: string | null;
+          latitud: number | null;
+          longitud: number | null;
+          menu_tipo: string | null;
+          menu_url: string | null;
+          negocio_id: string;
+          notas_entrega: string | null;
+          paso_actual: number;
+          precio_desde: number | null;
+          precio_noche: number | null;
+          precio_promedio: number | null;
+          punto_salida: string | null;
+          recibe_clientes: boolean | null;
+          recibe_pedidos: boolean;
+          salida_latitud: number | null;
+          salida_longitud: number | null;
+          sitio_web: string | null;
+          solo_reservacion: boolean;
+          tipo_servicio: string | null;
+          whatsapp_activo: boolean;
+          whatsapp_numero: string | null;
+        };
         Insert: {
-          actualizado_en?: string
-          capacidad?: number | null
-          codigo_postal?: string | null
-          colonia?: string | null
-          costo_entrega?: number | null
-          costo_entrega_tipo?: string | null
-          creado_en?: string
-          descripcion?: string | null
-          direccion?: string | null
-          distancia_km?: number | null
-          domicilio?: boolean | null
-          duracion?: string | null
-          facebook?: string | null
-          foto_principal?: string | null
-          instagram?: string | null
-          latitud?: number | null
-          longitud?: number | null
-          menu_tipo?: string | null
-          menu_url?: string | null
-          negocio_id: string
-          notas_entrega?: string | null
-          paso_actual?: number
-          precio_desde?: number | null
-          precio_noche?: number | null
-          precio_promedio?: number | null
-          punto_salida?: string | null
-          recibe_clientes?: boolean | null
-          recibe_pedidos?: boolean
-          salida_latitud?: number | null
-          salida_longitud?: number | null
-          sitio_web?: string | null
-          solo_reservacion?: boolean
-          tipo_servicio?: string | null
-          whatsapp_activo?: boolean
-          whatsapp_numero?: string | null
-        }
+          actualizado_en?: string;
+          capacidad?: number | null;
+          codigo_postal?: string | null;
+          colonia?: string | null;
+          costo_entrega?: number | null;
+          costo_entrega_tipo?: string | null;
+          creado_en?: string;
+          descripcion?: string | null;
+          direccion?: string | null;
+          distancia_km?: number | null;
+          domicilio?: boolean | null;
+          duracion?: string | null;
+          facebook?: string | null;
+          foto_principal?: string | null;
+          instagram?: string | null;
+          latitud?: number | null;
+          longitud?: number | null;
+          menu_tipo?: string | null;
+          menu_url?: string | null;
+          negocio_id: string;
+          notas_entrega?: string | null;
+          paso_actual?: number;
+          precio_desde?: number | null;
+          precio_noche?: number | null;
+          precio_promedio?: number | null;
+          punto_salida?: string | null;
+          recibe_clientes?: boolean | null;
+          recibe_pedidos?: boolean;
+          salida_latitud?: number | null;
+          salida_longitud?: number | null;
+          sitio_web?: string | null;
+          solo_reservacion?: boolean;
+          tipo_servicio?: string | null;
+          whatsapp_activo?: boolean;
+          whatsapp_numero?: string | null;
+        };
         Update: {
-          actualizado_en?: string
-          capacidad?: number | null
-          codigo_postal?: string | null
-          colonia?: string | null
-          costo_entrega?: number | null
-          costo_entrega_tipo?: string | null
-          creado_en?: string
-          descripcion?: string | null
-          direccion?: string | null
-          distancia_km?: number | null
-          domicilio?: boolean | null
-          duracion?: string | null
-          facebook?: string | null
-          foto_principal?: string | null
-          instagram?: string | null
-          latitud?: number | null
-          longitud?: number | null
-          menu_tipo?: string | null
-          menu_url?: string | null
-          negocio_id?: string
-          notas_entrega?: string | null
-          paso_actual?: number
-          precio_desde?: number | null
-          precio_noche?: number | null
-          precio_promedio?: number | null
-          punto_salida?: string | null
-          recibe_clientes?: boolean | null
-          recibe_pedidos?: boolean
-          salida_latitud?: number | null
-          salida_longitud?: number | null
-          sitio_web?: string | null
-          solo_reservacion?: boolean
-          tipo_servicio?: string | null
-          whatsapp_activo?: boolean
-          whatsapp_numero?: string | null
-        }
+          actualizado_en?: string;
+          capacidad?: number | null;
+          codigo_postal?: string | null;
+          colonia?: string | null;
+          costo_entrega?: number | null;
+          costo_entrega_tipo?: string | null;
+          creado_en?: string;
+          descripcion?: string | null;
+          direccion?: string | null;
+          distancia_km?: number | null;
+          domicilio?: boolean | null;
+          duracion?: string | null;
+          facebook?: string | null;
+          foto_principal?: string | null;
+          instagram?: string | null;
+          latitud?: number | null;
+          longitud?: number | null;
+          menu_tipo?: string | null;
+          menu_url?: string | null;
+          negocio_id?: string;
+          notas_entrega?: string | null;
+          paso_actual?: number;
+          precio_desde?: number | null;
+          precio_noche?: number | null;
+          precio_promedio?: number | null;
+          punto_salida?: string | null;
+          recibe_clientes?: boolean | null;
+          recibe_pedidos?: boolean;
+          salida_latitud?: number | null;
+          salida_longitud?: number | null;
+          sitio_web?: string | null;
+          solo_reservacion?: boolean;
+          tipo_servicio?: string | null;
+          whatsapp_activo?: boolean;
+          whatsapp_numero?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "negocio_perfil_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: true
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "negocio_perfil_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: true;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       negocio_productos: {
         Row: {
-          actualizado_en: string
-          creado_en: string
-          descripcion: string | null
-          disponible: boolean
-          foto_ruta: string | null
-          foto_url: string | null
-          id: string
-          negocio_id: string
-          nombre: string
-          orden: number
-          precio: number
-        }
+          actualizado_en: string;
+          creado_en: string;
+          descripcion: string | null;
+          disponible: boolean;
+          foto_ruta: string | null;
+          foto_url: string | null;
+          id: string;
+          negocio_id: string;
+          nombre: string;
+          orden: number;
+          precio: number;
+        };
         Insert: {
-          actualizado_en?: string
-          creado_en?: string
-          descripcion?: string | null
-          disponible?: boolean
-          foto_ruta?: string | null
-          foto_url?: string | null
-          id?: string
-          negocio_id: string
-          nombre: string
-          orden?: number
-          precio?: number
-        }
+          actualizado_en?: string;
+          creado_en?: string;
+          descripcion?: string | null;
+          disponible?: boolean;
+          foto_ruta?: string | null;
+          foto_url?: string | null;
+          id?: string;
+          negocio_id: string;
+          nombre: string;
+          orden?: number;
+          precio?: number;
+        };
         Update: {
-          actualizado_en?: string
-          creado_en?: string
-          descripcion?: string | null
-          disponible?: boolean
-          foto_ruta?: string | null
-          foto_url?: string | null
-          id?: string
-          negocio_id?: string
-          nombre?: string
-          orden?: number
-          precio?: number
-        }
+          actualizado_en?: string;
+          creado_en?: string;
+          descripcion?: string | null;
+          disponible?: boolean;
+          foto_ruta?: string | null;
+          foto_url?: string | null;
+          id?: string;
+          negocio_id?: string;
+          nombre?: string;
+          orden?: number;
+          precio?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "negocio_productos_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "negocio_productos_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       negocios: {
         Row: {
-          actualizado_en: string
-          celular: string
-          creado_en: string
-          estado_configuracion: Database["public"]["Enums"]["negocio_config"]
-          estatus: Database["public"]["Enums"]["negocio_estatus"]
-          fecha_fin: string
-          fecha_inicio: string
-          id: string
-          municipio: string
-          nombre_dueno: string
-          nombre_negocio: string
-          owner_id: string | null
-          plan_tipo: string
-          tipo: string
-          usuario: string
-        }
+          actualizado_en: string;
+          celular: string;
+          creado_en: string;
+          estado_configuracion: Database["public"]["Enums"]["negocio_config"];
+          estatus: Database["public"]["Enums"]["negocio_estatus"];
+          fecha_fin: string;
+          fecha_inicio: string;
+          id: string;
+          municipio: string;
+          nombre_dueno: string;
+          nombre_negocio: string;
+          owner_id: string | null;
+          plan_tipo: string;
+          tipo: string;
+          usuario: string;
+        };
         Insert: {
-          actualizado_en?: string
-          celular: string
-          creado_en?: string
-          estado_configuracion?: Database["public"]["Enums"]["negocio_config"]
-          estatus?: Database["public"]["Enums"]["negocio_estatus"]
-          fecha_fin?: string
-          fecha_inicio?: string
-          id?: string
-          municipio: string
-          nombre_dueno: string
-          nombre_negocio: string
-          owner_id?: string | null
-          plan_tipo?: string
-          tipo: string
-          usuario: string
-        }
+          actualizado_en?: string;
+          celular: string;
+          creado_en?: string;
+          estado_configuracion?: Database["public"]["Enums"]["negocio_config"];
+          estatus?: Database["public"]["Enums"]["negocio_estatus"];
+          fecha_fin?: string;
+          fecha_inicio?: string;
+          id?: string;
+          municipio: string;
+          nombre_dueno: string;
+          nombre_negocio: string;
+          owner_id?: string | null;
+          plan_tipo?: string;
+          tipo: string;
+          usuario: string;
+        };
         Update: {
-          actualizado_en?: string
-          celular?: string
-          creado_en?: string
-          estado_configuracion?: Database["public"]["Enums"]["negocio_config"]
-          estatus?: Database["public"]["Enums"]["negocio_estatus"]
-          fecha_fin?: string
-          fecha_inicio?: string
-          id?: string
-          municipio?: string
-          nombre_dueno?: string
-          nombre_negocio?: string
-          owner_id?: string | null
-          plan_tipo?: string
-          tipo?: string
-          usuario?: string
-        }
-        Relationships: []
-      }
+          actualizado_en?: string;
+          celular?: string;
+          creado_en?: string;
+          estado_configuracion?: Database["public"]["Enums"]["negocio_config"];
+          estatus?: Database["public"]["Enums"]["negocio_estatus"];
+          fecha_fin?: string;
+          fecha_inicio?: string;
+          id?: string;
+          municipio?: string;
+          nombre_dueno?: string;
+          nombre_negocio?: string;
+          owner_id?: string | null;
+          plan_tipo?: string;
+          tipo?: string;
+          usuario?: string;
+        };
+        Relationships: [];
+      };
       pedidos: {
         Row: {
-          actualizado_en: string
-          cliente_nombre: string
-          cliente_telefono: string
-          costo_entrega: number
-          creado_en: string
-          direccion: string | null
-          estado: string
-          folio: string
-          id: string
-          items: Json
-          negocio_id: string
-          origen: string
-          referencia: string | null
-          subtotal: number
-          tipo_entrega: string
-          total_estimado: number
-        }
+          actualizado_en: string;
+          cliente_nombre: string;
+          cliente_telefono: string;
+          costo_entrega: number;
+          creado_en: string;
+          direccion: string | null;
+          estado: string;
+          folio: string;
+          id: string;
+          items: Json;
+          negocio_id: string;
+          origen: string;
+          referencia: string | null;
+          subtotal: number;
+          tipo_entrega: string;
+          total_estimado: number;
+        };
         Insert: {
-          actualizado_en?: string
-          cliente_nombre: string
-          cliente_telefono: string
-          costo_entrega?: number
-          creado_en?: string
-          direccion?: string | null
-          estado?: string
-          folio?: string
-          id?: string
-          items?: Json
-          negocio_id: string
-          origen?: string
-          referencia?: string | null
-          subtotal?: number
-          tipo_entrega?: string
-          total_estimado?: number
-        }
+          actualizado_en?: string;
+          cliente_nombre: string;
+          cliente_telefono: string;
+          costo_entrega?: number;
+          creado_en?: string;
+          direccion?: string | null;
+          estado?: string;
+          folio?: string;
+          id?: string;
+          items?: Json;
+          negocio_id: string;
+          origen?: string;
+          referencia?: string | null;
+          subtotal?: number;
+          tipo_entrega?: string;
+          total_estimado?: number;
+        };
         Update: {
-          actualizado_en?: string
-          cliente_nombre?: string
-          cliente_telefono?: string
-          costo_entrega?: number
-          creado_en?: string
-          direccion?: string | null
-          estado?: string
-          folio?: string
-          id?: string
-          items?: Json
-          negocio_id?: string
-          origen?: string
-          referencia?: string | null
-          subtotal?: number
-          tipo_entrega?: string
-          total_estimado?: number
-        }
+          actualizado_en?: string;
+          cliente_nombre?: string;
+          cliente_telefono?: string;
+          costo_entrega?: number;
+          creado_en?: string;
+          direccion?: string | null;
+          estado?: string;
+          folio?: string;
+          id?: string;
+          items?: Json;
+          negocio_id?: string;
+          origen?: string;
+          referencia?: string | null;
+          subtotal?: number;
+          tipo_entrega?: string;
+          total_estimado?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "pedidos_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "pedidos_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       perfiles: {
         Row: {
-          creado_en: string
-          id: string
-          usuario: string
-        }
+          creado_en: string;
+          id: string;
+          usuario: string;
+        };
         Insert: {
-          creado_en?: string
-          id: string
-          usuario: string
-        }
+          creado_en?: string;
+          id: string;
+          usuario: string;
+        };
         Update: {
-          creado_en?: string
-          id?: string
-          usuario?: string
-        }
-        Relationships: []
-      }
+          creado_en?: string;
+          id?: string;
+          usuario?: string;
+        };
+        Relationships: [];
+      };
       resenas: {
         Row: {
-          comentario: string | null
-          creado_en: string
-          estrellas: number
-          id: string
-          negocio_id: string
-          telefono: string
-        }
+          comentario: string | null;
+          creado_en: string;
+          estrellas: number;
+          id: string;
+          negocio_id: string;
+          telefono: string;
+        };
         Insert: {
-          comentario?: string | null
-          creado_en?: string
-          estrellas: number
-          id?: string
-          negocio_id: string
-          telefono: string
-        }
+          comentario?: string | null;
+          creado_en?: string;
+          estrellas: number;
+          id?: string;
+          negocio_id: string;
+          telefono: string;
+        };
         Update: {
-          comentario?: string | null
-          creado_en?: string
-          estrellas?: number
-          id?: string
-          negocio_id?: string
-          telefono?: string
-        }
+          comentario?: string | null;
+          creado_en?: string;
+          estrellas?: number;
+          id?: string;
+          negocio_id?: string;
+          telefono?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "resenas_negocio_id_fkey"
-            columns: ["negocio_id"]
-            isOneToOne: false
-            referencedRelation: "negocios"
-            referencedColumns: ["id"]
+            foreignKeyName: "resenas_negocio_id_fkey";
+            columns: ["negocio_id"];
+            isOneToOne: false;
+            referencedRelation: "negocios";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       user_roles: {
         Row: {
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          id: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Insert: {
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          id?: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Update: {
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+          id?: string;
+          role?: Database["public"]["Enums"]["app_role"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       usuarios_publicos: {
         Row: {
-          acepta_promociones: boolean
-          creado_en: string
-          id: string
-          telefono: string
-        }
+          acepta_promociones: boolean;
+          creado_en: string;
+          id: string;
+          telefono: string;
+        };
         Insert: {
-          acepta_promociones?: boolean
-          creado_en?: string
-          id?: string
-          telefono: string
-        }
+          acepta_promociones?: boolean;
+          creado_en?: string;
+          id?: string;
+          telefono: string;
+        };
         Update: {
-          acepta_promociones?: boolean
-          creado_en?: string
-          id?: string
-          telefono?: string
-        }
-        Relationships: []
-      }
-    }
+          acepta_promociones?: boolean;
+          creado_en?: string;
+          id?: string;
+          telefono?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-    }
+          _role: Database["public"]["Enums"]["app_role"];
+          _user_id: string;
+        };
+        Returns: boolean;
+      };
+    };
     Enums: {
-      app_role: "master" | "negocio"
-      negocio_config: "perfil_incompleto" | "perfil_completo"
-      negocio_estatus: "activo" | "suspendido"
-    }
+      app_role: "master" | "negocio";
+      negocio_config: "perfil_incompleto" | "perfil_completo";
+      negocio_estatus: "activo" | "suspendido";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
@@ -743,4 +731,4 @@ export const Constants = {
       negocio_estatus: ["activo", "suspendido"],
     },
   },
-} as const
+} as const;

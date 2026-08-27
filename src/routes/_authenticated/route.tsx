@@ -46,7 +46,6 @@ function Marco() {
     void navigate({ to: "/", replace: true });
   }
 
-
   return (
     <div className="min-h-dvh pb-24 md:pb-0">
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">

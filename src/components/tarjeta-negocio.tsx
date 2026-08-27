@@ -19,7 +19,11 @@ export function TarjetaNegocioVista({
   return (
     <article className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
       {negocio.foto ? (
-        <img src={negocio.foto} alt={`Foto de ${negocio.nombre}`} className="h-40 w-full object-cover" />
+        <img
+          src={negocio.foto}
+          alt={`Foto de ${negocio.nombre}`}
+          className="h-40 w-full object-cover"
+        />
       ) : (
         <div className="flex h-40 items-center justify-center bg-secondary">
           <Camera className="size-7 text-muted-foreground" />

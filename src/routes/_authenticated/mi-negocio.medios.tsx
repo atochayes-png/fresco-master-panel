@@ -132,7 +132,9 @@ function Medios() {
     try {
       const r = await subirMedio(archivo, tipo);
       if (tipo === "video" && r.duration && r.duration > DURACION_MAXIMA) {
-        setError(`Para que cargue rápidamente, utiliza videos de máximo ${DURACION_MAXIMA} segundos.`);
+        setError(
+          `Para que cargue rápidamente, utiliza videos de máximo ${DURACION_MAXIMA} segundos.`,
+        );
         setSubiendo(false);
         return;
       }
@@ -369,7 +371,11 @@ function Medios() {
           <div className="space-y-3">
             <div className="overflow-hidden rounded-2xl bg-secondary">
               {tipo === "image" ? (
-                <img src={vista ?? ""} alt="Vista previa" className="max-h-64 w-full object-cover" />
+                <img
+                  src={vista ?? ""}
+                  alt="Vista previa"
+                  className="max-h-64 w-full object-cover"
+                />
               ) : (
                 <video src={vista ?? ""} controls playsInline className="max-h-64 w-full" />
               )}
