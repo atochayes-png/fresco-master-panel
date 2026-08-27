@@ -2,7 +2,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
+import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
+
 import { usuarioAEmail } from "@/lib/dominio";
 import { asegurarMaster } from "@/lib/negocios.functions";
 import { Button } from "@/components/ui/button";
