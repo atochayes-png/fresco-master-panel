@@ -31,6 +31,7 @@ export type PerfilRow = {
   precio_noche: number | null;
   capacidad: number | null;
   tipo_servicio: string | null;
+  recibe_pedidos: boolean;
   paso_actual: number;
 };
 
