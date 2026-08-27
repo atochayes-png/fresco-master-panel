@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AccesoRouteImport } from './routes/acceso'
 import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
@@ -38,6 +39,11 @@ const AccesoRoute = AccesoRouteImport.update({
 const BuscarRoute = BuscarRouteImport.update({
   id: '/buscar',
   path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardadosRoute = GuardadosRouteImport.update({
+  id: '/guardados',
+  path: '/guardados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
+  '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
+  '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
+  '/guardados': typeof GuardadosRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceso'
     | '/buscar'
+    | '/guardados'
     | '/resumen'
     | '/negocio/$id'
     | '/mi-negocio/completar'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceso'
     | '/buscar'
+    | '/guardados'
     | '/resumen'
     | '/negocio/$id'
     | '/mi-negocio/completar'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/acceso'
     | '/buscar'
+    | '/guardados'
     | '/_authenticated/resumen'
     | '/negocio/$id'
     | '/_authenticated/mi-negocio/completar'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AccesoRoute: typeof AccesoRoute
   BuscarRoute: typeof BuscarRoute
+  GuardadosRoute: typeof GuardadosRoute
   NegocioIdRoute: typeof NegocioIdRoute
 }
 
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/buscar'
       fullPath: '/buscar'
       preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guardados': {
+      id: '/guardados'
+      path: '/guardados'
+      fullPath: '/guardados'
+      preLoaderRoute: typeof GuardadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/resumen': {
@@ -274,6 +294,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AccesoRoute: AccesoRoute,
   BuscarRoute: BuscarRoute,
+  GuardadosRoute: GuardadosRoute,
   NegocioIdRoute: NegocioIdRoute,
 }
 export const routeTree = rootRouteImport
