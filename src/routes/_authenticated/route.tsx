@@ -1,9 +1,19 @@
-import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  Link,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect } from "react";
 import { LayoutGrid, Store, LogOut } from "lucide-react";
 
 import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
+import { miRol } from "@/lib/dueno.functions";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -18,6 +28,16 @@ export const Route = createFileRoute("/_authenticated")({
 function Marco() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const obtenerRol = useServerFn(miRol);
+  const { data: rolData } = useQuery({ queryKey: ["mi-rol"], queryFn: () => obtenerRol() });
+  const esDueno = rolData?.rol === "negocio";
+  const ruta = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (esDueno && !ruta.startsWith("/mi-negocio")) {
+      void navigate({ to: "/mi-negocio", replace: true });
+    }
+  }, [esDueno, ruta, navigate]);
 
   async function salir() {
     await queryClient.cancelQueries();
@@ -25,6 +45,7 @@ function Marco() {
     await supabase.auth.signOut();
     void navigate({ to: "/", replace: true });
   }
+
 
   return (
     <div className="min-h-dvh pb-24 md:pb-0">
@@ -44,8 +65,14 @@ function Marco() {
           </div>
 
           <nav className="hidden items-center gap-1 md:flex">
-            <EnlaceMenu to="/resumen" texto="Resumen" />
-            <EnlaceMenu to="/negocios" texto="Negocios" />
+            {esDueno ? (
+              <EnlaceMenu to="/mi-negocio" texto="Mi negocio" />
+            ) : (
+              <>
+                <EnlaceMenu to="/resumen" texto="Resumen" />
+                <EnlaceMenu to="/negocios" texto="Negocios" />
+              </>
+            )}
           </nav>
           <button
             onClick={salir}
@@ -61,12 +88,14 @@ function Marco() {
         <Outlet />
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card md:hidden">
-        <div className="grid grid-cols-2">
-          <EnlaceMovil to="/resumen" texto="Resumen" icono={<LayoutGrid className="size-5" />} />
-          <EnlaceMovil to="/negocios" texto="Negocios" icono={<Store className="size-5" />} />
-        </div>
-      </nav>
+      {esDueno ? null : (
+        <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card md:hidden">
+          <div className="grid grid-cols-2">
+            <EnlaceMovil to="/resumen" texto="Resumen" icono={<LayoutGrid className="size-5" />} />
+            <EnlaceMovil to="/negocios" texto="Negocios" icono={<Store className="size-5" />} />
+          </div>
+        </nav>
+      )}
     </div>
   );
 }
