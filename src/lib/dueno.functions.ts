@@ -177,6 +177,7 @@ export const guardarPerfil = createServerFn({ method: "POST" })
       "precio_noche",
       "capacidad",
       "tipo_servicio",
+      "recibe_pedidos",
       "paso_actual",
     ];
     const campos: Record<string, unknown> = {};
