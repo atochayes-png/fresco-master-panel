@@ -1,131 +1,187 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Loader2, MapPin, Search } from "lucide-react";
 
 import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
-import { supabase } from "@/integrations/supabase/client";
-
-import { usuarioAEmail } from "@/lib/dominio";
-import { asegurarMaster } from "@/lib/negocios.functions";
+import { MarcoPublico } from "@/components/publico-marco";
+import { TarjetaNegocioVista } from "@/components/tarjeta-negocio";
+import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
+import { CATEGORIAS, pedirUbicacion, ubicacionGuardada } from "@/lib/publico";
+import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Entrar — Tomar el Fresco en Yucatán" },
+      { title: "Tomar el Fresco en Yucatán — Encuentra y pide cerca de ti" },
       {
         name: "description",
-        content: "Acceso al panel de administración de Tomar el Fresco en Yucatán.",
+        content:
+          "Encuentra dónde comer, qué conocer, dónde hospedarte, cómo moverte y dónde divertirte en Yucatán. Sin registro: busca, encuentra y contacta por WhatsApp.",
       },
-      { property: "og:title", content: "Entrar — Tomar el Fresco en Yucatán" },
+      { property: "og:title", content: "Tomar el Fresco en Yucatán" },
       {
         property: "og:description",
-        content: "Acceso al panel de administración de Tomar el Fresco en Yucatán.",
+        content: "Negocios y experiencias de Yucatán cerca de ti. Contacta o haz tu pedido por WhatsApp.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Entrar,
+  component: Inicio,
 });
 
-function Entrar() {
+function Inicio() {
   const navigate = useNavigate();
-  const [usuario, setUsuario] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [ver, setVer] = useState(false);
-  const [cargando, setCargando] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [texto, setTexto] = useState("");
+  const [ubicacion, setUbicacion] = useState<{ lat: number; lng: number } | null>(null);
+  const [municipio, setMunicipio] = useState("");
+  const [buscandoUbi, setBuscandoUbi] = useState(false);
+  const [cercanos, setCercanos] = useState<TarjetaNegocio[] | null>(null);
 
   useEffect(() => {
-    void asegurarMaster();
-    void supabase.auth.getSession().then(({ data }) => {
-      if (data.session) void navigate({ to: "/resumen", replace: true });
-    });
-  }, [navigate]);
+    setUbicacion(ubicacionGuardada());
+  }, []);
 
-  async function enviar(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setCargando(true);
-    const { error: err } = await supabase.auth.signInWithPassword({
-      email: usuarioAEmail(usuario),
-      password: contrasena,
+  useEffect(() => {
+    let vivo = true;
+    void buscarNegocios({
+      data: {
+        texto: "",
+        municipio: municipio || null,
+        lat: ubicacion?.lat ?? null,
+        lng: ubicacion?.lng ?? null,
+      },
+    }).then((r) => {
+      if (vivo) setCercanos(r.slice(0, 6));
     });
-    setCargando(false);
-    if (err) {
-      setError("Usuario o contraseña incorrectos");
-      return;
-    }
-    void navigate({ to: "/resumen", replace: true });
+    return () => {
+      vivo = false;
+    };
+  }, [ubicacion, municipio]);
+
+  function irABuscar(extra?: { categoria?: string; texto?: string }) {
+    void navigate({
+      to: "/buscar",
+      search: {
+        q: extra?.texto ?? texto,
+        categoria: extra?.categoria ?? "",
+        municipio,
+      },
+    });
+  }
+
+  async function usarUbicacion() {
+    setBuscandoUbi(true);
+    const ubi = await pedirUbicacion();
+    setBuscandoUbi(false);
+    if (ubi) setUbicacion(ubi);
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center px-5 py-10">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto flex size-28 items-center justify-center rounded-3xl bg-marca-negro p-3 shadow-sm">
+    <MarcoPublico>
+      <section className="space-y-5">
+        <div className="text-center">
+          <div className="mx-auto flex size-24 items-center justify-center rounded-3xl bg-marca-negro p-3 shadow-sm">
             <img
               src={logoAsset.url}
               alt="Tomar el Fresco en Yucatán"
-              width={112}
-              height={112}
+              width={96}
+              height={96}
               className="h-full w-full object-contain"
             />
           </div>
-          <h1 className="mt-5 text-2xl font-bold">Tomar el Fresco</h1>
-          <p className="text-sm text-muted-foreground">en Yucatán</p>
+          <h1 className="mt-4 text-2xl font-bold">¿Qué quieres hacer?</h1>
+          <p className="text-sm text-muted-foreground">Tomar el Fresco en Yucatán</p>
         </div>
 
-
         <form
-          onSubmit={enviar}
-          className="space-y-5 rounded-3xl border border-border bg-card p-6 shadow-sm"
+          onSubmit={(e) => {
+            e.preventDefault();
+            irABuscar();
+          }}
+          className="flex gap-2"
         >
-          <div className="space-y-2">
-            <Label htmlFor="usuario" className="text-base">
-              Usuario
-            </Label>
-            <Input
-              id="usuario"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              autoCapitalize="none"
-              autoCorrect="off"
-              className="h-13 text-base"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="contrasena" className="text-base">
-              Contraseña
-            </Label>
-            <div className="relative">
-              <Input
-                id="contrasena"
-                type={ver ? "text" : "password"}
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
-                className="h-13 pr-12 text-base"
-              />
-              <button
-                type="button"
-                onClick={() => setVer((v) => !v)}
-                aria-label={ver ? "Ocultar contraseña" : "Mostrar contraseña"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-2 text-muted-foreground"
-              >
-                {ver ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-              </button>
-            </div>
-          </div>
-
-          {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
-
-          <Button type="submit" disabled={cargando} className="h-14 w-full text-base font-semibold">
-            {cargando ? <Loader2 className="size-5 animate-spin" /> : "INICIAR SESIÓN"}
+          <Input
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            placeholder="¿Qué estás buscando?"
+            className="h-14 text-base"
+          />
+          <Button type="submit" className="h-14 px-5" aria-label="Buscar">
+            <Search className="size-5" />
           </Button>
         </form>
-      </div>
-    </main>
+
+        <div className="grid grid-cols-2 gap-3">
+          {CATEGORIAS.map((c) => (
+            <button
+              key={c.clave}
+              onClick={() => irABuscar({ categoria: c.tipo, texto: "" })}
+              className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+            >
+              <span className="text-2xl">{c.emoji}</span>
+              {c.clave}
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-sm">
+          <p className="text-sm font-semibold">Para mostrarte lo más cercano</p>
+          <Button
+            variant={ubicacion ? "secondary" : "default"}
+            onClick={usarUbicacion}
+            disabled={buscandoUbi}
+            className="h-13 w-full text-base font-semibold"
+          >
+            {buscandoUbi ? (
+              <Loader2 className="size-5 animate-spin" />
+            ) : (
+              <>
+                <MapPin className="size-5" /> {ubicacion ? "Ubicación activada" : "Usar mi ubicación"}
+              </>
+            )}
+          </Button>
+          <div>
+            <label htmlFor="mun" className="text-sm text-muted-foreground">
+              O elige un municipio
+            </label>
+            <select
+              id="mun"
+              value={municipio}
+              onChange={(e) => setMunicipio(e.target.value)}
+              className="mt-1 h-13 w-full rounded-xl border border-input bg-background px-3 text-base"
+            >
+              <option value="">Todo Yucatán</option>
+              {MUNICIPIOS_YUCATAN.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {cercanos === null ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : cercanos.length ? (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold">
+              {ubicacion ? "Cerca de ti" : "Descubre en Yucatán"}
+            </h2>
+            {cercanos.map((n) => (
+              <TarjetaNegocioVista key={n.id} negocio={n} ubicacion={ubicacion} />
+            ))}
+          </div>
+        ) : (
+          <p className="py-6 text-center text-sm text-muted-foreground">
+            Todavía no hay negocios publicados en esta zona.
+          </p>
+        )}
+      </section>
+    </MarcoPublico>
   );
 }

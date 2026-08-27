@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { actualizarNegocio, cambiarEstatus, obtenerNegocio } from "@/lib/negocios.functions";
+import { pedidosDeNegocio } from "@/lib/productos.functions";
 import {
   MUNICIPIOS_YUCATAN,
   TIPOS_NEGOCIO,
@@ -38,6 +39,13 @@ function Ficha() {
     queryKey: ["negocio", id],
     queryFn: () => obtener({ data: { id } }),
   });
+
+  const metricas = useServerFn(pedidosDeNegocio);
+  const { data: pedidos } = useQuery({
+    queryKey: ["pedidos-negocio", id],
+    queryFn: () => metricas({ data: { negocio_id: id } }),
+  });
+
 
   const [editando, setEditando] = useState(false);
   const [form, setForm] = useState({
@@ -189,6 +197,14 @@ function Ficha() {
               }
             />
           </div>
+
+          <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="text-base font-semibold">Pedidos generados</h2>
+            <Dato titulo="Este mes" valor={String(pedidos?.mes ?? 0)} />
+            <Dato titulo="Total histórico" valor={String(pedidos?.total ?? 0)} />
+          </div>
+
+
 
           <div className="grid gap-3">
             <Button

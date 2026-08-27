@@ -31,6 +31,7 @@ export type PerfilRow = {
   precio_noche: number | null;
   capacidad: number | null;
   tipo_servicio: string | null;
+  recibe_pedidos: boolean;
   paso_actual: number;
 };
 
@@ -176,6 +177,7 @@ export const guardarPerfil = createServerFn({ method: "POST" })
       "precio_noche",
       "capacidad",
       "tipo_servicio",
+      "recibe_pedidos",
       "paso_actual",
     ];
     const campos: Record<string, unknown> = {};
