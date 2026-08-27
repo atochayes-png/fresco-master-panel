@@ -26,7 +26,10 @@ export type FichaPublica = TarjetaNegocio & {
   recibe_clientes: boolean;
   costo_entrega_tipo: string | null;
   costo_entrega: number | null;
+  distancia_km: number | null;
   notas_entrega: string | null;
+  salida_latitud: number | null;
+  salida_longitud: number | null;
   menu_url: string | null;
   menu_tipo: string | null;
   whatsapp: string | null;
