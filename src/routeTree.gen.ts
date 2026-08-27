@@ -10,33 +10,86 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
+import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
+import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
+import { Route as AuthenticatedNegociosNuevoRouteImport } from './routes/_authenticated/negocios.nuevo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
+  id: '/resumen',
+  path: '/resumen',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNegociosIndexRoute =
+  AuthenticatedNegociosIndexRouteImport.update({
+    id: '/negocios/',
+    path: '/negocios/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNegociosIdRoute = AuthenticatedNegociosIdRouteImport.update({
+  id: '/negocios/$id',
+  path: '/negocios/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNegociosNuevoRoute =
+  AuthenticatedNegociosNuevoRouteImport.update({
+    id: '/negocios/nuevo',
+    path: '/negocios/nuevo',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/resumen': typeof AuthenticatedResumenRoute
+  '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
+  '/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/resumen': typeof AuthenticatedResumenRoute
+  '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
+  '/negocios': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/resumen': typeof AuthenticatedResumenRoute
+  '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/_authenticated/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
+  '/_authenticated/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/resumen' | '/negocios/$id' | '/negocios/nuevo' | '/negocios/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/resumen' | '/negocios/$id' | '/negocios/nuevo' | '/negocios'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/_authenticated/resumen'
+    | '/_authenticated/negocios/$id'
+    | '/_authenticated/negocios/nuevo'
+    | '/_authenticated/negocios/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +101,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/resumen': {
+      id: '/_authenticated/resumen'
+      path: '/resumen'
+      fullPath: '/resumen'
+      preLoaderRoute: typeof AuthenticatedResumenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/negocios/': {
+      id: '/_authenticated/negocios/'
+      path: '/negocios'
+      fullPath: '/negocios/'
+      preLoaderRoute: typeof AuthenticatedNegociosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/negocios/$id': {
+      id: '/_authenticated/negocios/$id'
+      path: '/negocios/$id'
+      fullPath: '/negocios/$id'
+      preLoaderRoute: typeof AuthenticatedNegociosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/negocios/nuevo': {
+      id: '/_authenticated/negocios/nuevo'
+      path: '/negocios/nuevo'
+      fullPath: '/negocios/nuevo'
+      preLoaderRoute: typeof AuthenticatedNegociosNuevoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedResumenRoute: typeof AuthenticatedResumenRoute
+  AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
+  AuthenticatedNegociosNuevoRoute: typeof AuthenticatedNegociosNuevoRoute
+  AuthenticatedNegociosIndexRoute: typeof AuthenticatedNegociosIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedResumenRoute: AuthenticatedResumenRoute,
+  AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
+  AuthenticatedNegociosNuevoRoute: AuthenticatedNegociosNuevoRoute,
+  AuthenticatedNegociosIndexRoute: AuthenticatedNegociosIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
