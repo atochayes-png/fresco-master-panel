@@ -83,10 +83,10 @@ export function estaAbierto(horarios: HorarioPublico[]): boolean | null {
   const hoy = horarios.find((h) => h.dia === ahora.getDay());
   if (!hoy || !hoy.abierto || !hoy.apertura || !hoy.cierre) return false;
   const minutos = ahora.getHours() * 60 + ahora.getMinutes();
-  const [ha, ma] = hoy.apertura.split(":").map(Number);
-  const [hc, mc] = hoy.cierre.split(":").map(Number);
-  const inicio = ha * 60 + ma;
-  const fin = hc * 60 + mc;
+  const a = hoy.apertura.split(":").map(Number);
+  const c = hoy.cierre.split(":").map(Number);
+  const inicio = (a[0] ?? 0) * 60 + (a[1] ?? 0);
+  const fin = (c[0] ?? 0) * 60 + (c[1] ?? 0);
   if (fin <= inicio) return minutos >= inicio || minutos <= fin;
   return minutos >= inicio && minutos <= fin;
 }
