@@ -69,7 +69,7 @@ function Productos() {
   const recibePedidos = negocio?.perfil.recibe_pedidos === true;
 
   async function alternarPedidos(valor: boolean) {
-    await guardarP({ data: { paso: 4, perfil: { recibe_pedidos: valor } } });
+    await guardarP({ data: { campos: { recibe_pedidos: valor } } });
     await qc.invalidateQueries({ queryKey: ["mi-negocio"] });
   }
 
