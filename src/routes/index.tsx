@@ -38,11 +38,12 @@ function Inicio() {
   const [texto, setTexto] = useState("");
   const [ubicacion, setUbicacion] = useState<{ lat: number; lng: number } | null>(null);
   const [municipio, setMunicipio] = useState("");
-  const [buscandoUbi, setBuscandoUbi] = useState(false);
+  const [zona, setZona] = useState("");
   const [cercanos, setCercanos] = useState<TarjetaNegocio[] | null>(null);
 
   useEffect(() => {
     setUbicacion(ubicacionGuardada());
+    setZona(zonaGuardada());
   }, []);
 
   useEffect(() => {
