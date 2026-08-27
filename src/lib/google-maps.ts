@@ -1,3 +1,4 @@
+/// <reference types="google.maps" />
 /* Carga perezosa del mapa de Google. Sólo navegador y sólo una vez por sesión. */
 
 let promesa: Promise<typeof google.maps> | null = null;
