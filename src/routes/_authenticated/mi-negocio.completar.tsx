@@ -920,6 +920,34 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         }}
       />
 
+      {datos.negocio.tipo === "Turismo y experiencias" && puntoSalida.trim() ? (
+        <Tarjeta>
+          <p className="text-base font-semibold">Ubicación del punto de salida (opcional)</p>
+          <p className="text-sm text-muted-foreground">
+            Así las personas pueden llegar sin perderse.
+          </p>
+          <BuscadorDireccion
+            etiqueta="Busca el punto de salida"
+            onElegir={(l) => {
+              setSalidaLat(l.latitud);
+              setSalidaLng(l.longitud);
+              toast.success("Punto de salida guardado");
+            }}
+          />
+          {salidaLat && salidaLng ? (
+            <MapaPunto
+              lat={salidaLat}
+              lng={salidaLng}
+              altura="h-48"
+              onMover={(a, b) => {
+                setSalidaLat(a);
+                setSalidaLng(b);
+              }}
+            />
+          ) : null}
+        </Tarjeta>
+      ) : null}
+
       <Tarjeta>
         <p className="text-base font-semibold">
           ¿Quieres que las personas puedan contactarte por WhatsApp?
