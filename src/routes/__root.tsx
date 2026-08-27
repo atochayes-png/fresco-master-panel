@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "Tomar el Fresco en Yucatán" },
       { name: "description", content: "Administración de negocios de Tomar el Fresco en Yucatán." },
-      { name: "theme-color", content: "#e0568a" },
+      { name: "theme-color", content: "#f2699b" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-title", content: "Tomar el Fresco" },
       { property: "og:type", content: "website" },
