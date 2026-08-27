@@ -467,17 +467,70 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   );
 }
 
-function Mapa({ lat, lng }: { lat: number; lng: number }) {
-  const d = 0.004;
-  const bbox = `${lng - d}%2C${lat - d}%2C${lng + d}%2C${lat + d}`;
+/* Buscador de direcciones de Google. Sólo consulta al tocar BUSCAR,
+   para no gastar llamadas de más. */
+function BuscadorDireccion({
+  etiqueta,
+  onElegir,
+}: {
+  etiqueta: string;
+  onElegir: (lugar: Lugar) => void;
+}) {
+  const [texto, setTexto] = useState("");
+  const [buscando, setBuscando] = useState(false);
+  const [lugares, setLugares] = useState<Lugar[]>([]);
+
+  async function buscar() {
+    if (texto.trim().length < 3) {
+      toast.error("Escribe al menos 3 letras");
+      return;
+    }
+    setBuscando(true);
+    try {
+      const r = await buscarLugares({ data: { texto } });
+      setLugares(r);
+      if (!r.length) toast.error("No encontramos ese lugar");
+    } catch {
+      toast.error("El buscador de direcciones no está disponible");
+    } finally {
+      setBuscando(false);
+    }
+  }
+
   return (
     <div className="space-y-2">
-      <p className="text-sm text-muted-foreground">Confirma que el punto sea correcto:</p>
-      <iframe
-        title="Mapa de tu negocio"
-        className="h-52 w-full rounded-2xl border border-border"
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`}
-      />
+      <Campo etiqueta={etiqueta}>
+        <div className="flex gap-2">
+          <Input
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            placeholder="Calle, colonia o nombre del lugar"
+            className="h-13 text-base"
+          />
+          <Button type="button" variant="secondary" onClick={() => void buscar()} className="h-13 px-4">
+            {buscando ? <Loader2 className="size-5 animate-spin" /> : "BUSCAR"}
+          </Button>
+        </div>
+      </Campo>
+      {lugares.length ? (
+        <ul className="space-y-2">
+          {lugares.map((l) => (
+            <li key={l.id}>
+              <button
+                type="button"
+                onClick={() => {
+                  onElegir(l);
+                  setLugares([]);
+                }}
+                className="w-full rounded-2xl border border-border bg-background p-3 text-left"
+              >
+                <p className="text-base font-semibold">{l.nombre}</p>
+                <p className="text-sm text-muted-foreground">{l.direccion}</p>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
