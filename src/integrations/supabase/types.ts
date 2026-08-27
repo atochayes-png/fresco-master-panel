@@ -43,6 +43,30 @@ export type Database = {
           },
         ]
       }
+      medios_pendientes_borrado: {
+        Row: {
+          creado_en: string
+          id: string
+          procesado: boolean
+          public_id: string
+          resource_type: string
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          procesado?: boolean
+          public_id: string
+          resource_type?: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          procesado?: boolean
+          public_id?: string
+          resource_type?: string
+        }
+        Relationships: []
+      }
       negocio_fotos: {
         Row: {
           actualizado_en: string
@@ -115,6 +139,71 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "negocio_horarios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_medios: {
+        Row: {
+          actualizado_en: string
+          bytes: number | null
+          created_at: string
+          duration: number | null
+          es_destacado: boolean
+          es_portada: boolean
+          format: string | null
+          height: number | null
+          id: string
+          negocio_id: string
+          orden: number
+          public_id: string
+          resource_type: string
+          secure_url: string
+          tipo: string
+          width: number | null
+        }
+        Insert: {
+          actualizado_en?: string
+          bytes?: number | null
+          created_at?: string
+          duration?: number | null
+          es_destacado?: boolean
+          es_portada?: boolean
+          format?: string | null
+          height?: number | null
+          id?: string
+          negocio_id: string
+          orden?: number
+          public_id: string
+          resource_type?: string
+          secure_url: string
+          tipo: string
+          width?: number | null
+        }
+        Update: {
+          actualizado_en?: string
+          bytes?: number | null
+          created_at?: string
+          duration?: number | null
+          es_destacado?: boolean
+          es_portada?: boolean
+          format?: string | null
+          height?: number | null
+          id?: string
+          negocio_id?: string
+          orden?: number
+          public_id?: string
+          resource_type?: string
+          secure_url?: string
+          tipo?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_medios_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
