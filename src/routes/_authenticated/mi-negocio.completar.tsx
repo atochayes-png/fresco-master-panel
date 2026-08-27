@@ -341,6 +341,15 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
         {recibe ? (
           <div className="space-y-4 pt-2">
+            <BuscadorDireccion
+              etiqueta="Busca tu negocio, calle o localidad"
+              onElegir={(l) => {
+                setDireccion(l.direccion || l.nombre);
+                setLat(l.latitud);
+                setLng(l.longitud);
+                toast.success("Ubicación encontrada");
+              }}
+            />
             <Campo etiqueta="Dirección">
               <Input
                 value={direccion}
@@ -371,7 +380,21 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
             >
               <MapPin className="mr-2 size-5" /> Usar mi ubicación actual
             </Button>
-            {lat && lng ? <Mapa lat={lat} lng={lng} /> : null}
+            {lat && lng ? (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Confirma el punto. Puedes arrastrar el marcador rosa o tocar el mapa.
+                </p>
+                <MapaPunto
+                  lat={lat}
+                  lng={lng}
+                  onMover={(a, b) => {
+                    setLat(a);
+                    setLng(b);
+                  }}
+                />
+              </div>
+            ) : null}
           </div>
         ) : null}
       </Tarjeta>
