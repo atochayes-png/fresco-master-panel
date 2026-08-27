@@ -197,7 +197,14 @@ export const buscarNegocios = createServerFn({ method: "POST" })
       });
     }
 
-    resultado.sort((a, b) => (b._puntos - a._puntos) || (a._dist - b._dist) || a.nombre.localeCompare(b.nombre));
+    // Regla institucional: primero filtramos por relevancia (arriba) y
+    // después ordenamos principalmente por cercanía. Las reseñas no influyen.
+    const hayUbicacion = data.lat != null && data.lng != null;
+    resultado.sort((a, b) =>
+      hayUbicacion
+        ? (a._dist - b._dist) || (b._puntos - a._puntos) || a.nombre.localeCompare(b.nombre)
+        : (b._puntos - a._puntos) || a.nombre.localeCompare(b.nombre),
+    );
     return resultado.map(({ _puntos, _dist, ...resto }) => resto) as TarjetaNegocio[];
   });
 
