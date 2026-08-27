@@ -29,10 +29,19 @@ function Marco() {
     <div className="min-h-dvh pb-24 md:pb-0">
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <img src="/icons/icon-192.png" alt="" width={32} height={32} className="rounded-lg" />
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-marca-negro p-1">
+              <img
+                src={logoAsset.url}
+                alt="Tomar el Fresco en Yucatán"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain"
+              />
+            </span>
             <span className="font-display text-base font-bold">Tomar el Fresco</span>
           </div>
+
           <nav className="hidden items-center gap-1 md:flex">
             <EnlaceMenu to="/resumen" texto="Resumen" />
             <EnlaceMenu to="/negocios" texto="Negocios" />
