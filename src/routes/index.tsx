@@ -62,16 +62,19 @@ function Entrar() {
     <main className="flex min-h-dvh flex-col items-center justify-center px-5 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <img
-            src="/icons/icon-192.png"
-            alt="Tomar el Fresco en Yucatán"
-            width={72}
-            height={72}
-            className="mx-auto rounded-2xl shadow-sm"
-          />
-          <h1 className="mt-4 text-2xl font-bold">Tomar el Fresco</h1>
+          <div className="mx-auto flex size-28 items-center justify-center rounded-3xl bg-marca-negro p-3 shadow-sm">
+            <img
+              src={logoAsset.url}
+              alt="Tomar el Fresco en Yucatán"
+              width={112}
+              height={112}
+              className="h-full w-full object-contain"
+            />
+          </div>
+          <h1 className="mt-5 text-2xl font-bold">Tomar el Fresco</h1>
           <p className="text-sm text-muted-foreground">en Yucatán</p>
         </div>
+
 
         <form
           onSubmit={enviar}
