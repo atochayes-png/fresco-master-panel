@@ -6,6 +6,8 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { actualizarNegocio, cambiarEstatus, obtenerNegocio } from "@/lib/negocios.functions";
 import { pedidosDeNegocio } from "@/lib/productos.functions";
+import { mediosDeNegocio } from "@/lib/medios.functions";
+import { posterVideo, urlImagen } from "@/lib/cloudinary";
 import {
   MUNICIPIOS_YUCATAN,
   TIPOS_NEGOCIO,
@@ -46,6 +48,12 @@ function Ficha() {
     queryFn: () => metricas({ data: { negocio_id: id } }),
   });
 
+
+  const cargarMedios = useServerFn(mediosDeNegocio);
+  const { data: medios } = useQuery({
+    queryKey: ["medios-negocio", id],
+    queryFn: () => cargarMedios({ data: { negocio_id: id } }),
+  });
 
   const [editando, setEditando] = useState(false);
   const [form, setForm] = useState({
