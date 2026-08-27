@@ -204,6 +204,31 @@ function Ficha() {
             <Dato titulo="Total histórico" valor={String(pedidos?.total ?? 0)} />
           </div>
 
+          <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="text-base font-semibold">Fotos y videos</h2>
+            <Dato titulo="Fotos" valor={String(medios?.filter((m) => m.tipo === "image").length ?? 0)} />
+            <Dato titulo="Videos" valor={String(medios?.filter((m) => m.tipo === "video").length ?? 0)} />
+            {medios?.length ? (
+              <div className="flex gap-3 overflow-x-auto pb-1">
+                {medios.map((m) => (
+                  <img
+                    key={m.id}
+                    src={
+                      m.tipo === "video"
+                        ? posterVideo(m.secure_url, "miniatura")
+                        : urlImagen(m.secure_url, "miniatura")
+                    }
+                    alt={m.tipo === "video" ? "Video del negocio" : "Foto del negocio"}
+                    loading="lazy"
+                    className="size-20 shrink-0 rounded-xl object-cover"
+                  />
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+
+
 
 
           <div className="grid gap-3">
