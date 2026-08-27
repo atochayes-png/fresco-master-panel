@@ -112,12 +112,8 @@ export const miNegocio = createServerFn({ method: "POST" })
 export const guardarDatosNegocio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
-    (d: {
-      nombre_negocio: string;
-      nombre_dueno: string;
-      celular: string;
-      descripcion: string;
-    }) => d,
+    (d: { nombre_negocio: string; nombre_dueno: string; celular: string; descripcion: string }) =>
+      d,
   )
   .handler(async ({ data, context }) => {
     const { data: negocio } = await context.supabase

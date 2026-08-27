@@ -26,7 +26,7 @@ import { validarCelular } from "@/lib/dominio";
 
 export const Route = createFileRoute("/_authenticated/mi-negocio/completar")({
   validateSearch: (search: Record<string, unknown>) => ({
-    paso: Math.min(5, Math.max(1, Number(search['paso'] ?? 1) || 1)),
+    paso: Math.min(5, Math.max(1, Number(search["paso"] ?? 1) || 1)),
   }),
   head: () => ({
     meta: [
@@ -163,9 +163,18 @@ function Paso1({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
   function enviar() {
     const err = validarCelular(celular);
-    if (!nombreNegocio.trim()) { toast.error("Escribe el nombre de tu negocio"); return; }
-    if (err) { toast.error(err); return; }
-    if (!descripcion.trim()) { toast.error("Cuéntanos qué ofreces"); return; }
+    if (!nombreNegocio.trim()) {
+      toast.error("Escribe el nombre de tu negocio");
+      return;
+    }
+    if (err) {
+      toast.error(err);
+      return;
+    }
+    if (!descripcion.trim()) {
+      toast.error("Cuéntanos qué ofreces");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -299,8 +308,14 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   }
 
   function enviar() {
-    if (recibe === null) { toast.error("Dinos si tus clientes pueden visitarte"); return; }
-    if (recibe && !direccion.trim()) { toast.error("Escribe tu dirección"); return; }
+    if (recibe === null) {
+      toast.error("Dinos si tus clientes pueden visitarte");
+      return;
+    }
+    if (recibe && !direccion.trim()) {
+      toast.error("Escribe tu dirección");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -507,7 +522,12 @@ function BuscadorDireccion({
             placeholder="Calle, colonia o nombre del lugar"
             className="h-13 text-base"
           />
-          <Button type="button" variant="secondary" onClick={() => void buscar()} className="h-13 px-4">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => void buscar()}
+            className="h-13 px-4"
+          >
             {buscando ? <Loader2 className="size-5 animate-spin" /> : "BUSCAR"}
           </Button>
         </div>
@@ -619,7 +639,9 @@ function Paso3({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
                 type="button"
                 onClick={() => cambiar(d.dia, { abierto: !d.abierto })}
                 className={`rounded-full px-4 py-2 text-xs font-bold ${
-                  d.abierto ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
+                  d.abierto
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-muted-foreground"
                 }`}
               >
                 {d.abierto ? "ABIERTO" : "CERRADO"}
@@ -738,13 +760,19 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
     if (t === "Hospedaje y rentas")
       return { precio_noche: Number(precioNoche) || null, capacidad: Number(capacidad) || null };
     if (t === "Movilidad y transporte")
-      return { precio_desde: Number(precioDesde) || null, tipo_servicio: tipoServicio.trim() || null };
+      return {
+        precio_desde: Number(precioDesde) || null,
+        tipo_servicio: tipoServicio.trim() || null,
+      };
     if (t === "Diversión y entretenimiento") return { precio_desde: Number(precioDesde) || null };
     return {};
   }
 
   function enviar() {
-    if (!p.foto_principal) { toast.error("Agrega tu foto principal"); return; }
+    if (!p.foto_principal) {
+      toast.error("Agrega tu foto principal");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -812,7 +840,11 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         <div className="grid grid-cols-3 gap-2">
           {datos.fotos.map((f) => (
             <div key={f.id} className="relative">
-              <img src={f.url} alt="Foto de tu negocio" className="h-24 w-full rounded-xl object-cover" />
+              <img
+                src={f.url}
+                alt="Foto de tu negocio"
+                className="h-24 w-full rounded-xl object-cover"
+              />
               <button
                 type="button"
                 aria-label="Quitar foto"
@@ -971,13 +1003,25 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
           </Campo>
         ) : null}
         <Campo etiqueta="Facebook (opcional)">
-          <Input value={facebook} onChange={(e) => setFacebook(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={facebook}
+            onChange={(e) => setFacebook(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
         <Campo etiqueta="Instagram (opcional)">
-          <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
         <Campo etiqueta="Sitio web (opcional)">
-          <Input value={sitio} onChange={(e) => setSitio(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={sitio}
+            onChange={(e) => setSitio(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
       </Tarjeta>
 
@@ -1007,22 +1051,47 @@ function CamposGiro({
     });
   if (tipo === "Turismo y experiencias")
     filas.push(
-      { clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true },
+      {
+        clave: "precioDesde",
+        setter: "setPrecioDesde",
+        etiqueta: "Precio desde (opcional)",
+        numerico: true,
+      },
       { clave: "duracion", setter: "setDuracion", etiqueta: "Duración aproximada (opcional)" },
       { clave: "puntoSalida", setter: "setPuntoSalida", etiqueta: "Punto de salida (opcional)" },
     );
   if (tipo === "Hospedaje y rentas")
     filas.push(
-      { clave: "precioNoche", setter: "setPrecioNoche", etiqueta: "Precio desde por noche (opcional)", numerico: true },
-      { clave: "capacidad", setter: "setCapacidad", etiqueta: "Capacidad máxima de personas (opcional)", numerico: true },
+      {
+        clave: "precioNoche",
+        setter: "setPrecioNoche",
+        etiqueta: "Precio desde por noche (opcional)",
+        numerico: true,
+      },
+      {
+        clave: "capacidad",
+        setter: "setCapacidad",
+        etiqueta: "Capacidad máxima de personas (opcional)",
+        numerico: true,
+      },
     );
   if (tipo === "Movilidad y transporte")
     filas.push(
-      { clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true },
+      {
+        clave: "precioDesde",
+        setter: "setPrecioDesde",
+        etiqueta: "Precio desde (opcional)",
+        numerico: true,
+      },
       { clave: "tipoServicio", setter: "setTipoServicio", etiqueta: "Tipo de servicio (opcional)" },
     );
   if (tipo === "Diversión y entretenimiento")
-    filas.push({ clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true });
+    filas.push({
+      clave: "precioDesde",
+      setter: "setPrecioDesde",
+      etiqueta: "Precio desde (opcional)",
+      numerico: true,
+    });
 
   if (!filas.length) return null;
 
@@ -1102,7 +1171,9 @@ function Resumen({ datos }: { datos: Datos }) {
                 : "Sin horario"}
           </Dato>
           <Dato titulo="Contacto">
-            {p.whatsapp_activo ? `WhatsApp ${p.whatsapp_numero ?? datos.negocio.celular}` : datos.negocio.celular}
+            {p.whatsapp_activo
+              ? `WhatsApp ${p.whatsapp_numero ?? datos.negocio.celular}`
+              : datos.negocio.celular}
           </Dato>
           <Dato titulo="Servicio a domicilio">
             {p.domicilio
@@ -1123,7 +1194,12 @@ function Resumen({ datos }: { datos: Datos }) {
 
       <BotonPrincipal
         cargando={guardando}
-        onClick={() => void correr(() => publicar(), () => setListo(true))}
+        onClick={() =>
+          void correr(
+            () => publicar(),
+            () => setListo(true),
+          )
+        }
       >
         PUBLICAR MI NEGOCIO
       </BotonPrincipal>
