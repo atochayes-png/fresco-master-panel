@@ -118,7 +118,26 @@ function MiNegocio() {
         <Acceso paso={4} icono={<Images className="size-6" />} texto="FOTOS" />
         <Acceso paso={4} icono={<UtensilsCrossed className="size-6" />} texto="MENÚ / CATÁLOGO" />
         <Acceso paso={4} icono={<Phone className="size-6" />} texto="CONTACTO" />
+        <Link
+          to="/mi-negocio/productos"
+          className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+        >
+          <span className="text-primary">
+            <ShoppingBag className="size-6" />
+          </span>
+          MIS PRODUCTOS
+        </Link>
+        <Link
+          to="/mi-negocio/pedidos"
+          className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+        >
+          <span className="text-primary">
+            <ClipboardList className="size-6" />
+          </span>
+          PEDIDOS
+        </Link>
       </div>
+
 
       <TarjetaPlan negocio={negocio} dias={dias} />
     </div>

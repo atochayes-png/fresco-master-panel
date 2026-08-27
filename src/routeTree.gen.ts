@@ -18,6 +18,7 @@ import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticate
 import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
 import { Route as AuthenticatedMiNegocioCompletarRouteImport } from './routes/_authenticated/mi-negocio.completar'
+import { Route as AuthenticatedMiNegocioPedidosRouteImport } from './routes/_authenticated/mi-negocio.pedidos'
 import { Route as AuthenticatedMiNegocioProductosRouteImport } from './routes/_authenticated/mi-negocio.productos'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
@@ -69,6 +70,12 @@ const AuthenticatedMiNegocioCompletarRoute =
     path: '/mi-negocio/completar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMiNegocioPedidosRoute =
+  AuthenticatedMiNegocioPedidosRouteImport.update({
+    id: '/mi-negocio/pedidos',
+    path: '/mi-negocio/pedidos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMiNegocioProductosRoute =
   AuthenticatedMiNegocioProductosRouteImport.update({
     id: '/mi-negocio/productos',
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
+  '/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
   '/mi-negocio/productos': typeof AuthenticatedMiNegocioProductosRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -115,6 +123,7 @@ export interface FileRoutesByTo {
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
+  '/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
   '/mi-negocio/productos': typeof AuthenticatedMiNegocioProductosRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -131,6 +140,7 @@ export interface FileRoutesById {
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
+  '/_authenticated/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
   '/_authenticated/mi-negocio/productos': typeof AuthenticatedMiNegocioProductosRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/_authenticated/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/resumen'
     | '/negocio/$id'
     | '/mi-negocio/completar'
+    | '/mi-negocio/pedidos'
     | '/mi-negocio/productos'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/resumen'
     | '/negocio/$id'
     | '/mi-negocio/completar'
+    | '/mi-negocio/pedidos'
     | '/mi-negocio/productos'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -176,6 +188,7 @@ export interface FileRouteTypes {
     | '/_authenticated/resumen'
     | '/negocio/$id'
     | '/_authenticated/mi-negocio/completar'
+    | '/_authenticated/mi-negocio/pedidos'
     | '/_authenticated/mi-negocio/productos'
     | '/_authenticated/negocios/$id'
     | '/_authenticated/negocios/nuevo'
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiNegocioCompletarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mi-negocio/pedidos': {
+      id: '/_authenticated/mi-negocio/pedidos'
+      path: '/mi-negocio/pedidos'
+      fullPath: '/mi-negocio/pedidos'
+      preLoaderRoute: typeof AuthenticatedMiNegocioPedidosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mi-negocio/productos': {
       id: '/_authenticated/mi-negocio/productos'
       path: '/mi-negocio/productos'
@@ -291,6 +311,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedResumenRoute: typeof AuthenticatedResumenRoute
   AuthenticatedMiNegocioCompletarRoute: typeof AuthenticatedMiNegocioCompletarRoute
+  AuthenticatedMiNegocioPedidosRoute: typeof AuthenticatedMiNegocioPedidosRoute
   AuthenticatedMiNegocioProductosRoute: typeof AuthenticatedMiNegocioProductosRoute
   AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
   AuthenticatedNegociosNuevoRoute: typeof AuthenticatedNegociosNuevoRoute
@@ -301,6 +322,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedResumenRoute: AuthenticatedResumenRoute,
   AuthenticatedMiNegocioCompletarRoute: AuthenticatedMiNegocioCompletarRoute,
+  AuthenticatedMiNegocioPedidosRoute: AuthenticatedMiNegocioPedidosRoute,
   AuthenticatedMiNegocioProductosRoute: AuthenticatedMiNegocioProductosRoute,
   AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
   AuthenticatedNegociosNuevoRoute: AuthenticatedNegociosNuevoRoute,
