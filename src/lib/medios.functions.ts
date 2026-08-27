@@ -147,12 +147,14 @@ export const ordenarMedios = createServerFn({ method: "POST" })
   .inputValidator((d: { ids: string[] }) => d)
   .handler(async ({ data, context }) => {
     const negocioId = await negocioDelDueno(context.supabase, context.userId);
-    for (let i = 0; i < data.ids.length; i++) {
+    let i = 0;
+    for (const id of data.ids) {
       await context.supabase
         .from("negocio_medios")
         .update({ orden: i })
-        .eq("id", data.ids[i])
+        .eq("id", id)
         .eq("negocio_id", negocioId);
+      i++;
     }
     return { ok: true };
   });
