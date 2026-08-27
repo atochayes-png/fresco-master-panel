@@ -39,6 +39,13 @@ function Ficha() {
     queryFn: () => obtener({ data: { id } }),
   });
 
+  const metricas = useServerFn(pedidosDeNegocio);
+  const { data: pedidos } = useQuery({
+    queryKey: ["pedidos-negocio", id],
+    queryFn: () => metricas({ data: { negocio_id: id } }),
+  });
+
+
   const [editando, setEditando] = useState(false);
   const [form, setForm] = useState({
     nombre_dueno: "",
