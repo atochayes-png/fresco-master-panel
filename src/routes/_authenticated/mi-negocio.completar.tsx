@@ -732,6 +732,8 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         precio_desde: Number(precioDesde) || null,
         duracion: duracion.trim() || null,
         punto_salida: puntoSalida.trim() || null,
+        salida_latitud: puntoSalida.trim() ? salidaLat : null,
+        salida_longitud: puntoSalida.trim() ? salidaLng : null,
       };
     if (t === "Hospedaje y rentas")
       return { precio_noche: Number(precioNoche) || null, capacidad: Number(capacidad) || null };
