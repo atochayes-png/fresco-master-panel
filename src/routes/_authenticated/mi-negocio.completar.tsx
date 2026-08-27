@@ -270,12 +270,28 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   const [km, setKm] = useState(p.distancia_km ? String(p.distancia_km) : "");
   const [notas, setNotas] = useState(p.notas_entrega ?? "");
 
+  async function completarDesdeMapa(nlat: number, nlng: number) {
+    setLat(nlat);
+    setLng(nlng);
+    try {
+      const d = await direccionDePunto({ data: { lat: nlat, lng: nlng } });
+      if (!d) return;
+      if (!direccion.trim()) setDireccion(d.direccion);
+      if (!colonia.trim() && d.colonia) setColonia(d.colonia);
+      if (!cp.trim() && d.codigo_postal) setCp(d.codigo_postal);
+    } catch {
+      /* La dirección se puede escribir a mano. */
+    }
+  }
+
   function ubicar() {
-    if (!navigator.geolocation) { toast.error("Tu teléfono no comparte la ubicación"); return; }
+    if (!navigator.geolocation) {
+      toast.error("Tu teléfono no comparte la ubicación");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLat(pos.coords.latitude);
-        setLng(pos.coords.longitude);
+        void completarDesdeMapa(pos.coords.latitude, pos.coords.longitude);
         toast.success("Ubicación guardada");
       },
       () => toast.error("No pudimos obtener tu ubicación"),
