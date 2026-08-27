@@ -77,7 +77,6 @@ function Entrar() {
           <p className="text-sm text-muted-foreground">en Yucatán</p>
         </div>
 
-
         <form
           onSubmit={enviar}
           className="space-y-5 rounded-3xl border border-border bg-card p-6 shadow-sm"

@@ -117,7 +117,15 @@ function MiNegocio() {
         <Acceso paso={1} icono={<Store className="size-6" />} texto="MI INFORMACIÓN" />
         <Acceso paso={2} icono={<MapPin className="size-6" />} texto="UBICACIÓN" />
         <Acceso paso={3} icono={<CalendarClock className="size-6" />} texto="HORARIOS" />
-        <Acceso paso={4} icono={<Images className="size-6" />} texto="FOTOS" />
+        <Link
+          to="/mi-negocio/medios"
+          className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+        >
+          <span className="text-primary">
+            <Images className="size-6" />
+          </span>
+          FOTOS Y VIDEOS
+        </Link>
         <Acceso paso={4} icono={<UtensilsCrossed className="size-6" />} texto="MENÚ / CATÁLOGO" />
         <Acceso paso={4} icono={<Phone className="size-6" />} texto="CONTACTO" />
         <Link
@@ -139,7 +147,6 @@ function MiNegocio() {
           PEDIDOS
         </Link>
       </div>
-
 
       <TarjetaPlan negocio={negocio} dias={dias} />
     </div>

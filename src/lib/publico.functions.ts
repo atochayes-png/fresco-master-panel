@@ -1,4 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
+import { urlImagen } from "@/lib/cloudinary";
+
+export type MedioPublico = {
+  id: string;
+  tipo: "image" | "video";
+  url: string;
+  destacado: boolean;
+};
 
 export type TarjetaNegocio = {
   id: string;
@@ -43,6 +51,7 @@ export type FichaPublica = TarjetaNegocio & {
   capacidad: number | null;
   tipo_servicio: string | null;
   galeria: string[];
+  medios: MedioPublico[];
   productos: {
     id: string;
     nombre: string;
@@ -145,6 +154,18 @@ export const buscarNegocios = createServerFn({ method: "POST" })
       db.from("resenas").select("negocio_id, estrellas").in("negocio_id", ids),
     ]);
 
+    // Portada multimedia (optimizada) con prioridad sobre la foto anterior.
+    const { data: portadas } = await db
+      .from("negocio_medios")
+      .select("negocio_id, secure_url, tipo, es_portada, orden")
+      .in("negocio_id", ids)
+      .eq("es_portada", true);
+    const portadaPorId = new Map(
+      (portadas ?? [])
+        .filter((m) => m.tipo === "image")
+        .map((m) => [m.negocio_id, urlImagen(m.secure_url, "tarjeta")]),
+    );
+
     const perfilPorId = new Map((perfiles ?? []).map((p) => [p.negocio_id, p]));
     const rutas: string[] = [];
     const fotoPorId = new Map<string, string>();
@@ -213,7 +234,7 @@ export const buscarNegocios = createServerFn({ method: "POST" })
         nombre: n.nombre_negocio,
         tipo: n.tipo,
         municipio: n.municipio,
-        foto: ruta ? (firmadas[ruta] ?? null) : null,
+        foto: portadaPorId.get(n.id) ?? (ruta ? (firmadas[ruta] ?? null) : null),
         descripcion: perfil?.descripcion ?? null,
         latitud: perfil?.latitud ?? null,
         longitud: perfil?.longitud ?? null,
@@ -301,6 +322,20 @@ export const fichaNegocio = createServerFn({ method: "POST" })
       );
     }
 
+    const { data: mediosFilas } = await db
+      .from("negocio_medios")
+      .select("id, tipo, secure_url, es_portada, es_destacado, orden, created_at")
+      .eq("negocio_id", n.id)
+      .order("orden")
+      .order("created_at");
+    const medios: MedioPublico[] = (mediosFilas ?? []).map((m) => ({
+      id: m.id,
+      tipo: m.tipo === "video" ? "video" : "image",
+      url: m.secure_url,
+      destacado: m.es_destacado === true,
+    }));
+    const portadaMedio = (mediosFilas ?? []).find((m) => m.es_portada && m.tipo === "image");
+
     const promedio = (resenas ?? []).length
       ? Math.round(
           ((resenas ?? []).reduce((a, r) => a + r.estrellas, 0) / (resenas ?? []).length) * 10,
@@ -313,8 +348,13 @@ export const fichaNegocio = createServerFn({ method: "POST" })
       tipo: n.tipo,
       municipio: n.municipio,
       descripcion: perfil?.descripcion ?? null,
-      foto: galeriaRutas[0] ? (firmadas[galeriaRutas[0]] ?? null) : null,
+      foto: portadaMedio
+        ? urlImagen(portadaMedio.secure_url, "ficha")
+        : galeriaRutas[0]
+          ? (firmadas[galeriaRutas[0]] ?? null)
+          : null,
       galeria: galeriaRutas.map((r) => firmadas[r]).filter(Boolean) as string[],
+      medios,
       latitud: perfil?.latitud ?? null,
       longitud: perfil?.longitud ?? null,
       domicilio: perfil?.domicilio === true,

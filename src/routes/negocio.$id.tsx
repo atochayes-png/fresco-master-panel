@@ -17,6 +17,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
+import { GaleriaMedios } from "@/components/galeria-medios";
 import { MarcoPublico } from "@/components/publico-marco";
 import { MapaPunto } from "@/components/mapa-punto";
 import { Identificacion } from "@/components/identificacion";
@@ -192,7 +193,8 @@ function Ficha() {
             <img
               src={ficha.foto}
               alt={`Foto de ${ficha.nombre}`}
-              className="h-52 w-full object-cover"
+              decoding="async"
+              className="h-56 w-full object-cover"
             />
           ) : (
             <div className="flex h-52 items-center justify-center bg-secondary">
@@ -225,13 +227,16 @@ function Ficha() {
           </div>
         </div>
 
-        {ficha.galeria.length ? (
+        {ficha.medios.length ? (
+          <GaleriaMedios medios={ficha.medios} nombre={ficha.nombre} />
+        ) : ficha.galeria.length ? (
           <div className="flex gap-3 overflow-x-auto pb-1">
             {ficha.galeria.map((url) => (
               <img
                 key={url}
                 src={url}
                 alt={`Galería de ${ficha.nombre}`}
+                loading="lazy"
                 className="h-28 w-40 shrink-0 rounded-2xl object-cover"
               />
             ))}

@@ -153,7 +153,10 @@ function Productos() {
       ) : (
         <ul className="space-y-3">
           {(productos ?? []).map((p) => (
-            <li key={p.id} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
+            <li
+              key={p.id}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3"
+            >
               {p.foto_url ? (
                 <img src={p.foto_url} alt={p.nombre} className="size-16 rounded-xl object-cover" />
               ) : (
@@ -204,7 +207,9 @@ function Productos() {
       {borrador ? (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-4">
           <div className="max-h-[92dvh] w-full max-w-sm space-y-4 overflow-y-auto rounded-t-3xl border border-border bg-card p-6 sm:rounded-3xl">
-            <h2 className="text-xl font-bold">{borrador.id ? "Editar producto" : "Nuevo producto"}</h2>
+            <h2 className="text-xl font-bold">
+              {borrador.id ? "Editar producto" : "Nuevo producto"}
+            </h2>
 
             <div className="space-y-2">
               <Label htmlFor="np" className="text-base">
@@ -248,7 +253,11 @@ function Productos() {
                 Foto (opcional)
               </Label>
               {borrador.foto_url ? (
-                <img src={borrador.foto_url} alt="Foto del producto" className="h-32 w-full rounded-2xl object-cover" />
+                <img
+                  src={borrador.foto_url}
+                  alt="Foto del producto"
+                  className="h-32 w-full rounded-2xl object-cover"
+                />
               ) : null}
               <Input
                 id="fp"
@@ -274,7 +283,11 @@ function Productos() {
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-            <Button onClick={guardarBorrador} disabled={ocupado} className="h-14 w-full text-base font-semibold">
+            <Button
+              onClick={guardarBorrador}
+              disabled={ocupado}
+              className="h-14 w-full text-base font-semibold"
+            >
               {ocupado ? <Loader2 className="size-5 animate-spin" /> : "GUARDAR"}
             </Button>
             <Button variant="ghost" onClick={() => setBorrador(null)} className="h-12 w-full">

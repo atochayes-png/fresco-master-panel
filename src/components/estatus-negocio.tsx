@@ -8,7 +8,13 @@ const ESTILOS: Record<EstatusCalculado, string> = {
   suspendido: "bg-muted text-muted-foreground",
 };
 
-export function EstatusBadge({ estatus, className }: { estatus: EstatusCalculado; className?: string }) {
+export function EstatusBadge({
+  estatus,
+  className,
+}: {
+  estatus: EstatusCalculado;
+  className?: string;
+}) {
   return (
     <span
       className={cn(
