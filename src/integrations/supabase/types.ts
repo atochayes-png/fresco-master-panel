@@ -14,6 +14,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      guardados: {
+        Row: {
+          creado_en: string
+          id: string
+          negocio_id: string
+          telefono: string
+        }
+        Insert: {
+          creado_en?: string
+          id?: string
+          negocio_id: string
+          telefono: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          negocio_id?: string
+          telefono?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardados_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       negocio_fotos: {
         Row: {
           actualizado_en: string
@@ -122,6 +151,7 @@ export type Database = {
           precio_promedio: number | null
           punto_salida: string | null
           recibe_clientes: boolean | null
+          recibe_pedidos: boolean
           sitio_web: string | null
           solo_reservacion: boolean
           tipo_servicio: string | null
@@ -156,6 +186,7 @@ export type Database = {
           precio_promedio?: number | null
           punto_salida?: string | null
           recibe_clientes?: boolean | null
+          recibe_pedidos?: boolean
           sitio_web?: string | null
           solo_reservacion?: boolean
           tipo_servicio?: string | null
@@ -190,6 +221,7 @@ export type Database = {
           precio_promedio?: number | null
           punto_salida?: string | null
           recibe_clientes?: boolean | null
+          recibe_pedidos?: boolean
           sitio_web?: string | null
           solo_reservacion?: boolean
           tipo_servicio?: string | null
@@ -201,6 +233,56 @@ export type Database = {
             foreignKeyName: "negocio_perfil_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: true
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_productos: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          descripcion: string | null
+          disponible: boolean
+          foto_ruta: string | null
+          foto_url: string | null
+          id: string
+          negocio_id: string
+          nombre: string
+          orden: number
+          precio: number
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          disponible?: boolean
+          foto_ruta?: string | null
+          foto_url?: string | null
+          id?: string
+          negocio_id: string
+          nombre: string
+          orden?: number
+          precio?: number
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          disponible?: boolean
+          foto_ruta?: string | null
+          foto_url?: string | null
+          id?: string
+          negocio_id?: string
+          nombre?: string
+          orden?: number
+          precio?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_productos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
             referencedRelation: "negocios"
             referencedColumns: ["id"]
           },
@@ -260,6 +342,71 @@ export type Database = {
         }
         Relationships: []
       }
+      pedidos: {
+        Row: {
+          actualizado_en: string
+          cliente_nombre: string
+          cliente_telefono: string
+          costo_entrega: number
+          creado_en: string
+          direccion: string | null
+          estado: string
+          folio: string
+          id: string
+          items: Json
+          negocio_id: string
+          origen: string
+          referencia: string | null
+          subtotal: number
+          tipo_entrega: string
+          total_estimado: number
+        }
+        Insert: {
+          actualizado_en?: string
+          cliente_nombre: string
+          cliente_telefono: string
+          costo_entrega?: number
+          creado_en?: string
+          direccion?: string | null
+          estado?: string
+          folio?: string
+          id?: string
+          items?: Json
+          negocio_id: string
+          origen?: string
+          referencia?: string | null
+          subtotal?: number
+          tipo_entrega?: string
+          total_estimado?: number
+        }
+        Update: {
+          actualizado_en?: string
+          cliente_nombre?: string
+          cliente_telefono?: string
+          costo_entrega?: number
+          creado_en?: string
+          direccion?: string | null
+          estado?: string
+          folio?: string
+          id?: string
+          items?: Json
+          negocio_id?: string
+          origen?: string
+          referencia?: string | null
+          subtotal?: number
+          tipo_entrega?: string
+          total_estimado?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       perfiles: {
         Row: {
           creado_en: string
@@ -278,6 +425,41 @@ export type Database = {
         }
         Relationships: []
       }
+      resenas: {
+        Row: {
+          comentario: string | null
+          creado_en: string
+          estrellas: number
+          id: string
+          negocio_id: string
+          telefono: string
+        }
+        Insert: {
+          comentario?: string | null
+          creado_en?: string
+          estrellas: number
+          id?: string
+          negocio_id: string
+          telefono: string
+        }
+        Update: {
+          comentario?: string | null
+          creado_en?: string
+          estrellas?: number
+          id?: string
+          negocio_id?: string
+          telefono?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resenas_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -293,6 +475,27 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      usuarios_publicos: {
+        Row: {
+          acepta_promociones: boolean
+          creado_en: string
+          id: string
+          telefono: string
+        }
+        Insert: {
+          acepta_promociones?: boolean
+          creado_en?: string
+          id?: string
+          telefono: string
+        }
+        Update: {
+          acepta_promociones?: boolean
+          creado_en?: string
+          id?: string
+          telefono?: string
         }
         Relationships: []
       }
