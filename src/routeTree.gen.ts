@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AccesoRouteImport } from './routes/acceso'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
 import { Route as AuthenticatedMiNegocioCompletarRouteImport } from './routes/_authenticated/mi-negocio.completar'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccesoRoute = AccesoRouteImport.update({
+  id: '/acceso',
+  path: '/acceso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
@@ -64,6 +70,7 @@ const AuthenticatedNegociosNuevoRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acceso': typeof AccesoRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acceso': typeof AccesoRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/acceso': typeof AccesoRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acceso'
     | '/resumen'
     | '/mi-negocio/completar'
     | '/negocios/$id'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acceso'
     | '/resumen'
     | '/mi-negocio/completar'
     | '/negocios/$id'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/acceso'
     | '/_authenticated/resumen'
     | '/_authenticated/mi-negocio/completar'
     | '/_authenticated/negocios/$id'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AccesoRoute: typeof AccesoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acceso': {
+      id: '/acceso'
+      path: '/acceso'
+      fullPath: '/acceso'
+      preLoaderRoute: typeof AccesoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/resumen': {
@@ -212,6 +232,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AccesoRoute: AccesoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
