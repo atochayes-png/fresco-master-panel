@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { MarcoPublico } from "@/components/publico-marco";
+import { MapaPunto } from "@/components/mapa-punto";
 import { Identificacion } from "@/components/identificacion";
 import {
   alternarGuardado,
@@ -39,8 +40,10 @@ import {
   mensajePedido,
   nombreDia,
   nombreGuardado,
+  pedirUbicacion,
   pesos,
   telefonoGuardado,
+  textoDistancia,
   ubicacionGuardada,
   type Carrito,
 } from "@/lib/publico";
@@ -86,7 +89,8 @@ function Ficha() {
     setCarrito(leerCarrito(id));
     void fichaNegocio({ data: { id } }).then((r) => setFicha(r ?? "vacio"));
     const tel = telefonoGuardado();
-    if (tel) void misGuardados({ data: { telefono: tel } }).then((l) => setGuardado(l.includes(id)));
+    if (tel)
+      void misGuardados({ data: { telefono: tel } }).then((l) => setGuardado(l.includes(id)));
   }, [id]);
 
   const total = useMemo(() => {
@@ -147,6 +151,8 @@ function Ficha() {
 
   const km = distanciaKm(ubicacion, ficha.latitud, ficha.longitud);
   const abierto = estaAbierto(ficha.horarios);
+  const fueraDeRango =
+    ficha.domicilio && ficha.distancia_km != null && km != null && km > ficha.distancia_km;
   const whatsapp = ficha.whatsapp ?? ficha.telefono ?? "";
 
   if (paso === "pedido") {
@@ -183,7 +189,11 @@ function Ficha() {
 
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
           {ficha.foto ? (
-            <img src={ficha.foto} alt={`Foto de ${ficha.nombre}`} className="h-52 w-full object-cover" />
+            <img
+              src={ficha.foto}
+              alt={`Foto de ${ficha.nombre}`}
+              className="h-52 w-full object-cover"
+            />
           ) : (
             <div className="flex h-52 items-center justify-center bg-secondary">
               <Camera className="size-8 text-muted-foreground" />
@@ -236,7 +246,9 @@ function Ficha() {
                 <li key={d} className="flex justify-between">
                   <span>{nombreDia(d)}</span>
                   <span className="text-muted-foreground">
-                    {h?.abierto && h.apertura && h.cierre ? `${h.apertura} a ${h.cierre}` : "Cerrado"}
+                    {h?.abierto && h.apertura && h.cierre
+                      ? `${h.apertura} a ${h.cierre}`
+                      : "Cerrado"}
                   </span>
                 </li>
               );
@@ -247,18 +259,50 @@ function Ficha() {
         {ficha.recibe_clientes && (ficha.direccion || ficha.latitud) ? (
           <Bloque titulo="Ubicación" icono={<MapPin className="size-5" />}>
             {ficha.direccion ? <p className="text-sm">{ficha.direccion}</p> : null}
-            {ficha.colonia ? <p className="text-sm text-muted-foreground">{ficha.colonia}</p> : null}
-            {ficha.latitud && ficha.longitud ? (
-              <Button asChild variant="secondary" className="mt-3 h-12 w-full">
-                <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.latitud},${ficha.longitud}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  CÓMO LLEGAR
-                </a>
-              </Button>
+            {ficha.colonia ? (
+              <p className="text-sm text-muted-foreground">{ficha.colonia}</p>
             ) : null}
+            {km != null ? (
+              <p className="mt-1 text-sm font-semibold">A {textoDistancia(km)} de ti</p>
+            ) : null}
+            {ficha.latitud && ficha.longitud ? (
+              <>
+                <div className="mt-3">
+                  <ClientOnly fallback={<div className="h-56 w-full rounded-2xl bg-secondary" />}>
+                    <MapaPunto lat={ficha.latitud} lng={ficha.longitud} />
+                  </ClientOnly>
+                </div>
+                <Button asChild variant="secondary" className="mt-3 h-12 w-full">
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.latitud},${ficha.longitud}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    CÓMO LLEGAR
+                  </a>
+                </Button>
+              </>
+            ) : null}
+          </Bloque>
+        ) : null}
+
+        {ficha.punto_salida && ficha.salida_latitud && ficha.salida_longitud ? (
+          <Bloque titulo="Punto de salida" icono={<MapPin className="size-5" />}>
+            <p className="text-sm">{ficha.punto_salida}</p>
+            <div className="mt-3">
+              <ClientOnly fallback={<div className="h-48 w-full rounded-2xl bg-secondary" />}>
+                <MapaPunto lat={ficha.salida_latitud} lng={ficha.salida_longitud} altura="h-48" />
+              </ClientOnly>
+            </div>
+            <Button asChild variant="secondary" className="mt-3 h-12 w-full">
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.salida_latitud},${ficha.salida_longitud}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                CÓMO LLEGAR AL PUNTO DE SALIDA
+              </a>
+            </Button>
           </Bloque>
         ) : null}
 
@@ -269,6 +313,17 @@ function Ficha() {
                 ? `Costo de entrega: ${pesos(ficha.costo_entrega)}`
                 : "El costo de entrega se acuerda con el negocio."}
             </p>
+            {ficha.distancia_km ? (
+              <p className="mt-1 text-sm text-muted-foreground">
+                Entregan hasta {ficha.distancia_km} km a la redonda.
+              </p>
+            ) : null}
+            {fueraDeRango ? (
+              <p className="mt-2 rounded-2xl bg-secondary p-3 text-sm font-semibold">
+                Estás a {textoDistancia(km!)} y este negocio entrega hasta {ficha.distancia_km} km.
+                Puedes preguntar por WhatsApp si te alcanzan a llevar.
+              </p>
+            ) : null}
             {ficha.notas_entrega ? (
               <p className="mt-1 text-sm text-muted-foreground">{ficha.notas_entrega}</p>
             ) : null}
@@ -345,13 +400,25 @@ function Ficha() {
             ) : null}
             <div className="flex flex-wrap gap-2">
               {ficha.facebook ? (
-                <Redes url={ficha.facebook} icono={<Facebook className="size-4" />} texto="Facebook" />
+                <Redes
+                  url={ficha.facebook}
+                  icono={<Facebook className="size-4" />}
+                  texto="Facebook"
+                />
               ) : null}
               {ficha.instagram ? (
-                <Redes url={ficha.instagram} icono={<Instagram className="size-4" />} texto="Instagram" />
+                <Redes
+                  url={ficha.instagram}
+                  icono={<Instagram className="size-4" />}
+                  texto="Instagram"
+                />
               ) : null}
               {ficha.sitio_web ? (
-                <Redes url={ficha.sitio_web} icono={<Globe className="size-4" />} texto="Sitio web" />
+                <Redes
+                  url={ficha.sitio_web}
+                  icono={<Globe className="size-4" />}
+                  texto="Sitio web"
+                />
               ) : null}
             </div>
           </div>
@@ -457,7 +524,9 @@ function Resenas({ ficha, onPedirTelefono }: { ficha: FichaPublica; onPedirTelef
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-muted-foreground">Todavía no hay opiniones. ¡Sé la primera persona!</p>
+        <p className="text-sm text-muted-foreground">
+          Todavía no hay opiniones. ¡Sé la primera persona!
+        </p>
       )}
 
       {enviado ? (
@@ -468,7 +537,9 @@ function Resenas({ ficha, onPedirTelefono }: { ficha: FichaPublica; onPedirTelef
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} onClick={() => setEstrellas(n)} aria-label={`${n} estrellas`}>
-                <Star className={`size-7 ${n <= estrellas ? "fill-current text-primary" : "text-muted-foreground"}`} />
+                <Star
+                  className={`size-7 ${n <= estrellas ? "fill-current text-primary" : "text-muted-foreground"}`}
+                />
               </button>
             ))}
           </div>
@@ -501,9 +572,12 @@ function Pedido({
 }) {
   const [nombre, setNombre] = useState(nombreGuardado());
   const [telefono, setTelefono] = useState(telefonoGuardado() ?? "");
-  const [tipo, setTipo] = useState<"recoger" | "domicilio">(ficha.domicilio ? "domicilio" : "recoger");
+  const [tipo, setTipo] = useState<"recoger" | "domicilio">(
+    ficha.domicilio ? "domicilio" : "recoger",
+  );
   const [direccion, setDireccion] = useState("");
   const [referencia, setReferencia] = useState("");
+  const [punto, setPunto] = useState<{ lat: number; lng: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);
   const [listo, setListo] = useState<{ folio: string; enlace: string; total: number } | null>(null);
@@ -515,6 +589,19 @@ function Pedido({
     })
     .filter(Boolean) as { id: string; nombre: string; cantidad: number; importe: number }[];
   const subtotal = items.reduce((a, i) => a + i.importe, 0);
+
+  const distancia = distanciaKm(punto, ficha.latitud, ficha.longitud);
+  const lejos =
+    tipo === "domicilio" &&
+    ficha.distancia_km != null &&
+    distancia != null &&
+    distancia > ficha.distancia_km;
+
+  async function usarMiUbicacion() {
+    const ubi = await pedirUbicacion();
+    if (ubi) setPunto(ubi);
+    else setError("No pudimos obtener tu ubicación. Escribe tu dirección con referencias.");
+  }
 
   async function confirmar() {
     setError(null);
@@ -542,7 +629,10 @@ function Pedido({
         costo_entrega: r.costo_entrega,
         total_estimado: r.total_estimado,
         tipo_entrega: tipo,
-        direccion,
+        direccion:
+          punto && tipo === "domicilio"
+            ? `${direccion}\nUbicación en el mapa: https://www.google.com/maps/search/?api=1&query=${punto.lat},${punto.lng}`
+            : direccion,
         referencia,
       });
       void marcarPedidoEnviado({ data: { id: r.id } });
@@ -657,6 +747,34 @@ function Pedido({
           {tipo === "domicilio" ? (
             <>
               <div className="space-y-2">
+                <Label className="text-base">Confirma dónde quieres recibir tu pedido</Label>
+                <Button
+                  type="button"
+                  variant={punto ? "secondary" : "default"}
+                  onClick={usarMiUbicacion}
+                  className="h-13 w-full text-base font-semibold"
+                >
+                  <MapPin className="mr-2 size-5" />
+                  {punto ? "Ubicación confirmada" : "Usar mi ubicación"}
+                </Button>
+                {punto ? (
+                  <ClientOnly fallback={<div className="h-48 w-full rounded-2xl bg-secondary" />}>
+                    <MapaPunto
+                      lat={punto.lat}
+                      lng={punto.lng}
+                      altura="h-48"
+                      onMover={(lat, lng) => setPunto({ lat, lng })}
+                    />
+                  </ClientOnly>
+                ) : null}
+                {lejos ? (
+                  <p className="rounded-2xl bg-secondary p-3 text-sm font-semibold">
+                    Estás fuera del área de entrega ({ficha.distancia_km} km). Puedes continuar y
+                    preguntar al negocio por WhatsApp.
+                  </p>
+                ) : null}
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="dir" className="text-base">
                   Dirección de entrega
                 </Label>
@@ -689,7 +807,11 @@ function Pedido({
 
         {error ? <p className="text-sm font-medium text-destructive">{error}</p> : null}
 
-        <Button onClick={confirmar} disabled={cargando} className="h-14 w-full text-base font-semibold">
+        <Button
+          onClick={confirmar}
+          disabled={cargando}
+          className="h-14 w-full text-base font-semibold"
+        >
           {cargando ? <Loader2 className="size-5 animate-spin" /> : "CONFIRMAR PEDIDO"}
         </Button>
       </div>

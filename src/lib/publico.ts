@@ -60,6 +60,31 @@ export async function pedirUbicacion(): Promise<{ lat: number; lng: number } | n
   });
 }
 
+const CLAVE_ZONA_NOMBRE = "tfy_zona_nombre";
+
+export function zonaGuardada(): string {
+  if (typeof window === "undefined") return "";
+  return window.localStorage.getItem(CLAVE_ZONA_NOMBRE) ?? "";
+}
+
+export function guardarZona(nombre: string, ubi: { lat: number; lng: number }) {
+  window.localStorage.setItem(CLAVE_ZONA_NOMBRE, nombre);
+  guardarUbicacion(ubi);
+}
+
+export function limpiarZona() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(CLAVE_ZONA_NOMBRE);
+}
+
+/* Distancia en texto sencillo: 350 m · 1.2 km · 8 km */
+export function textoDistancia(km: number | null): string | null {
+  if (km == null) return null;
+  if (km < 1) return `${Math.max(50, Math.round((km * 1000) / 50) * 50)} m`;
+  if (km < 10) return `${km.toFixed(1)} km`;
+  return `${Math.round(km)} km`;
+}
+
 export function distanciaKm(
   a: { lat: number; lng: number } | null,
   lat: number | null,
@@ -75,7 +100,12 @@ export function distanciaKm(
   return Math.round(2 * R * Math.asin(Math.sqrt(s)) * 10) / 10;
 }
 
-export type HorarioPublico = { dia: number; abierto: boolean; apertura: string | null; cierre: string | null };
+export type HorarioPublico = {
+  dia: number;
+  abierto: boolean;
+  apertura: string | null;
+  cierre: string | null;
+};
 
 export function estaAbierto(horarios: HorarioPublico[]): boolean | null {
   if (!horarios.length) return null;
@@ -149,7 +179,11 @@ export function mensajePedido(datos: {
   ];
   if (datos.costo_entrega > 0) lineas.push(`Entrega: ${pesos(datos.costo_entrega)}`);
   lineas.push(`Total estimado: ${pesos(datos.total_estimado)}`);
-  lineas.push("", "Entrega:", datos.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger en el negocio");
+  lineas.push(
+    "",
+    "Entrega:",
+    datos.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger en el negocio",
+  );
   if (datos.tipo_entrega === "domicilio" && datos.direccion) {
     lineas.push("Dirección:", datos.direccion);
     if (datos.referencia) lineas.push(`Referencia: ${datos.referencia}`);

@@ -5,8 +5,9 @@ import { Loader2, MapPin, Search } from "lucide-react";
 import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
 import { MarcoPublico } from "@/components/publico-marco";
 import { TarjetaNegocioVista } from "@/components/tarjeta-negocio";
+import { SelectorUbicacion } from "@/components/ubicacion-selector";
 import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
-import { CATEGORIAS, pedirUbicacion, ubicacionGuardada } from "@/lib/publico";
+import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Tomar el Fresco en Yucatán" },
       {
         property: "og:description",
-        content: "Negocios y experiencias de Yucatán cerca de ti. Contacta o haz tu pedido por WhatsApp.",
+        content:
+          "Negocios y experiencias de Yucatán cerca de ti. Contacta o haz tu pedido por WhatsApp.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,11 +39,12 @@ function Inicio() {
   const [texto, setTexto] = useState("");
   const [ubicacion, setUbicacion] = useState<{ lat: number; lng: number } | null>(null);
   const [municipio, setMunicipio] = useState("");
-  const [buscandoUbi, setBuscandoUbi] = useState(false);
+  const [zona, setZona] = useState("");
   const [cercanos, setCercanos] = useState<TarjetaNegocio[] | null>(null);
 
   useEffect(() => {
     setUbicacion(ubicacionGuardada());
+    setZona(zonaGuardada());
   }, []);
 
   useEffect(() => {
@@ -70,13 +73,6 @@ function Inicio() {
         municipio,
       },
     });
-  }
-
-  async function usarUbicacion() {
-    setBuscandoUbi(true);
-    const ubi = await pedirUbicacion();
-    setBuscandoUbi(false);
-    if (ubi) setUbicacion(ubi);
   }
 
   return (
@@ -129,20 +125,14 @@ function Inicio() {
 
         <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-sm">
           <p className="text-sm font-semibold">Para mostrarte lo más cercano</p>
-          <Button
-            variant={ubicacion ? "secondary" : "default"}
-            onClick={usarUbicacion}
-            disabled={buscandoUbi}
-            className="h-13 w-full text-base font-semibold"
-          >
-            {buscandoUbi ? (
-              <Loader2 className="size-5 animate-spin" />
-            ) : (
-              <>
-                <MapPin className="size-5" /> {ubicacion ? "Ubicación activada" : "Usar mi ubicación"}
-              </>
-            )}
-          </Button>
+          <SelectorUbicacion
+            ubicacion={ubicacion}
+            zona={zona}
+            onCambio={(ubi, nombre) => {
+              setUbicacion(ubi);
+              setZona(nombre);
+            }}
+          />
           <div>
             <label htmlFor="mun" className="text-sm text-muted-foreground">
               O elige un municipio

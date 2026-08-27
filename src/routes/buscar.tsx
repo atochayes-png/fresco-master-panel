@@ -1,11 +1,21 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, MapPin, Search } from "lucide-react";
+import { ClientOnly } from "@tanstack/react-router";
+import { Camera, Loader2, MapPin, Search } from "lucide-react";
 
 import { MarcoPublico } from "@/components/publico-marco";
 import { TarjetaNegocioVista } from "@/components/tarjeta-negocio";
+import { MapaResultados } from "@/components/mapa-resultados";
+import { SelectorUbicacion } from "@/components/ubicacion-selector";
 import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
-import { CATEGORIAS, pedirUbicacion, ubicacionGuardada } from "@/lib/publico";
+import {
+  CATEGORIAS,
+  distanciaKm,
+  estaAbierto,
+  textoDistancia,
+  ubicacionGuardada,
+  zonaGuardada,
+} from "@/lib/publico";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +24,9 @@ type Busqueda = { q: string; categoria: string; municipio: string };
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: (s: Record<string, unknown>): Busqueda => ({
-    q: typeof s['q'] === "string" ? s['q'] : "",
-    categoria: typeof s['categoria'] === "string" ? s['categoria'] : "",
-    municipio: typeof s['municipio'] === "string" ? s['municipio'] : "",
+    q: typeof s["q"] === "string" ? s["q"] : "",
+    categoria: typeof s["categoria"] === "string" ? s["categoria"] : "",
+    municipio: typeof s["municipio"] === "string" ? s["municipio"] : "",
   }),
   head: () => ({
     meta: [
@@ -43,10 +53,14 @@ function Buscar() {
   const busqueda = Route.useSearch();
   const [texto, setTexto] = useState(busqueda.q);
   const [ubicacion, setUbicacion] = useState<{ lat: number; lng: number } | null>(null);
+  const [zona, setZona] = useState("");
   const [resultados, setResultados] = useState<TarjetaNegocio[] | null>(null);
+  const [vista, setVista] = useState<"lista" | "mapa">("lista");
+  const [seleccionado, setSeleccionado] = useState<string | null>(null);
 
   useEffect(() => {
     setUbicacion(ubicacionGuardada());
+    setZona(zonaGuardada());
   }, []);
 
   useEffect(() => {
@@ -76,10 +90,8 @@ function Buscar() {
     void navigate({ to: "/buscar", search: { ...busqueda, ...cambios } });
   }
 
-  async function usarUbicacion() {
-    const ubi = await pedirUbicacion();
-    if (ubi) setUbicacion(ubi);
-  }
+  const conMapa = (resultados ?? []).filter((n) => n.latitud != null && n.longitud != null);
+  const activo = (resultados ?? []).find((n) => n.id === seleccionado) ?? null;
 
   return (
     <MarcoPublico>
@@ -118,29 +130,28 @@ function Buscar() {
           ))}
         </div>
 
-        <div className="flex gap-2">
-          <select
-            value={busqueda.municipio}
-            onChange={(e) => actualizar({ municipio: e.target.value })}
-            aria-label="Municipio"
-            className="h-12 flex-1 rounded-xl border border-input bg-background px-3 text-sm"
-          >
-            <option value="">Todo Yucatán</option>
-            {MUNICIPIOS_YUCATAN.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-          <Button
-            variant={ubicacion ? "secondary" : "outline"}
-            onClick={usarUbicacion}
-            className="h-12"
-          >
-            <MapPin className="size-4" />
-            {ubicacion ? "Cerca de mí" : "Mi ubicación"}
-          </Button>
-        </div>
+        <select
+          value={busqueda.municipio}
+          onChange={(e) => actualizar({ municipio: e.target.value })}
+          aria-label="Municipio"
+          className="h-12 w-full rounded-xl border border-input bg-background px-3 text-sm"
+        >
+          <option value="">Todo Yucatán</option>
+          {MUNICIPIOS_YUCATAN.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+
+        <SelectorUbicacion
+          ubicacion={ubicacion}
+          zona={zona}
+          onCambio={(ubi, nombre) => {
+            setUbicacion(ubi);
+            setZona(nombre);
+          }}
+        />
 
         {resultados === null ? (
           <div className="flex justify-center py-16">
@@ -158,16 +169,108 @@ function Buscar() {
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {resultados.length} {resultados.length === 1 ? "resultado" : "resultados"}
-            </p>
-            {resultados.map((n) => (
-              <TarjetaNegocioVista key={n.id} negocio={n} ubicacion={ubicacion} />
-            ))}
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm text-muted-foreground">
+                {resultados.length} {resultados.length === 1 ? "resultado" : "resultados"}
+              </p>
+              <div className="flex rounded-full bg-secondary p-1">
+                {(["lista", "mapa"] as const).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setVista(v)}
+                    disabled={v === "mapa" && conMapa.length === 0}
+                    className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase disabled:opacity-40 ${
+                      vista === v
+                        ? "bg-primary text-primary-foreground"
+                        : "text-secondary-foreground"
+                    }`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {vista === "lista" ? (
+              resultados.map((n) => (
+                <TarjetaNegocioVista key={n.id} negocio={n} ubicacion={ubicacion} />
+              ))
+            ) : (
+              <div className="space-y-3">
+                <ClientOnly
+                  fallback={
+                    <div className="flex h-[26rem] items-center justify-center rounded-3xl bg-secondary">
+                      <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                    </div>
+                  }
+                >
+                  <MapaResultados
+                    negocios={conMapa}
+                    ubicacion={ubicacion}
+                    seleccionado={seleccionado}
+                    onSeleccionar={setSeleccionado}
+                  />
+                </ClientOnly>
+                {activo ? (
+                  <TarjetaMapa negocio={activo} ubicacion={ubicacion} />
+                ) : (
+                  <p className="text-center text-xs text-muted-foreground">
+                    Toca un punto rosa para ver el negocio.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
     </MarcoPublico>
+  );
+}
+
+function TarjetaMapa({
+  negocio,
+  ubicacion,
+}: {
+  negocio: TarjetaNegocio;
+  ubicacion: { lat: number; lng: number } | null;
+}) {
+  const km = distanciaKm(ubicacion, negocio.latitud, negocio.longitud);
+  const abierto = estaAbierto(negocio.horarios);
+  return (
+    <div className="flex items-center gap-3 rounded-3xl border border-border bg-card p-3 shadow-sm">
+      {negocio.foto ? (
+        <img
+          src={negocio.foto}
+          alt={`Foto de ${negocio.nombre}`}
+          className="size-20 rounded-2xl object-cover"
+        />
+      ) : (
+        <div className="flex size-20 items-center justify-center rounded-2xl bg-secondary">
+          <Camera className="size-6 text-muted-foreground" />
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-bold">{negocio.nombre}</p>
+        <p className="truncate text-xs text-muted-foreground">{negocio.tipo}</p>
+        <p className="mt-1 flex items-center gap-2 text-xs font-semibold">
+          {km != null ? (
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="size-3.5" /> {textoDistancia(km)}
+            </span>
+          ) : null}
+          {abierto === null ? null : (
+            <span className={abierto ? "text-primary" : "text-muted-foreground"}>
+              {abierto ? "Abierto" : "Cerrado"}
+            </span>
+          )}
+        </p>
+      </div>
+      <Button asChild className="h-11 px-5 font-semibold">
+        <Link to="/negocio/$id" params={{ id: negocio.id }}>
+          VER
+        </Link>
+      </Button>
+    </div>
   );
 }
 

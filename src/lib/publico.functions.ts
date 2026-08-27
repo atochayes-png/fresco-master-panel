@@ -26,7 +26,10 @@ export type FichaPublica = TarjetaNegocio & {
   recibe_clientes: boolean;
   costo_entrega_tipo: string | null;
   costo_entrega: number | null;
+  distancia_km: number | null;
   notas_entrega: string | null;
+  salida_latitud: number | null;
+  salida_longitud: number | null;
   menu_url: string | null;
   menu_tipo: string | null;
   whatsapp: string | null;
@@ -40,8 +43,20 @@ export type FichaPublica = TarjetaNegocio & {
   capacidad: number | null;
   tipo_servicio: string | null;
   galeria: string[];
-  productos: { id: string; nombre: string; descripcion: string | null; precio: number; foto: string | null }[];
-  comentarios: { id: string; estrellas: number; comentario: string | null; creado_en: string; telefono: string }[];
+  productos: {
+    id: string;
+    nombre: string;
+    descripcion: string | null;
+    precio: number;
+    foto: string | null;
+  }[];
+  comentarios: {
+    id: string;
+    estrellas: number;
+    comentario: string | null;
+    creado_en: string;
+    telefono: string;
+  }[];
 };
 
 const HOY = () => new Date().toISOString().slice(0, 10);
@@ -80,7 +95,9 @@ async function firmar(
 async function cargarVisibles(db: Awaited<ReturnType<typeof admin>>) {
   const { data: negocios } = await db
     .from("negocios")
-    .select("id, nombre_negocio, tipo, municipio, celular, estatus, estado_configuracion, fecha_fin")
+    .select(
+      "id, nombre_negocio, tipo, municipio, celular, estatus, estado_configuracion, fecha_fin",
+    )
     .eq("estatus", "activo")
     .eq("estado_configuracion", "perfil_completo")
     .gte("fecha_fin", HOY());
@@ -103,14 +120,30 @@ export const buscarNegocios = createServerFn({ method: "POST" })
     if (!negocios.length) return [] as TarjetaNegocio[];
     const ids = negocios.map((n) => n.id);
 
-    const [{ data: perfiles }, { data: fotos }, { data: horarios }, { data: productos }, { data: resenas }] =
-      await Promise.all([
-        db.from("negocio_perfil").select("*").in("negocio_id", ids),
-        db.from("negocio_fotos").select("negocio_id, ruta, orden").in("negocio_id", ids).order("orden"),
-        db.from("negocio_horarios").select("negocio_id, dia, abierto, apertura, cierre").in("negocio_id", ids),
-        db.from("negocio_productos").select("negocio_id, nombre, descripcion").in("negocio_id", ids).eq("disponible", true),
-        db.from("resenas").select("negocio_id, estrellas").in("negocio_id", ids),
-      ]);
+    const [
+      { data: perfiles },
+      { data: fotos },
+      { data: horarios },
+      { data: productos },
+      { data: resenas },
+    ] = await Promise.all([
+      db.from("negocio_perfil").select("*").in("negocio_id", ids),
+      db
+        .from("negocio_fotos")
+        .select("negocio_id, ruta, orden")
+        .in("negocio_id", ids)
+        .order("orden"),
+      db
+        .from("negocio_horarios")
+        .select("negocio_id, dia, abierto, apertura, cierre")
+        .in("negocio_id", ids),
+      db
+        .from("negocio_productos")
+        .select("negocio_id, nombre, descripcion")
+        .in("negocio_id", ids)
+        .eq("disponible", true),
+      db.from("resenas").select("negocio_id, estrellas").in("negocio_id", ids),
+    ]);
 
     const perfilPorId = new Map((perfiles ?? []).map((p) => [p.negocio_id, p]));
     const rutas: string[] = [];
@@ -157,7 +190,12 @@ export const buscarNegocios = createServerFn({ method: "POST" })
         : null;
 
       let distancia = Number.MAX_SAFE_INTEGER;
-      if (data.lat != null && data.lng != null && perfil?.latitud != null && perfil?.longitud != null) {
+      if (
+        data.lat != null &&
+        data.lng != null &&
+        perfil?.latitud != null &&
+        perfil?.longitud != null
+      ) {
         const R = 6371;
         const dLat = ((perfil.latitud - data.lat) * Math.PI) / 180;
         const dLng = ((perfil.longitud - data.lng) * Math.PI) / 180;
@@ -194,7 +232,14 @@ export const buscarNegocios = createServerFn({ method: "POST" })
       });
     }
 
-    resultado.sort((a, b) => (b._puntos - a._puntos) || (a._dist - b._dist) || a.nombre.localeCompare(b.nombre));
+    // Regla institucional: primero filtramos por relevancia (arriba) y
+    // después ordenamos principalmente por cercanía. Las reseñas no influyen.
+    const hayUbicacion = data.lat != null && data.lng != null;
+    resultado.sort((a, b) =>
+      hayUbicacion
+        ? a._dist - b._dist || b._puntos - a._puntos || a.nombre.localeCompare(b.nombre)
+        : b._puntos - a._puntos || a.nombre.localeCompare(b.nombre),
+    );
     return resultado.map(({ _puntos, _dist, ...resto }) => resto) as TarjetaNegocio[];
   });
 
@@ -204,7 +249,9 @@ export const fichaNegocio = createServerFn({ method: "POST" })
     const db = await admin();
     const { data: n } = await db
       .from("negocios")
-      .select("id, nombre_negocio, tipo, municipio, celular, estatus, estado_configuracion, fecha_fin")
+      .select(
+        "id, nombre_negocio, tipo, municipio, celular, estatus, estado_configuracion, fecha_fin",
+      )
       .eq("id", data.id)
       .maybeSingle();
     if (
@@ -215,19 +262,32 @@ export const fichaNegocio = createServerFn({ method: "POST" })
     )
       return null;
 
-    const [{ data: perfil }, { data: fotos }, { data: horarios }, { data: productos }, { data: resenas }] =
-      await Promise.all([
-        db.from("negocio_perfil").select("*").eq("negocio_id", n.id).maybeSingle(),
-        db.from("negocio_fotos").select("ruta, orden").eq("negocio_id", n.id).order("orden"),
-        db.from("negocio_horarios").select("dia, abierto, apertura, cierre").eq("negocio_id", n.id).order("dia"),
-        db
-          .from("negocio_productos")
-          .select("id, nombre, descripcion, precio, foto_ruta")
-          .eq("negocio_id", n.id)
-          .eq("disponible", true)
-          .order("orden"),
-        db.from("resenas").select("id, estrellas, comentario, creado_en, telefono").eq("negocio_id", n.id).order("creado_en", { ascending: false }),
-      ]);
+    const [
+      { data: perfil },
+      { data: fotos },
+      { data: horarios },
+      { data: productos },
+      { data: resenas },
+    ] = await Promise.all([
+      db.from("negocio_perfil").select("*").eq("negocio_id", n.id).maybeSingle(),
+      db.from("negocio_fotos").select("ruta, orden").eq("negocio_id", n.id).order("orden"),
+      db
+        .from("negocio_horarios")
+        .select("dia, abierto, apertura, cierre")
+        .eq("negocio_id", n.id)
+        .order("dia"),
+      db
+        .from("negocio_productos")
+        .select("id, nombre, descripcion, precio, foto_ruta")
+        .eq("negocio_id", n.id)
+        .eq("disponible", true)
+        .order("orden"),
+      db
+        .from("resenas")
+        .select("id, estrellas, comentario, creado_en, telefono")
+        .eq("negocio_id", n.id)
+        .order("creado_en", { ascending: false }),
+    ]);
 
     const rutas = [
       ...(fotos ?? []).map((f) => f.ruta),
@@ -236,11 +296,15 @@ export const fichaNegocio = createServerFn({ method: "POST" })
     const firmadas = await firmar(db, rutas);
     const galeriaRutas = (fotos ?? []).map((f) => f.ruta);
     if (perfil?.foto_principal) {
-      galeriaRutas.sort((a, b) => (a === perfil.foto_principal ? -1 : b === perfil.foto_principal ? 1 : 0));
+      galeriaRutas.sort((a, b) =>
+        a === perfil.foto_principal ? -1 : b === perfil.foto_principal ? 1 : 0,
+      );
     }
 
     const promedio = (resenas ?? []).length
-      ? Math.round(((resenas ?? []).reduce((a, r) => a + r.estrellas, 0) / (resenas ?? []).length) * 10) / 10
+      ? Math.round(
+          ((resenas ?? []).reduce((a, r) => a + r.estrellas, 0) / (resenas ?? []).length) * 10,
+        ) / 10
       : null;
 
     const ficha: FichaPublica = {
@@ -266,14 +330,20 @@ export const fichaNegocio = createServerFn({ method: "POST" })
       })),
       estrellas: promedio,
       resenas: (resenas ?? []).length,
-      direccion: perfil?.direccion ?? null,
-      colonia: perfil?.colonia ?? null,
-      codigo_postal: perfil?.codigo_postal ?? null,
+      // La dirección exacta sólo se publica si el negocio recibe clientes.
+      direccion: perfil?.recibe_clientes ? (perfil.direccion ?? null) : null,
+      colonia: perfil?.recibe_clientes ? (perfil.colonia ?? null) : null,
+      codigo_postal: perfil?.recibe_clientes ? (perfil.codigo_postal ?? null) : null,
       recibe_clientes: perfil?.recibe_clientes === true,
       costo_entrega_tipo: perfil?.costo_entrega_tipo ?? null,
       costo_entrega: perfil?.costo_entrega ?? null,
+      distancia_km: perfil?.distancia_km != null ? Number(perfil.distancia_km) : null,
       notas_entrega: perfil?.notas_entrega ?? null,
-      menu_url: perfil?.menu_url ? (await firmar(db, [perfil.menu_url]))[perfil.menu_url] ?? null : null,
+      salida_latitud: perfil?.salida_latitud ?? null,
+      salida_longitud: perfil?.salida_longitud ?? null,
+      menu_url: perfil?.menu_url
+        ? ((await firmar(db, [perfil.menu_url]))[perfil.menu_url] ?? null)
+        : null,
       menu_tipo: perfil?.menu_tipo ?? null,
       whatsapp: perfil?.whatsapp_activo === false ? null : (perfil?.whatsapp_numero ?? n.celular),
       telefono: n.celular,
@@ -324,7 +394,10 @@ export const misGuardados = createServerFn({ method: "POST" })
     const telefono = soloDigitos(data.telefono);
     if (telefono.length < 10) return [] as string[];
     const db = await admin();
-    const { data: filas } = await db.from("guardados").select("negocio_id").eq("telefono", telefono);
+    const { data: filas } = await db
+      .from("guardados")
+      .select("negocio_id")
+      .eq("telefono", telefono);
     return (filas ?? []).map((f) => f.negocio_id);
   });
 
@@ -349,7 +422,9 @@ export const alternarGuardado = createServerFn({ method: "POST" })
   });
 
 export const publicarResena = createServerFn({ method: "POST" })
-  .inputValidator((d: { telefono: string; negocio_id: string; estrellas: number; comentario: string }) => d)
+  .inputValidator(
+    (d: { telefono: string; negocio_id: string; estrellas: number; comentario: string }) => d,
+  )
   .handler(async ({ data }) => {
     const telefono = soloDigitos(data.telefono);
     if (telefono.length < 10) throw new Error("Número inválido");
@@ -403,7 +478,9 @@ export const crearPedido = createServerFn({ method: "POST" })
 
     const { data: perfil } = await db
       .from("negocio_perfil")
-      .select("recibe_pedidos, domicilio, costo_entrega, costo_entrega_tipo, whatsapp_numero, whatsapp_activo")
+      .select(
+        "recibe_pedidos, domicilio, costo_entrega, costo_entrega_tipo, whatsapp_numero, whatsapp_activo",
+      )
       .eq("negocio_id", negocio.id)
       .maybeSingle();
     if (!perfil?.recibe_pedidos) throw new Error("Este negocio no recibe pedidos por ahora");
@@ -421,9 +498,21 @@ export const crearPedido = createServerFn({ method: "POST" })
         const p = (productos ?? []).find((x) => x.id === i.id);
         if (!p) return null;
         const cantidad = Math.min(50, Math.max(1, Math.round(i.cantidad)));
-        return { id: p.id, nombre: p.nombre, precio: Number(p.precio), cantidad, importe: Number(p.precio) * cantidad };
+        return {
+          id: p.id,
+          nombre: p.nombre,
+          precio: Number(p.precio),
+          cantidad,
+          importe: Number(p.precio) * cantidad,
+        };
       })
-      .filter(Boolean) as { id: string; nombre: string; precio: number; cantidad: number; importe: number }[];
+      .filter(Boolean) as {
+      id: string;
+      nombre: string;
+      precio: number;
+      cantidad: number;
+      importe: number;
+    }[];
     if (!items.length) throw new Error("Los productos ya no están disponibles");
 
     const subtotal = items.reduce((a, i) => a + i.importe, 0);
@@ -450,7 +539,10 @@ export const crearPedido = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-    const whatsapp = perfil.whatsapp_activo === false ? negocio.celular : (perfil.whatsapp_numero ?? negocio.celular);
+    const whatsapp =
+      perfil.whatsapp_activo === false
+        ? negocio.celular
+        : (perfil.whatsapp_numero ?? negocio.celular);
 
     return {
       id: pedido.id,
@@ -468,6 +560,10 @@ export const marcarPedidoEnviado = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data }) => {
     const db = await admin();
-    await db.from("pedidos").update({ estado: "ENVIADO_A_WHATSAPP" }).eq("id", data.id).eq("estado", "GENERADO");
+    await db
+      .from("pedidos")
+      .update({ estado: "ENVIADO_A_WHATSAPP" })
+      .eq("id", data.id)
+      .eq("estado", "GENERADO");
     return { ok: true };
   });

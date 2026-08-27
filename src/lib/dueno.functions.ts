@@ -28,6 +28,8 @@ export type PerfilRow = {
   precio_desde: number | null;
   duracion: string | null;
   punto_salida: string | null;
+  salida_latitud: number | null;
+  salida_longitud: number | null;
   precio_noche: number | null;
   capacidad: number | null;
   tipo_servicio: string | null;
@@ -110,12 +112,8 @@ export const miNegocio = createServerFn({ method: "POST" })
 export const guardarDatosNegocio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
-    (d: {
-      nombre_negocio: string;
-      nombre_dueno: string;
-      celular: string;
-      descripcion: string;
-    }) => d,
+    (d: { nombre_negocio: string; nombre_dueno: string; celular: string; descripcion: string }) =>
+      d,
   )
   .handler(async ({ data, context }) => {
     const { data: negocio } = await context.supabase
@@ -174,6 +172,8 @@ export const guardarPerfil = createServerFn({ method: "POST" })
       "precio_desde",
       "duracion",
       "punto_salida",
+      "salida_latitud",
+      "salida_longitud",
       "precio_noche",
       "capacidad",
       "tipo_servicio",

@@ -19,12 +19,14 @@ import {
   publicarNegocio,
   registrarFoto,
 } from "@/lib/dueno.functions";
+import { buscarLugares, direccionDePunto, type Lugar } from "@/lib/mapas.functions";
+import { MapaPunto } from "@/components/mapa-punto";
 import { DIAS, comprimirImagen, etiquetaHora, subirArchivo, urlFirmada } from "@/lib/dueno";
 import { validarCelular } from "@/lib/dominio";
 
 export const Route = createFileRoute("/_authenticated/mi-negocio/completar")({
   validateSearch: (search: Record<string, unknown>) => ({
-    paso: Math.min(5, Math.max(1, Number(search['paso'] ?? 1) || 1)),
+    paso: Math.min(5, Math.max(1, Number(search["paso"] ?? 1) || 1)),
   }),
   head: () => ({
     meta: [
@@ -161,9 +163,18 @@ function Paso1({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
   function enviar() {
     const err = validarCelular(celular);
-    if (!nombreNegocio.trim()) { toast.error("Escribe el nombre de tu negocio"); return; }
-    if (err) { toast.error(err); return; }
-    if (!descripcion.trim()) { toast.error("Cuéntanos qué ofreces"); return; }
+    if (!nombreNegocio.trim()) {
+      toast.error("Escribe el nombre de tu negocio");
+      return;
+    }
+    if (err) {
+      toast.error(err);
+      return;
+    }
+    if (!descripcion.trim()) {
+      toast.error("Cuéntanos qué ofreces");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -268,12 +279,28 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   const [km, setKm] = useState(p.distancia_km ? String(p.distancia_km) : "");
   const [notas, setNotas] = useState(p.notas_entrega ?? "");
 
+  async function completarDesdeMapa(nlat: number, nlng: number) {
+    setLat(nlat);
+    setLng(nlng);
+    try {
+      const d = await direccionDePunto({ data: { lat: nlat, lng: nlng } });
+      if (!d) return;
+      if (!direccion.trim()) setDireccion(d.direccion);
+      if (!colonia.trim() && d.colonia) setColonia(d.colonia);
+      if (!cp.trim() && d.codigo_postal) setCp(d.codigo_postal);
+    } catch {
+      /* La dirección se puede escribir a mano. */
+    }
+  }
+
   function ubicar() {
-    if (!navigator.geolocation) { toast.error("Tu teléfono no comparte la ubicación"); return; }
+    if (!navigator.geolocation) {
+      toast.error("Tu teléfono no comparte la ubicación");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLat(pos.coords.latitude);
-        setLng(pos.coords.longitude);
+        void completarDesdeMapa(pos.coords.latitude, pos.coords.longitude);
         toast.success("Ubicación guardada");
       },
       () => toast.error("No pudimos obtener tu ubicación"),
@@ -281,8 +308,14 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   }
 
   function enviar() {
-    if (recibe === null) { toast.error("Dinos si tus clientes pueden visitarte"); return; }
-    if (recibe && !direccion.trim()) { toast.error("Escribe tu dirección"); return; }
+    if (recibe === null) {
+      toast.error("Dinos si tus clientes pueden visitarte");
+      return;
+    }
+    if (recibe && !direccion.trim()) {
+      toast.error("Escribe tu dirección");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -323,6 +356,15 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
         {recibe ? (
           <div className="space-y-4 pt-2">
+            <BuscadorDireccion
+              etiqueta="Busca tu negocio, calle o localidad"
+              onElegir={(l) => {
+                setDireccion(l.direccion || l.nombre);
+                setLat(l.latitud);
+                setLng(l.longitud);
+                toast.success("Ubicación encontrada");
+              }}
+            />
             <Campo etiqueta="Dirección">
               <Input
                 value={direccion}
@@ -353,7 +395,21 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
             >
               <MapPin className="mr-2 size-5" /> Usar mi ubicación actual
             </Button>
-            {lat && lng ? <Mapa lat={lat} lng={lng} /> : null}
+            {lat && lng ? (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Confirma el punto. Puedes arrastrar el marcador rosa o tocar el mapa.
+                </p>
+                <MapaPunto
+                  lat={lat}
+                  lng={lng}
+                  onMover={(a, b) => {
+                    setLat(a);
+                    setLng(b);
+                  }}
+                />
+              </div>
+            ) : null}
           </div>
         ) : null}
       </Tarjeta>
@@ -426,17 +482,75 @@ function Paso2({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   );
 }
 
-function Mapa({ lat, lng }: { lat: number; lng: number }) {
-  const d = 0.004;
-  const bbox = `${lng - d}%2C${lat - d}%2C${lng + d}%2C${lat + d}`;
+/* Buscador de direcciones de Google. Sólo consulta al tocar BUSCAR,
+   para no gastar llamadas de más. */
+function BuscadorDireccion({
+  etiqueta,
+  onElegir,
+}: {
+  etiqueta: string;
+  onElegir: (lugar: Lugar) => void;
+}) {
+  const [texto, setTexto] = useState("");
+  const [buscando, setBuscando] = useState(false);
+  const [lugares, setLugares] = useState<Lugar[]>([]);
+
+  async function buscar() {
+    if (texto.trim().length < 3) {
+      toast.error("Escribe al menos 3 letras");
+      return;
+    }
+    setBuscando(true);
+    try {
+      const r = await buscarLugares({ data: { texto } });
+      setLugares(r);
+      if (!r.length) toast.error("No encontramos ese lugar");
+    } catch {
+      toast.error("El buscador de direcciones no está disponible");
+    } finally {
+      setBuscando(false);
+    }
+  }
+
   return (
     <div className="space-y-2">
-      <p className="text-sm text-muted-foreground">Confirma que el punto sea correcto:</p>
-      <iframe
-        title="Mapa de tu negocio"
-        className="h-52 w-full rounded-2xl border border-border"
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`}
-      />
+      <Campo etiqueta={etiqueta}>
+        <div className="flex gap-2">
+          <Input
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            placeholder="Calle, colonia o nombre del lugar"
+            className="h-13 text-base"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => void buscar()}
+            className="h-13 px-4"
+          >
+            {buscando ? <Loader2 className="size-5 animate-spin" /> : "BUSCAR"}
+          </Button>
+        </div>
+      </Campo>
+      {lugares.length ? (
+        <ul className="space-y-2">
+          {lugares.map((l) => (
+            <li key={l.id}>
+              <button
+                type="button"
+                onClick={() => {
+                  onElegir(l);
+                  setLugares([]);
+                }}
+                className="w-full rounded-2xl border border-border bg-background p-3 text-left"
+              >
+                <p className="text-base font-semibold">{l.nombre}</p>
+                <p className="text-sm text-muted-foreground">{l.direccion}</p>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
@@ -525,7 +639,9 @@ function Paso3({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
                 type="button"
                 onClick={() => cambiar(d.dia, { abierto: !d.abierto })}
                 className={`rounded-full px-4 py-2 text-xs font-bold ${
-                  d.abierto ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
+                  d.abierto
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-muted-foreground"
                 }`}
               >
                 {d.abierto ? "ABIERTO" : "CERRADO"}
@@ -589,6 +705,8 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
   const [precioDesde, setPrecioDesde] = useState(p.precio_desde ? String(p.precio_desde) : "");
   const [duracion, setDuracion] = useState(p.duracion ?? "");
   const [puntoSalida, setPuntoSalida] = useState(p.punto_salida ?? "");
+  const [salidaLat, setSalidaLat] = useState<number | null>(p.salida_latitud);
+  const [salidaLng, setSalidaLng] = useState<number | null>(p.salida_longitud);
   const [precioNoche, setPrecioNoche] = useState(p.precio_noche ? String(p.precio_noche) : "");
   const [capacidad, setCapacidad] = useState(p.capacidad ? String(p.capacidad) : "");
   const [tipoServicio, setTipoServicio] = useState(p.tipo_servicio ?? "");
@@ -636,17 +754,25 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         precio_desde: Number(precioDesde) || null,
         duracion: duracion.trim() || null,
         punto_salida: puntoSalida.trim() || null,
+        salida_latitud: puntoSalida.trim() ? salidaLat : null,
+        salida_longitud: puntoSalida.trim() ? salidaLng : null,
       };
     if (t === "Hospedaje y rentas")
       return { precio_noche: Number(precioNoche) || null, capacidad: Number(capacidad) || null };
     if (t === "Movilidad y transporte")
-      return { precio_desde: Number(precioDesde) || null, tipo_servicio: tipoServicio.trim() || null };
+      return {
+        precio_desde: Number(precioDesde) || null,
+        tipo_servicio: tipoServicio.trim() || null,
+      };
     if (t === "Diversión y entretenimiento") return { precio_desde: Number(precioDesde) || null };
     return {};
   }
 
   function enviar() {
-    if (!p.foto_principal) { toast.error("Agrega tu foto principal"); return; }
+    if (!p.foto_principal) {
+      toast.error("Agrega tu foto principal");
+      return;
+    }
     void correr(
       () =>
         guardar({
@@ -714,7 +840,11 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         <div className="grid grid-cols-3 gap-2">
           {datos.fotos.map((f) => (
             <div key={f.id} className="relative">
-              <img src={f.url} alt="Foto de tu negocio" className="h-24 w-full rounded-xl object-cover" />
+              <img
+                src={f.url}
+                alt="Foto de tu negocio"
+                className="h-24 w-full rounded-xl object-cover"
+              />
               <button
                 type="button"
                 aria-label="Quitar foto"
@@ -822,6 +952,34 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
         }}
       />
 
+      {datos.negocio.tipo === "Turismo y experiencias" && puntoSalida.trim() ? (
+        <Tarjeta>
+          <p className="text-base font-semibold">Ubicación del punto de salida (opcional)</p>
+          <p className="text-sm text-muted-foreground">
+            Así las personas pueden llegar sin perderse.
+          </p>
+          <BuscadorDireccion
+            etiqueta="Busca el punto de salida"
+            onElegir={(l) => {
+              setSalidaLat(l.latitud);
+              setSalidaLng(l.longitud);
+              toast.success("Punto de salida guardado");
+            }}
+          />
+          {salidaLat && salidaLng ? (
+            <MapaPunto
+              lat={salidaLat}
+              lng={salidaLng}
+              altura="h-48"
+              onMover={(a, b) => {
+                setSalidaLat(a);
+                setSalidaLng(b);
+              }}
+            />
+          ) : null}
+        </Tarjeta>
+      ) : null}
+
       <Tarjeta>
         <p className="text-base font-semibold">
           ¿Quieres que las personas puedan contactarte por WhatsApp?
@@ -845,13 +1003,25 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
           </Campo>
         ) : null}
         <Campo etiqueta="Facebook (opcional)">
-          <Input value={facebook} onChange={(e) => setFacebook(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={facebook}
+            onChange={(e) => setFacebook(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
         <Campo etiqueta="Instagram (opcional)">
-          <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
         <Campo etiqueta="Sitio web (opcional)">
-          <Input value={sitio} onChange={(e) => setSitio(e.target.value)} className="h-13 text-base" />
+          <Input
+            value={sitio}
+            onChange={(e) => setSitio(e.target.value)}
+            className="h-13 text-base"
+          />
         </Campo>
       </Tarjeta>
 
@@ -881,22 +1051,47 @@ function CamposGiro({
     });
   if (tipo === "Turismo y experiencias")
     filas.push(
-      { clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true },
+      {
+        clave: "precioDesde",
+        setter: "setPrecioDesde",
+        etiqueta: "Precio desde (opcional)",
+        numerico: true,
+      },
       { clave: "duracion", setter: "setDuracion", etiqueta: "Duración aproximada (opcional)" },
       { clave: "puntoSalida", setter: "setPuntoSalida", etiqueta: "Punto de salida (opcional)" },
     );
   if (tipo === "Hospedaje y rentas")
     filas.push(
-      { clave: "precioNoche", setter: "setPrecioNoche", etiqueta: "Precio desde por noche (opcional)", numerico: true },
-      { clave: "capacidad", setter: "setCapacidad", etiqueta: "Capacidad máxima de personas (opcional)", numerico: true },
+      {
+        clave: "precioNoche",
+        setter: "setPrecioNoche",
+        etiqueta: "Precio desde por noche (opcional)",
+        numerico: true,
+      },
+      {
+        clave: "capacidad",
+        setter: "setCapacidad",
+        etiqueta: "Capacidad máxima de personas (opcional)",
+        numerico: true,
+      },
     );
   if (tipo === "Movilidad y transporte")
     filas.push(
-      { clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true },
+      {
+        clave: "precioDesde",
+        setter: "setPrecioDesde",
+        etiqueta: "Precio desde (opcional)",
+        numerico: true,
+      },
       { clave: "tipoServicio", setter: "setTipoServicio", etiqueta: "Tipo de servicio (opcional)" },
     );
   if (tipo === "Diversión y entretenimiento")
-    filas.push({ clave: "precioDesde", setter: "setPrecioDesde", etiqueta: "Precio desde (opcional)", numerico: true });
+    filas.push({
+      clave: "precioDesde",
+      setter: "setPrecioDesde",
+      etiqueta: "Precio desde (opcional)",
+      numerico: true,
+    });
 
   if (!filas.length) return null;
 
@@ -976,7 +1171,9 @@ function Resumen({ datos }: { datos: Datos }) {
                 : "Sin horario"}
           </Dato>
           <Dato titulo="Contacto">
-            {p.whatsapp_activo ? `WhatsApp ${p.whatsapp_numero ?? datos.negocio.celular}` : datos.negocio.celular}
+            {p.whatsapp_activo
+              ? `WhatsApp ${p.whatsapp_numero ?? datos.negocio.celular}`
+              : datos.negocio.celular}
           </Dato>
           <Dato titulo="Servicio a domicilio">
             {p.domicilio
@@ -997,7 +1194,12 @@ function Resumen({ datos }: { datos: Datos }) {
 
       <BotonPrincipal
         cargando={guardando}
-        onClick={() => void correr(() => publicar(), () => setListo(true))}
+        onClick={() =>
+          void correr(
+            () => publicar(),
+            () => setListo(true),
+          )
+        }
       >
         PUBLICAR MI NEGOCIO
       </BotonPrincipal>

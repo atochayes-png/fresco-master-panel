@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Bike, Camera, MapPin, Star } from "lucide-react";
 
 import type { TarjetaNegocio } from "@/lib/publico.functions";
-import { distanciaKm, estaAbierto, pesos } from "@/lib/publico";
+import { distanciaKm, estaAbierto, pesos, textoDistancia } from "@/lib/publico";
 import { Button } from "@/components/ui/button";
 
 export function TarjetaNegocioVista({
@@ -36,7 +36,7 @@ export function TarjetaNegocioVista({
         <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
           {km != null ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1">
-              <MapPin className="size-3.5" /> {km} km
+              <MapPin className="size-3.5" /> {textoDistancia(km)}
             </span>
           ) : null}
           {negocio.solo_reservacion ? (

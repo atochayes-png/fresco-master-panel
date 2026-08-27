@@ -152,6 +152,8 @@ export type Database = {
           punto_salida: string | null
           recibe_clientes: boolean | null
           recibe_pedidos: boolean
+          salida_latitud: number | null
+          salida_longitud: number | null
           sitio_web: string | null
           solo_reservacion: boolean
           tipo_servicio: string | null
@@ -187,6 +189,8 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          salida_latitud?: number | null
+          salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
           tipo_servicio?: string | null
@@ -222,6 +226,8 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          salida_latitud?: number | null
+          salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
           tipo_servicio?: string | null
