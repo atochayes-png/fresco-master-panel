@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { MarcoPublico } from "@/components/publico-marco";
+import { MapaPunto } from "@/components/mapa-punto";
 import { Identificacion } from "@/components/identificacion";
 import {
   alternarGuardado,
@@ -41,6 +42,7 @@ import {
   nombreGuardado,
   pesos,
   telefonoGuardado,
+  textoDistancia,
   ubicacionGuardada,
   type Carrito,
 } from "@/lib/publico";
@@ -147,6 +149,8 @@ function Ficha() {
 
   const km = distanciaKm(ubicacion, ficha.latitud, ficha.longitud);
   const abierto = estaAbierto(ficha.horarios);
+  const fueraDeRango =
+    ficha.domicilio && ficha.distancia_km != null && km != null && km > ficha.distancia_km;
   const whatsapp = ficha.whatsapp ?? ficha.telefono ?? "";
 
   if (paso === "pedido") {
