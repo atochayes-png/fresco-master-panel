@@ -48,6 +48,12 @@
   --color-ring-offset-background: var(--background);
   --color-exito: var(--exito);
   --color-aviso: var(--aviso);
+  --color-marca-rosa: var(--marca-rosa);
+  --color-marca-rosa-suave: var(--marca-rosa-suave);
+  --color-marca-rosa-tenue: var(--marca-rosa-tenue);
+  --color-marca-negro: var(--marca-negro);
+  --color-marca-crema: var(--marca-crema);
+
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --color-chart-1: var(--chart-1);
