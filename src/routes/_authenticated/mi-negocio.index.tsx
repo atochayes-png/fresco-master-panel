@@ -5,10 +5,12 @@ import {
   AlertTriangle,
   CalendarClock,
   Camera,
+  ClipboardList,
   Images,
   Loader2,
   MapPin,
   Phone,
+  ShoppingBag,
   Store,
   UtensilsCrossed,
 } from "lucide-react";
