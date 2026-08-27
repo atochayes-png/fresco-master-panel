@@ -248,17 +248,47 @@ function Ficha() {
           <Bloque titulo="Ubicación" icono={<MapPin className="size-5" />}>
             {ficha.direccion ? <p className="text-sm">{ficha.direccion}</p> : null}
             {ficha.colonia ? <p className="text-sm text-muted-foreground">{ficha.colonia}</p> : null}
-            {ficha.latitud && ficha.longitud ? (
-              <Button asChild variant="secondary" className="mt-3 h-12 w-full">
-                <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.latitud},${ficha.longitud}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  CÓMO LLEGAR
-                </a>
-              </Button>
+            {km != null ? (
+              <p className="mt-1 text-sm font-semibold">A {textoDistancia(km)} de ti</p>
             ) : null}
+            {ficha.latitud && ficha.longitud ? (
+              <>
+                <div className="mt-3">
+                  <ClientOnly fallback={<div className="h-56 w-full rounded-2xl bg-secondary" />}>
+                    <MapaPunto lat={ficha.latitud} lng={ficha.longitud} />
+                  </ClientOnly>
+                </div>
+                <Button asChild variant="secondary" className="mt-3 h-12 w-full">
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.latitud},${ficha.longitud}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    CÓMO LLEGAR
+                  </a>
+                </Button>
+              </>
+            ) : null}
+          </Bloque>
+        ) : null}
+
+        {ficha.punto_salida && ficha.salida_latitud && ficha.salida_longitud ? (
+          <Bloque titulo="Punto de salida" icono={<MapPin className="size-5" />}>
+            <p className="text-sm">{ficha.punto_salida}</p>
+            <div className="mt-3">
+              <ClientOnly fallback={<div className="h-48 w-full rounded-2xl bg-secondary" />}>
+                <MapaPunto lat={ficha.salida_latitud} lng={ficha.salida_longitud} altura="h-48" />
+              </ClientOnly>
+            </div>
+            <Button asChild variant="secondary" className="mt-3 h-12 w-full">
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${ficha.salida_latitud},${ficha.salida_longitud}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                CÓMO LLEGAR AL PUNTO DE SALIDA
+              </a>
+            </Button>
           </Bloque>
         ) : null}
 
@@ -269,6 +299,17 @@ function Ficha() {
                 ? `Costo de entrega: ${pesos(ficha.costo_entrega)}`
                 : "El costo de entrega se acuerda con el negocio."}
             </p>
+            {ficha.distancia_km ? (
+              <p className="mt-1 text-sm text-muted-foreground">
+                Entregan hasta {ficha.distancia_km} km a la redonda.
+              </p>
+            ) : null}
+            {fueraDeRango ? (
+              <p className="mt-2 rounded-2xl bg-secondary p-3 text-sm font-semibold">
+                Estás a {textoDistancia(km!)} y este negocio entrega hasta {ficha.distancia_km} km.
+                Puedes preguntar por WhatsApp si te alcanzan a llevar.
+              </p>
+            ) : null}
             {ficha.notas_entrega ? (
               <p className="mt-1 text-sm text-muted-foreground">{ficha.notas_entrega}</p>
             ) : null}
