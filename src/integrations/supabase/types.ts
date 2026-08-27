@@ -14,6 +14,198 @@ export type Database = {
   }
   public: {
     Tables: {
+      negocio_fotos: {
+        Row: {
+          actualizado_en: string
+          creado_en: string
+          id: string
+          negocio_id: string
+          orden: number
+          ruta: string
+          url: string
+        }
+        Insert: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          negocio_id: string
+          orden?: number
+          ruta: string
+          url: string
+        }
+        Update: {
+          actualizado_en?: string
+          creado_en?: string
+          id?: string
+          negocio_id?: string
+          orden?: number
+          ruta?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_fotos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_horarios: {
+        Row: {
+          abierto: boolean
+          actualizado_en: string
+          apertura: string | null
+          cierre: string | null
+          creado_en: string
+          dia: number
+          id: string
+          negocio_id: string
+        }
+        Insert: {
+          abierto?: boolean
+          actualizado_en?: string
+          apertura?: string | null
+          cierre?: string | null
+          creado_en?: string
+          dia: number
+          id?: string
+          negocio_id: string
+        }
+        Update: {
+          abierto?: boolean
+          actualizado_en?: string
+          apertura?: string | null
+          cierre?: string | null
+          creado_en?: string
+          dia?: number
+          id?: string
+          negocio_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_horarios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_perfil: {
+        Row: {
+          actualizado_en: string
+          capacidad: number | null
+          codigo_postal: string | null
+          colonia: string | null
+          costo_entrega: number | null
+          costo_entrega_tipo: string | null
+          creado_en: string
+          descripcion: string | null
+          direccion: string | null
+          distancia_km: number | null
+          domicilio: boolean | null
+          duracion: string | null
+          facebook: string | null
+          foto_principal: string | null
+          instagram: string | null
+          latitud: number | null
+          longitud: number | null
+          menu_tipo: string | null
+          menu_url: string | null
+          negocio_id: string
+          notas_entrega: string | null
+          paso_actual: number
+          precio_desde: number | null
+          precio_noche: number | null
+          precio_promedio: number | null
+          punto_salida: string | null
+          recibe_clientes: boolean | null
+          sitio_web: string | null
+          solo_reservacion: boolean
+          tipo_servicio: string | null
+          whatsapp_activo: boolean
+          whatsapp_numero: string | null
+        }
+        Insert: {
+          actualizado_en?: string
+          capacidad?: number | null
+          codigo_postal?: string | null
+          colonia?: string | null
+          costo_entrega?: number | null
+          costo_entrega_tipo?: string | null
+          creado_en?: string
+          descripcion?: string | null
+          direccion?: string | null
+          distancia_km?: number | null
+          domicilio?: boolean | null
+          duracion?: string | null
+          facebook?: string | null
+          foto_principal?: string | null
+          instagram?: string | null
+          latitud?: number | null
+          longitud?: number | null
+          menu_tipo?: string | null
+          menu_url?: string | null
+          negocio_id: string
+          notas_entrega?: string | null
+          paso_actual?: number
+          precio_desde?: number | null
+          precio_noche?: number | null
+          precio_promedio?: number | null
+          punto_salida?: string | null
+          recibe_clientes?: boolean | null
+          sitio_web?: string | null
+          solo_reservacion?: boolean
+          tipo_servicio?: string | null
+          whatsapp_activo?: boolean
+          whatsapp_numero?: string | null
+        }
+        Update: {
+          actualizado_en?: string
+          capacidad?: number | null
+          codigo_postal?: string | null
+          colonia?: string | null
+          costo_entrega?: number | null
+          costo_entrega_tipo?: string | null
+          creado_en?: string
+          descripcion?: string | null
+          direccion?: string | null
+          distancia_km?: number | null
+          domicilio?: boolean | null
+          duracion?: string | null
+          facebook?: string | null
+          foto_principal?: string | null
+          instagram?: string | null
+          latitud?: number | null
+          longitud?: number | null
+          menu_tipo?: string | null
+          menu_url?: string | null
+          negocio_id?: string
+          notas_entrega?: string | null
+          paso_actual?: number
+          precio_desde?: number | null
+          precio_noche?: number | null
+          precio_promedio?: number | null
+          punto_salida?: string | null
+          recibe_clientes?: boolean | null
+          sitio_web?: string | null
+          solo_reservacion?: boolean
+          tipo_servicio?: string | null
+          whatsapp_activo?: boolean
+          whatsapp_numero?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_perfil_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: true
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       negocios: {
         Row: {
           actualizado_en: string
