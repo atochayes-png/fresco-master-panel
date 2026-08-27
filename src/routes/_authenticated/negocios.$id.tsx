@@ -198,6 +198,14 @@ function Ficha() {
             />
           </div>
 
+          <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="text-base font-semibold">Pedidos generados</h2>
+            <Dato titulo="Este mes" valor={String(pedidos?.mes ?? 0)} />
+            <Dato titulo="Total histórico" valor={String(pedidos?.total ?? 0)} />
+          </div>
+
+
+
           <div className="grid gap-3">
             <Button
               variant="outline"
