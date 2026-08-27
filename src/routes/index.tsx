@@ -74,12 +74,6 @@ function Inicio() {
     });
   }
 
-  async function usarUbicacion() {
-    setBuscandoUbi(true);
-    const ubi = await pedirUbicacion();
-    setBuscandoUbi(false);
-    if (ubi) setUbicacion(ubi);
-  }
 
   return (
     <MarcoPublico>
