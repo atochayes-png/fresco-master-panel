@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AccesoRouteImport } from './routes/acceso'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
+import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
 import { Route as AuthenticatedMiNegocioCompletarRouteImport } from './routes/_authenticated/mi-negocio.completar'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
@@ -43,6 +44,11 @@ const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
   id: '/resumen',
   path: '/resumen',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const NegocioIdRoute = NegocioIdRouteImport.update({
+  id: '/negocio/$id',
+  path: '/negocio/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedMiNegocioIndexRoute =
   AuthenticatedMiNegocioIndexRouteImport.update({
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/resumen': typeof AuthenticatedResumenRoute
+  '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/resumen': typeof AuthenticatedResumenRoute
+  '/negocio/$id': typeof NegocioIdRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
+  '/negocio/$id': typeof NegocioIdRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/_authenticated/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/resumen'
+    | '/negocio/$id'
     | '/mi-negocio/completar'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/resumen'
+    | '/negocio/$id'
     | '/mi-negocio/completar'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/_authenticated/resumen'
+    | '/negocio/$id'
     | '/_authenticated/mi-negocio/completar'
     | '/_authenticated/negocios/$id'
     | '/_authenticated/negocios/nuevo'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AccesoRoute: typeof AccesoRoute
   BuscarRoute: typeof BuscarRoute
+  NegocioIdRoute: typeof NegocioIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -189,6 +202,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/resumen'
       preLoaderRoute: typeof AuthenticatedResumenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/negocio/$id': {
+      id: '/negocio/$id'
+      path: '/negocio/$id'
+      fullPath: '/negocio/$id'
+      preLoaderRoute: typeof NegocioIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/mi-negocio/': {
       id: '/_authenticated/mi-negocio/'
@@ -254,6 +274,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AccesoRoute: AccesoRoute,
   BuscarRoute: BuscarRoute,
+  NegocioIdRoute: NegocioIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
