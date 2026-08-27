@@ -100,7 +100,12 @@ export function distanciaKm(
   return Math.round(2 * R * Math.asin(Math.sqrt(s)) * 10) / 10;
 }
 
-export type HorarioPublico = { dia: number; abierto: boolean; apertura: string | null; cierre: string | null };
+export type HorarioPublico = {
+  dia: number;
+  abierto: boolean;
+  apertura: string | null;
+  cierre: string | null;
+};
 
 export function estaAbierto(horarios: HorarioPublico[]): boolean | null {
   if (!horarios.length) return null;
@@ -174,7 +179,11 @@ export function mensajePedido(datos: {
   ];
   if (datos.costo_entrega > 0) lineas.push(`Entrega: ${pesos(datos.costo_entrega)}`);
   lineas.push(`Total estimado: ${pesos(datos.total_estimado)}`);
-  lineas.push("", "Entrega:", datos.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger en el negocio");
+  lineas.push(
+    "",
+    "Entrega:",
+    datos.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger en el negocio",
+  );
   if (datos.tipo_entrega === "domicilio" && datos.direccion) {
     lineas.push("Dirección:", datos.direccion);
     if (datos.referencia) lineas.push(`Referencia: ${datos.referencia}`);

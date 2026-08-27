@@ -69,7 +69,9 @@ export function MapaPunto({
 
   if (error) {
     return (
-      <div className={`flex ${altura} w-full items-center justify-center rounded-2xl bg-secondary text-sm text-muted-foreground`}>
+      <div
+        className={`flex ${altura} w-full items-center justify-center rounded-2xl bg-secondary text-sm text-muted-foreground`}
+      >
         {error}
       </div>
     );

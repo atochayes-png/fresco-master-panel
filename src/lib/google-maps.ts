@@ -10,8 +10,10 @@ export function cargarMapas(): Promise<typeof google.maps> {
   if (window.google?.maps) return Promise.resolve(window.google.maps);
   if (promesa) return promesa;
 
-  const clave = import.meta.env['VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY'] as string | undefined;
-  const canal = import.meta.env['VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID'] as string | undefined;
+  const clave = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"] as
+    string | undefined;
+  const canal = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID"] as
+    string | undefined;
 
   promesa = new Promise<typeof google.maps>((resolve, reject) => {
     if (!clave) {
@@ -19,7 +21,8 @@ export function cargarMapas(): Promise<typeof google.maps> {
       return;
     }
     const nombreCallback = "__tfyMapaListo";
-    (window as unknown as Record<string, unknown>)[nombreCallback] = () => resolve(window.google.maps);
+    (window as unknown as Record<string, unknown>)[nombreCallback] = () =>
+      resolve(window.google.maps);
     const script = document.createElement("script");
     script.async = true;
     script.src =

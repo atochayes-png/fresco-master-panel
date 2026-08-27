@@ -24,7 +24,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Tomar el Fresco en Yucatán" },
       {
         property: "og:description",
-        content: "Negocios y experiencias de Yucatán cerca de ti. Contacta o haz tu pedido por WhatsApp.",
+        content:
+          "Negocios y experiencias de Yucatán cerca de ti. Contacta o haz tu pedido por WhatsApp.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -73,7 +74,6 @@ function Inicio() {
       },
     });
   }
-
 
   return (
     <MarcoPublico>

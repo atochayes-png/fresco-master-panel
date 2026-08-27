@@ -24,9 +24,9 @@ type Busqueda = { q: string; categoria: string; municipio: string };
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: (s: Record<string, unknown>): Busqueda => ({
-    q: typeof s['q'] === "string" ? s['q'] : "",
-    categoria: typeof s['categoria'] === "string" ? s['categoria'] : "",
-    municipio: typeof s['municipio'] === "string" ? s['municipio'] : "",
+    q: typeof s["q"] === "string" ? s["q"] : "",
+    categoria: typeof s["categoria"] === "string" ? s["categoria"] : "",
+    municipio: typeof s["municipio"] === "string" ? s["municipio"] : "",
   }),
   head: () => ({
     meta: [
@@ -180,7 +180,9 @@ function Buscar() {
                     onClick={() => setVista(v)}
                     disabled={v === "mapa" && conMapa.length === 0}
                     className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase disabled:opacity-40 ${
-                      vista === v ? "bg-primary text-primary-foreground" : "text-secondary-foreground"
+                      vista === v
+                        ? "bg-primary text-primary-foreground"
+                        : "text-secondary-foreground"
                     }`}
                   >
                     {v}
@@ -237,7 +239,11 @@ function TarjetaMapa({
   return (
     <div className="flex items-center gap-3 rounded-3xl border border-border bg-card p-3 shadow-sm">
       {negocio.foto ? (
-        <img src={negocio.foto} alt={`Foto de ${negocio.nombre}`} className="size-20 rounded-2xl object-cover" />
+        <img
+          src={negocio.foto}
+          alt={`Foto de ${negocio.nombre}`}
+          className="size-20 rounded-2xl object-cover"
+        />
       ) : (
         <div className="flex size-20 items-center justify-center rounded-2xl bg-secondary">
           <Camera className="size-6 text-muted-foreground" />

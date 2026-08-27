@@ -92,7 +92,9 @@ export function SelectorUbicacion({
           disabled={buscandoGps}
           className="h-12 text-sm font-semibold"
         >
-          {buscandoGps ? <Loader2 className="size-5 animate-spin" /> : (
+          {buscandoGps ? (
+            <Loader2 className="size-5 animate-spin" />
+          ) : (
             <>
               <MapPin className="size-4" /> USAR MI UBICACIÓN
             </>
@@ -122,8 +124,17 @@ export function SelectorUbicacion({
               placeholder="Centro de Mérida, Progreso, Altabrisa…"
               className="h-12 text-base"
             />
-            <Button type="submit" className="h-12 px-4" aria-label="Buscar zona" disabled={cargando}>
-              {cargando ? <Loader2 className="size-5 animate-spin" /> : <Search className="size-5" />}
+            <Button
+              type="submit"
+              className="h-12 px-4"
+              aria-label="Buscar zona"
+              disabled={cargando}
+            >
+              {cargando ? (
+                <Loader2 className="size-5 animate-spin" />
+              ) : (
+                <Search className="size-5" />
+              )}
             </Button>
           </form>
           {opciones?.length ? (

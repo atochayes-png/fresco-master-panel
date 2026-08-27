@@ -21,8 +21,8 @@ const PUERTA = "https://connector-gateway.lovable.dev/google_maps";
 const CENTRO = { latitude: 20.7099, longitude: -89.0943 };
 
 function credenciales() {
-  const lovable = process.env['LOVABLE_API_KEY'];
-  const maps = process.env['GOOGLE_MAPS_API_KEY'];
+  const lovable = process.env["LOVABLE_API_KEY"];
+  const maps = process.env["GOOGLE_MAPS_API_KEY"];
   if (!lovable || !maps) throw new Error("El buscador de direcciones no está disponible por ahora");
   return {
     Authorization: `Bearer ${lovable}`,
