@@ -19,6 +19,8 @@ import {
   publicarNegocio,
   registrarFoto,
 } from "@/lib/dueno.functions";
+import { buscarLugares, direccionDePunto, type Lugar } from "@/lib/mapas.functions";
+import { MapaPunto } from "@/components/mapa-punto";
 import { DIAS, comprimirImagen, etiquetaHora, subirArchivo, urlFirmada } from "@/lib/dueno";
 import { validarCelular } from "@/lib/dominio";
 
