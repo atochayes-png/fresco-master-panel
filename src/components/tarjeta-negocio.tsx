@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Bike, Camera, MapPin, Star } from "lucide-react";
 
 import type { TarjetaNegocio } from "@/lib/publico.functions";
-import { distanciaKm, estaAbierto, pesos } from "@/lib/publico";
+import { distanciaKm, estaAbierto, pesos, textoDistancia } from "@/lib/publico";
 import { Button } from "@/components/ui/button";
 
 export function TarjetaNegocioVista({
