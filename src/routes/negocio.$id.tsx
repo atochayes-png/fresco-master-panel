@@ -702,6 +702,34 @@ function Pedido({
           {tipo === "domicilio" ? (
             <>
               <div className="space-y-2">
+                <Label className="text-base">Confirma dónde quieres recibir tu pedido</Label>
+                <Button
+                  type="button"
+                  variant={punto ? "secondary" : "default"}
+                  onClick={usarMiUbicacion}
+                  className="h-13 w-full text-base font-semibold"
+                >
+                  <MapPin className="mr-2 size-5" />
+                  {punto ? "Ubicación confirmada" : "Usar mi ubicación"}
+                </Button>
+                {punto ? (
+                  <ClientOnly fallback={<div className="h-48 w-full rounded-2xl bg-secondary" />}>
+                    <MapaPunto
+                      lat={punto.lat}
+                      lng={punto.lng}
+                      altura="h-48"
+                      onMover={(lat, lng) => setPunto({ lat, lng })}
+                    />
+                  </ClientOnly>
+                ) : null}
+                {lejos ? (
+                  <p className="rounded-2xl bg-secondary p-3 text-sm font-semibold">
+                    Estás fuera del área de entrega ({ficha.distancia_km} km). Puedes continuar y
+                    preguntar al negocio por WhatsApp.
+                  </p>
+                ) : null}
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="dir" className="text-base">
                   Dirección de entrega
                 </Label>
