@@ -799,15 +799,15 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
       <Titulo texto="Fotos e información" />
 
       <Tarjeta>
-        <p className="text-base font-semibold">Foto principal</p>
+        <p className="text-base font-semibold">Logotipo de tu negocio</p>
         <p className="text-sm text-muted-foreground">
-          Esta será la primera foto que verán las personas.
+          Este logotipo identificará tu negocio dentro de Tomar el Fresco.
         </p>
         {principal ? (
           <img
             src={principal.url}
-            alt="Foto principal de tu negocio"
-            className="h-52 w-full rounded-2xl object-cover"
+            alt="Logotipo de tu negocio"
+            className="h-52 w-full rounded-2xl object-contain"
           />
         ) : null}
         <input
