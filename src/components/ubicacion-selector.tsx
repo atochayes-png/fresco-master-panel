@@ -85,28 +85,27 @@ export function SelectorUbicacion({
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="space-y-2">
         <Button
-          variant={ubicacion && !zona ? "secondary" : "default"}
           onClick={usarGps}
           disabled={buscandoGps}
-          className="h-12 text-sm font-semibold"
+          className="h-14 w-full text-base font-bold"
         >
           {buscandoGps ? (
             <Loader2 className="size-5 animate-spin" />
           ) : (
             <>
-              <MapPin className="size-4" /> USAR MI UBICACIÓN
+              <MapPin className="size-5" /> USAR MI UBICACIÓN
             </>
           )}
         </Button>
-        <Button
-          variant="secondary"
+        <button
+          type="button"
           onClick={() => setAbierto((v) => !v)}
-          className="h-12 text-sm font-semibold"
+          className="w-full rounded-full py-2 text-sm font-medium text-muted-foreground underline underline-offset-4"
         >
-          ELEGIR ZONA
-        </Button>
+          Elegir otra zona
+        </button>
       </div>
 
       {abierto ? (
