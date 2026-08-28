@@ -1147,7 +1147,11 @@ function Resumen({ datos }: { datos: Datos }) {
       <Titulo texto="Así se verá tu negocio" ayuda="Revisa que todo esté bien antes de publicar." />
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
         {principal ? (
-          <img src={principal.url} alt="Foto principal" className="h-48 w-full object-cover" />
+          <img
+            src={principal.url}
+            alt={`Logotipo de ${datos.negocio.nombre_negocio}`}
+            className="h-48 w-full bg-secondary object-contain"
+          />
         ) : null}
         <div className="space-y-3 p-5">
           <div>
