@@ -770,7 +770,7 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
   function enviar() {
     if (!p.foto_principal) {
-      toast.error("Agrega tu foto principal");
+      toast.error("Sube el logotipo de tu negocio");
       return;
     }
     void correr(
