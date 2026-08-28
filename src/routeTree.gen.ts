@@ -16,6 +16,7 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
+import { Route as NegocioLoginRouteImport } from './routes/negocio.login'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
 import { Route as AuthenticatedMiNegocioCompletarRouteImport } from './routes/_authenticated/mi-negocio.completar'
 import { Route as AuthenticatedMiNegocioMediosRouteImport } from './routes/_authenticated/mi-negocio.medios'
@@ -57,6 +58,11 @@ const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
 const NegocioIdRoute = NegocioIdRouteImport.update({
   id: '/negocio/$id',
   path: '/negocio/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NegocioLoginRoute = NegocioLoginRouteImport.update({
+  id: '/negocio/login',
+  path: '/negocio/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedMiNegocioIndexRoute =
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
+  '/negocio/login': typeof NegocioLoginRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/mi-negocio/medios': typeof AuthenticatedMiNegocioMediosRoute
   '/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
+  '/negocio/login': typeof NegocioLoginRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/mi-negocio/medios': typeof AuthenticatedMiNegocioMediosRoute
   '/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/guardados': typeof GuardadosRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/negocio/$id': typeof NegocioIdRoute
+  '/negocio/login': typeof NegocioLoginRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
   '/_authenticated/mi-negocio/medios': typeof AuthenticatedMiNegocioMediosRoute
   '/_authenticated/mi-negocio/pedidos': typeof AuthenticatedMiNegocioPedidosRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/guardados'
     | '/resumen'
     | '/negocio/$id'
+    | '/negocio/login'
     | '/mi-negocio/completar'
     | '/mi-negocio/medios'
     | '/mi-negocio/pedidos'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/guardados'
     | '/resumen'
     | '/negocio/$id'
+    | '/negocio/login'
     | '/mi-negocio/completar'
     | '/mi-negocio/medios'
     | '/mi-negocio/pedidos'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/guardados'
     | '/_authenticated/resumen'
     | '/negocio/$id'
+    | '/negocio/login'
     | '/_authenticated/mi-negocio/completar'
     | '/_authenticated/mi-negocio/medios'
     | '/_authenticated/mi-negocio/pedidos'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   BuscarRoute: typeof BuscarRoute
   GuardadosRoute: typeof GuardadosRoute
   NegocioIdRoute: typeof NegocioIdRoute
+  NegocioLoginRoute: typeof NegocioLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/negocio/$id'
       fullPath: '/negocio/$id'
       preLoaderRoute: typeof NegocioIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/negocio/login': {
+      id: '/negocio/login'
+      path: '/negocio/login'
+      fullPath: '/negocio/login'
+      preLoaderRoute: typeof NegocioLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/mi-negocio/': {
@@ -362,6 +382,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuscarRoute: BuscarRoute,
   GuardadosRoute: GuardadosRoute,
   NegocioIdRoute: NegocioIdRoute,
+  NegocioLoginRoute: NegocioLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
