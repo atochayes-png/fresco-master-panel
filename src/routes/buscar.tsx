@@ -114,9 +114,10 @@ function Buscar() {
           </Button>
         </form>
 
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
           <Chip
             activo={!busqueda.categoria}
+            emoji="✨"
             texto="Todo"
             onClick={() => actualizar({ categoria: "" })}
           />
@@ -124,7 +125,8 @@ function Buscar() {
             <Chip
               key={c.clave}
               activo={busqueda.categoria === c.tipo}
-              texto={`${c.emoji} ${c.clave}`}
+              emoji={c.emoji}
+              texto={c.clave}
               onClick={() => actualizar({ categoria: c.tipo })}
             />
           ))}
