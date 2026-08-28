@@ -114,9 +114,10 @@ function Buscar() {
           </Button>
         </form>
 
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
           <Chip
             activo={!busqueda.categoria}
+            emoji="✨"
             texto="Todo"
             onClick={() => actualizar({ categoria: "" })}
           />
@@ -124,7 +125,8 @@ function Buscar() {
             <Chip
               key={c.clave}
               activo={busqueda.categoria === c.tipo}
-              texto={`${c.emoji} ${c.clave}`}
+              emoji={c.emoji}
+              texto={c.clave}
               onClick={() => actualizar({ categoria: c.tipo })}
             />
           ))}
@@ -274,15 +276,26 @@ function TarjetaMapa({
   );
 }
 
-function Chip({ activo, texto, onClick }: { activo: boolean; texto: string; onClick: () => void }) {
+function Chip({
+  activo,
+  emoji,
+  texto,
+  onClick,
+}: {
+  activo: boolean;
+  emoji: string;
+  texto: string;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${
+      className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-bold leading-tight ${
         activo ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
       }`}
     >
-      {texto}
+      <span className="text-lg">{emoji}</span>
+      <span className="w-full text-center">{texto}</span>
     </button>
   );
 }

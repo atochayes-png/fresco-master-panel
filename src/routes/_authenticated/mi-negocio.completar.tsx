@@ -770,7 +770,7 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
 
   function enviar() {
     if (!p.foto_principal) {
-      toast.error("Agrega tu foto principal");
+      toast.error("Sube el logotipo de tu negocio");
       return;
     }
     void correr(
@@ -799,22 +799,21 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
       <Titulo texto="Fotos e información" />
 
       <Tarjeta>
-        <p className="text-base font-semibold">Foto principal</p>
+        <p className="text-base font-semibold">Logotipo de tu negocio</p>
         <p className="text-sm text-muted-foreground">
-          Esta será la primera foto que verán las personas.
+          Este logotipo identificará tu negocio dentro de Tomar el Fresco.
         </p>
         {principal ? (
           <img
             src={principal.url}
-            alt="Foto principal de tu negocio"
-            className="h-52 w-full rounded-2xl object-cover"
+            alt="Logotipo de tu negocio"
+            className="h-52 w-full rounded-2xl object-contain"
           />
         ) : null}
         <input
           ref={refPrincipal}
           type="file"
           accept="image/*"
-          capture="environment"
           hidden
           onChange={(e) => {
             const f = e.target.files?.[0];
@@ -830,7 +829,7 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
           className="h-13 w-full text-base"
         >
           <Camera className="mr-2 size-5" />
-          {principal ? "Cambiar foto principal" : "Agregar foto principal"}
+          {principal ? "Cambiar logotipo" : "Subir logotipo"}
         </Button>
       </Tarjeta>
 
@@ -1148,7 +1147,11 @@ function Resumen({ datos }: { datos: Datos }) {
       <Titulo texto="Así se verá tu negocio" ayuda="Revisa que todo esté bien antes de publicar." />
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
         {principal ? (
-          <img src={principal.url} alt="Foto principal" className="h-48 w-full object-cover" />
+          <img
+            src={principal.url}
+            alt={`Logotipo de ${datos.negocio.nombre_negocio}`}
+            className="h-48 w-full bg-secondary object-contain"
+          />
         ) : null}
         <div className="space-y-3 p-5">
           <div>

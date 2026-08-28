@@ -23,12 +23,6 @@ export function MarcoPublico({ children }: { children: React.ReactNode }) {
               <span className="block text-xs font-medium text-muted-foreground">en Yucatán</span>
             </span>
           </Link>
-          <Link
-            to="/acceso"
-            className="rounded-full px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-secondary"
-          >
-            Soy un negocio
-          </Link>
         </div>
       </header>
 
