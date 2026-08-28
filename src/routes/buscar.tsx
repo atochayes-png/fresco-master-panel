@@ -276,15 +276,26 @@ function TarjetaMapa({
   );
 }
 
-function Chip({ activo, texto, onClick }: { activo: boolean; texto: string; onClick: () => void }) {
+function Chip({
+  activo,
+  emoji,
+  texto,
+  onClick,
+}: {
+  activo: boolean;
+  emoji: string;
+  texto: string;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${
+      className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-bold leading-tight ${
         activo ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
       }`}
     >
-      {texto}
+      <span className="text-lg">{emoji}</span>
+      <span className="w-full text-center">{texto}</span>
     </button>
   );
 }
