@@ -829,7 +829,7 @@ function Paso4({ datos, alContinuar }: { datos: Datos; alContinuar: () => void }
           className="h-13 w-full text-base"
         >
           <Camera className="mr-2 size-5" />
-          {principal ? "Cambiar foto principal" : "Agregar foto principal"}
+          {principal ? "Cambiar logotipo" : "Subir logotipo"}
         </Button>
       </Tarjeta>
 
