@@ -10,6 +10,7 @@ import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
 import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
+import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
 
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
@@ -135,7 +136,18 @@ function Inicio() {
                 <span className="text-2xl">{c.emoji}</span>
                 {c.clave}
               </Link>
+            ) : c.tipo === TIPO_HOSPEDAJE ? (
+              <Link
+                key={c.clave}
+                to="/hospedaje"
+                search={{ q: "", municipio: "", entrada: "", salida: "", huespedes: 2 }}
+                className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+              >
+                <span className="text-2xl">{c.emoji}</span>
+                {c.clave}
+              </Link>
             ) : (
+
 
             <button
               key={c.clave}
