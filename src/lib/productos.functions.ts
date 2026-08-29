@@ -22,6 +22,7 @@ export type PedidoRow = {
   estado: string;
   cliente_nombre: string;
   tipo_entrega: string;
+  forma_pago: string | null;
 };
 
 async function miNegocioId(supabase: { from: (t: string) => any }, userId: string) {
@@ -115,7 +116,9 @@ export const misPedidos = createServerFn({ method: "POST" })
     const negocioId = await miNegocioId(context.supabase, context.userId);
     const { data } = await context.supabase
       .from("pedidos")
-      .select("id, folio, creado_en, total_estimado, estado, cliente_nombre, tipo_entrega")
+      .select(
+        "id, folio, creado_en, total_estimado, estado, cliente_nombre, tipo_entrega, forma_pago",
+      )
       .eq("negocio_id", negocioId)
       .order("creado_en", { ascending: false })
       .limit(100);
