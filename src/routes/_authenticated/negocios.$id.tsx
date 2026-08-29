@@ -10,6 +10,8 @@ import { reservacionesDeNegocio } from "@/lib/conocer.functions";
 import { esConocer } from "@/lib/conocer";
 import { esHospedaje } from "@/lib/hospedaje";
 import { solicitudesHospedajeDeNegocio } from "@/lib/hospedaje.functions";
+import { esMoverme } from "@/lib/moverme";
+import { solicitudesRentaDeNegocio } from "@/lib/moverme.functions";
 import { mediosDeNegocio } from "@/lib/medios.functions";
 import { posterVideo, urlImagen } from "@/lib/cloudinary";
 import {
@@ -58,6 +60,11 @@ function Ficha() {
     queryFn: () => cargarReservas({ data: { negocio_id: id } }),
   });
 
+  const cargarRenta = useServerFn(solicitudesRentaDeNegocio);
+  const { data: renta } = useQuery({
+    queryKey: ["solicitudes-renta-negocio", id],
+    queryFn: () => cargarRenta({ data: { negocio_id: id } }),
+  });
   const cargarHospedaje = useServerFn(solicitudesHospedajeDeNegocio);
   const { data: hospedaje } = useQuery({
     queryKey: ["solicitudes-hospedaje-negocio", id],
@@ -228,6 +235,14 @@ function Ficha() {
               <h2 className="text-base font-semibold">Solicitudes de reservación</h2>
               <Dato titulo="Este mes" valor={String(reservas?.mes ?? 0)} />
               <Dato titulo="Total histórico" valor={String(reservas?.total ?? 0)} />
+            </div>
+          ) : null}
+
+          {esMoverme(negocio.tipo) ? (
+            <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <h2 className="text-base font-semibold">Solicitudes de renta</h2>
+              <Dato titulo="Este mes" valor={String(renta?.mes ?? 0)} />
+              <Dato titulo="Total histórico" valor={String(renta?.total ?? 0)} />
             </div>
           ) : null}
 
