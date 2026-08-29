@@ -9,6 +9,8 @@ import { SelectorUbicacion } from "@/components/ubicacion-selector";
 import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
 import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
+import { TIPO_CONOCER } from "@/lib/conocer";
+
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,7 +125,18 @@ function Inicio() {
                 <span className="text-2xl">{c.emoji}</span>
                 {c.clave}
               </Link>
+            ) : c.tipo === TIPO_CONOCER ? (
+              <Link
+                key={c.clave}
+                to="/conocer"
+                search={{ q: "", categoria: "", municipio: "" }}
+                className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+              >
+                <span className="text-2xl">{c.emoji}</span>
+                {c.clave}
+              </Link>
             ) : (
+
             <button
               key={c.clave}
               onClick={() => irABuscar({ categoria: c.tipo, texto: "" })}

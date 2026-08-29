@@ -6,6 +6,7 @@ import {
   CalendarClock,
   Camera,
   ClipboardList,
+  Compass,
   Images,
   Loader2,
   MapPin,
@@ -19,6 +20,7 @@ import {
 
 import { miNegocio } from "@/lib/dueno.functions";
 import { esComer } from "@/lib/comer";
+import { esConocer } from "@/lib/conocer";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -69,6 +71,7 @@ function MiNegocio() {
   const dias = diasRestantes(negocio.fecha_fin);
   const principal = fotos.find((f) => f.ruta === perfil.foto_principal) ?? fotos[0];
   const comer = esComer(negocio.tipo);
+  const conocer = esConocer(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
@@ -154,25 +157,51 @@ function MiNegocio() {
             </Link>
           </>
         ) : null}
-        <Link
-          to="/mi-negocio/productos"
-          className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
-        >
-          <span className="text-primary">
-            <ShoppingBag className="size-6" />
-          </span>
-          {comer ? "MI MENÚ" : "MIS PRODUCTOS"}
-        </Link>
-        <Link
-          to="/mi-negocio/pedidos"
-          className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
-        >
-          <span className="text-primary">
-            <ClipboardList className="size-6" />
-          </span>
-          PEDIDOS
-        </Link>
+        {conocer ? (
+          <>
+            <Link
+              to="/mi-negocio/experiencias"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Compass className="size-6" />
+              </span>
+              MIS EXPERIENCIAS
+            </Link>
+            <Link
+              to="/mi-negocio/reservaciones"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              SOLICITUDES DESDE TFY
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/mi-negocio/productos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ShoppingBag className="size-6" />
+              </span>
+              {comer ? "MI MENÚ" : "MIS PRODUCTOS"}
+            </Link>
+            <Link
+              to="/mi-negocio/pedidos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              PEDIDOS
+            </Link>
+          </>
+        )}
       </div>
+
 
       <TarjetaPlan negocio={negocio} dias={dias} />
     </div>
