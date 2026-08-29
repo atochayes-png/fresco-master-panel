@@ -17,6 +17,7 @@ import { Route as ComerRouteImport } from './routes/comer'
 import { Route as ConocerRouteImport } from './routes/conocer'
 import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as HospedajeRouteImport } from './routes/hospedaje'
+import { Route as MovermeRouteImport } from './routes/moverme'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as AlojamientoIdRouteImport } from './routes/alojamiento.$id'
 import { Route as ExperienciaIdRouteImport } from './routes/experiencia.$id'
@@ -81,6 +82,11 @@ const GuardadosRoute = GuardadosRouteImport.update({
 const HospedajeRoute = HospedajeRouteImport.update({
   id: '/hospedaje',
   path: '/hospedaje',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MovermeRoute = MovermeRouteImport.update({
+  id: '/moverme',
+  path: '/moverme',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
@@ -241,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/hospedaje': typeof HospedajeRoute
+  '/moverme': typeof MovermeRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/alojamiento/$id': typeof AlojamientoIdRoute
   '/experiencia/$id': typeof ExperienciaIdRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/hospedaje': typeof HospedajeRoute
+  '/moverme': typeof MovermeRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/alojamiento/$id': typeof AlojamientoIdRoute
   '/experiencia/$id': typeof ExperienciaIdRoute
@@ -313,6 +321,7 @@ export interface FileRoutesById {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/hospedaje': typeof HospedajeRoute
+  '/moverme': typeof MovermeRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/alojamiento/$id': typeof AlojamientoIdRoute
   '/experiencia/$id': typeof ExperienciaIdRoute
@@ -350,6 +359,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/hospedaje'
+    | '/moverme'
     | '/resumen'
     | '/alojamiento/$id'
     | '/experiencia/$id'
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/hospedaje'
+    | '/moverme'
     | '/resumen'
     | '/alojamiento/$id'
     | '/experiencia/$id'
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/hospedaje'
+    | '/moverme'
     | '/_authenticated/resumen'
     | '/alojamiento/$id'
     | '/experiencia/$id'
@@ -458,6 +470,7 @@ export interface RootRouteChildren {
   ConocerRoute: typeof ConocerRoute
   GuardadosRoute: typeof GuardadosRoute
   HospedajeRoute: typeof HospedajeRoute
+  MovermeRoute: typeof MovermeRoute
   AlojamientoIdRoute: typeof AlojamientoIdRoute
   ExperienciaIdRoute: typeof ExperienciaIdRoute
   MasterLoginRoute: typeof MasterLoginRoute
@@ -521,6 +534,13 @@ declare module '@tanstack/react-router' {
       path: '/hospedaje'
       fullPath: '/hospedaje'
       preLoaderRoute: typeof HospedajeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/moverme': {
+      id: '/moverme'
+      path: '/moverme'
+      fullPath: '/moverme'
+      preLoaderRoute: typeof MovermeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/resumen': {
@@ -776,6 +796,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConocerRoute: ConocerRoute,
   GuardadosRoute: GuardadosRoute,
   HospedajeRoute: HospedajeRoute,
+  MovermeRoute: MovermeRoute,
   AlojamientoIdRoute: AlojamientoIdRoute,
   ExperienciaIdRoute: ExperienciaIdRoute,
   MasterLoginRoute: MasterLoginRoute,
