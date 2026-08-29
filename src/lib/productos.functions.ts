@@ -55,6 +55,7 @@ export const guardarProducto = createServerFn({ method: "POST" })
       descripcion: string;
       precio: number;
       disponible: boolean;
+      categoria?: string | null;
       foto_ruta?: string | null;
       foto_url?: string | null;
     }) => d,
@@ -69,6 +70,7 @@ export const guardarProducto = createServerFn({ method: "POST" })
       descripcion: data.descripcion?.trim().slice(0, 160) || null,
       precio,
       disponible: data.disponible !== false,
+      categoria: (data.categoria ?? "").trim().slice(0, 40) || null,
       ...(data.foto_ruta ? { foto_ruta: data.foto_ruta, foto_url: data.foto_url ?? null } : {}),
     };
 
