@@ -221,6 +221,45 @@ function MiNegocio() {
               POLÍTICAS
             </Link>
           </>
+        ) : moverme ? (
+          <>
+            <Link
+              to="/mi-negocio/vehiculos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Car className="size-6" />
+              </span>
+              MIS VEHÍCULOS
+            </Link>
+            <Link
+              to="/mi-negocio/disponibilidad-renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <CalendarDays className="size-6" />
+              </span>
+              DISPONIBILIDAD
+            </Link>
+            <Link
+              to="/mi-negocio/solicitudes-renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              SOLICITUDES DESDE TFY
+            </Link>
+            <Link
+              to="/mi-negocio/renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Tag className="size-6" />
+              </span>
+              REQUISITOS Y ENTREGA
+            </Link>
+          </>
         ) : (
 
           <>
