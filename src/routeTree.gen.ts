@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AccesoRouteImport } from './routes/acceso'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as ComerRouteImport } from './routes/comer'
+import { Route as ConocerRouteImport } from './routes/conocer'
 import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
 import { Route as MasterLoginRouteImport } from './routes/master.login'
@@ -54,6 +55,11 @@ const BuscarRoute = BuscarRouteImport.update({
 const ComerRoute = ComerRouteImport.update({
   id: '/comer',
   path: '/comer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConocerRoute = ConocerRouteImport.update({
+  id: '/conocer',
+  path: '/conocer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuardadosRoute = GuardadosRouteImport.update({
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/comer': typeof ComerRoute
+  '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/master/login': typeof MasterLoginRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/comer': typeof ComerRoute
+  '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
   '/master/login': typeof MasterLoginRoute
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/acceso': typeof AccesoRoute
   '/buscar': typeof BuscarRoute
   '/comer': typeof ComerRoute
+  '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
   '/master/login': typeof MasterLoginRoute
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/comer'
+    | '/conocer'
     | '/guardados'
     | '/resumen'
     | '/master/login'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/comer'
+    | '/conocer'
     | '/guardados'
     | '/resumen'
     | '/master/login'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/buscar'
     | '/comer'
+    | '/conocer'
     | '/guardados'
     | '/_authenticated/resumen'
     | '/master/login'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   AccesoRoute: typeof AccesoRoute
   BuscarRoute: typeof BuscarRoute
   ComerRoute: typeof ComerRoute
+  ConocerRoute: typeof ConocerRoute
   GuardadosRoute: typeof GuardadosRoute
   MasterLoginRoute: typeof MasterLoginRoute
   NegocioIdRoute: typeof NegocioIdRoute
@@ -344,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/comer'
       fullPath: '/comer'
       preLoaderRoute: typeof ComerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conocer': {
+      id: '/conocer'
+      path: '/conocer'
+      fullPath: '/conocer'
+      preLoaderRoute: typeof ConocerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guardados': {
@@ -512,6 +532,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccesoRoute: AccesoRoute,
   BuscarRoute: BuscarRoute,
   ComerRoute: ComerRoute,
+  ConocerRoute: ConocerRoute,
   GuardadosRoute: GuardadosRoute,
   MasterLoginRoute: MasterLoginRoute,
   NegocioIdRoute: NegocioIdRoute,
