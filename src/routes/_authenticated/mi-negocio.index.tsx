@@ -178,7 +178,47 @@ function MiNegocio() {
               SOLICITUDES DESDE TFY
             </Link>
           </>
+        ) : hospedaje ? (
+          <>
+            <Link
+              to="/mi-negocio/alojamientos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <BedDouble className="size-6" />
+              </span>
+              MIS ALOJAMIENTOS
+            </Link>
+            <Link
+              to="/mi-negocio/disponibilidad"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <CalendarDays className="size-6" />
+              </span>
+              DISPONIBILIDAD
+            </Link>
+            <Link
+              to="/mi-negocio/solicitudes-hospedaje"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              SOLICITUDES DESDE TFY
+            </Link>
+            <Link
+              to="/mi-negocio/hospedaje"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Tag className="size-6" />
+              </span>
+              POLÍTICAS
+            </Link>
+          </>
         ) : (
+
           <>
             <Link
               to="/mi-negocio/productos"
