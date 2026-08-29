@@ -11,6 +11,7 @@ import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
 import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
+import { TIPO_MOVERME } from "@/lib/moverme";
 
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
@@ -141,6 +142,25 @@ function Inicio() {
                 key={c.clave}
                 to="/hospedaje"
                 search={{ q: "", municipio: "", entrada: "", salida: "", huespedes: 2 }}
+                className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+              >
+                <span className="text-2xl">{c.emoji}</span>
+                {c.clave}
+              </Link>
+            ) : c.tipo === TIPO_MOVERME ? (
+              <Link
+                key={c.clave}
+                to="/moverme"
+                search={{
+                  q: "",
+                  municipio: "",
+                  inicio: "",
+                  hora_inicio: "10:00",
+                  fin: "",
+                  hora_fin: "10:00",
+                  pasajeros: 0,
+                  entrega: "",
+                }}
                 className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
               >
                 <span className="text-2xl">{c.emoji}</span>

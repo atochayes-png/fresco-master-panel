@@ -19,6 +19,7 @@ import {
 import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
 import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
+import { TIPO_MOVERME } from "@/lib/moverme";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -152,7 +153,21 @@ function Buscar() {
                             huespedes: 2,
                           },
                         })
-                      : actualizar({ categoria: c.tipo })
+                      : c.tipo === TIPO_MOVERME
+                        ? void navigate({
+                            to: "/moverme",
+                            search: {
+                              q: busqueda.q,
+                              municipio: busqueda.municipio,
+                              inicio: "",
+                              hora_inicio: "10:00",
+                              fin: "",
+                              hora_fin: "10:00",
+                              pasajeros: 0,
+                              entrega: "",
+                            },
+                          })
+                        : actualizar({ categoria: c.tipo })
               }
 
             />

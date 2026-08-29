@@ -7,6 +7,7 @@ import {
   CalendarClock,
   CalendarDays,
   Camera,
+  Car,
   ClipboardList,
   Compass,
   Images,
@@ -24,6 +25,7 @@ import { miNegocio } from "@/lib/dueno.functions";
 import { esComer } from "@/lib/comer";
 import { esConocer } from "@/lib/conocer";
 import { esHospedaje } from "@/lib/hospedaje";
+import { esMoverme } from "@/lib/moverme";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -76,6 +78,7 @@ function MiNegocio() {
   const comer = esComer(negocio.tipo);
   const conocer = esConocer(negocio.tipo);
   const hospedaje = esHospedaje(negocio.tipo);
+  const moverme = esMoverme(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
@@ -219,6 +222,45 @@ function MiNegocio() {
                 <Tag className="size-6" />
               </span>
               POLÍTICAS
+            </Link>
+          </>
+        ) : moverme ? (
+          <>
+            <Link
+              to="/mi-negocio/vehiculos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Car className="size-6" />
+              </span>
+              MIS VEHÍCULOS
+            </Link>
+            <Link
+              to="/mi-negocio/disponibilidad-renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <CalendarDays className="size-6" />
+              </span>
+              DISPONIBILIDAD
+            </Link>
+            <Link
+              to="/mi-negocio/solicitudes-renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              SOLICITUDES DESDE TFY
+            </Link>
+            <Link
+              to="/mi-negocio/renta"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Tag className="size-6" />
+              </span>
+              REQUISITOS Y ENTREGA
             </Link>
           </>
         ) : (
