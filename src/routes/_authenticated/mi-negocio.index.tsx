@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   AlertTriangle,
+  BedDouble,
   CalendarClock,
+  CalendarDays,
   Camera,
   ClipboardList,
   Compass,
@@ -21,6 +23,7 @@ import {
 import { miNegocio } from "@/lib/dueno.functions";
 import { esComer } from "@/lib/comer";
 import { esConocer } from "@/lib/conocer";
+import { esHospedaje } from "@/lib/hospedaje";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -72,6 +75,7 @@ function MiNegocio() {
   const principal = fotos.find((f) => f.ruta === perfil.foto_principal) ?? fotos[0];
   const comer = esComer(negocio.tipo);
   const conocer = esConocer(negocio.tipo);
+  const hospedaje = esHospedaje(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
