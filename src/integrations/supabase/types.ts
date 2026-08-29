@@ -560,6 +560,17 @@ export type Database = {
           punto_salida: string | null
           recibe_clientes: boolean | null
           recibe_pedidos: boolean
+          renta_deposito: boolean
+          renta_edad_minima: number | null
+          renta_entrega_costo: number | null
+          renta_entrega_costo_tipo: string
+          renta_entrega_opciones: string[]
+          renta_identificacion: boolean
+          renta_licencia: boolean
+          renta_notas: string | null
+          renta_requisitos_notas: string | null
+          renta_tarjeta: string
+          renta_usa_calendario: boolean
           requiere_anticipo: boolean
           salida_latitud: number | null
           salida_longitud: number | null
@@ -609,6 +620,17 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          renta_deposito?: boolean
+          renta_edad_minima?: number | null
+          renta_entrega_costo?: number | null
+          renta_entrega_costo_tipo?: string
+          renta_entrega_opciones?: string[]
+          renta_identificacion?: boolean
+          renta_licencia?: boolean
+          renta_notas?: string | null
+          renta_requisitos_notas?: string | null
+          renta_tarjeta?: string
+          renta_usa_calendario?: boolean
           requiere_anticipo?: boolean
           salida_latitud?: number | null
           salida_longitud?: number | null
@@ -658,6 +680,17 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          renta_deposito?: boolean
+          renta_edad_minima?: number | null
+          renta_entrega_costo?: number | null
+          renta_entrega_costo_tipo?: string
+          renta_entrega_opciones?: string[]
+          renta_identificacion?: boolean
+          renta_licencia?: boolean
+          renta_notas?: string | null
+          renta_requisitos_notas?: string | null
+          renta_tarjeta?: string
+          renta_usa_calendario?: boolean
           requiere_anticipo?: boolean
           salida_latitud?: number | null
           salida_longitud?: number | null
@@ -781,6 +814,71 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "negocio_promociones_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_vehiculos: {
+        Row: {
+          activo: boolean
+          actualizado_en: string
+          aire_acondicionado: boolean
+          creado_en: string
+          descripcion: string | null
+          equipaje: string | null
+          id: string
+          modelo_referencia: string | null
+          negocio_id: string
+          nombre: string
+          orden: number
+          pasajeros: number
+          precio: number | null
+          precio_tipo: string
+          transmision: string
+          unidades: number
+        }
+        Insert: {
+          activo?: boolean
+          actualizado_en?: string
+          aire_acondicionado?: boolean
+          creado_en?: string
+          descripcion?: string | null
+          equipaje?: string | null
+          id?: string
+          modelo_referencia?: string | null
+          negocio_id: string
+          nombre: string
+          orden?: number
+          pasajeros?: number
+          precio?: number | null
+          precio_tipo?: string
+          transmision?: string
+          unidades?: number
+        }
+        Update: {
+          activo?: boolean
+          actualizado_en?: string
+          aire_acondicionado?: boolean
+          creado_en?: string
+          descripcion?: string | null
+          equipaje?: string | null
+          id?: string
+          modelo_referencia?: string | null
+          negocio_id?: string
+          nombre?: string
+          orden?: number
+          pasajeros?: number
+          precio?: number | null
+          precio_tipo?: string
+          transmision?: string
+          unidades?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_vehiculos_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
@@ -1116,6 +1214,96 @@ export type Database = {
           },
         ]
       }
+      solicitudes_renta: {
+        Row: {
+          actualizado_en: string
+          cliente_nombre: string
+          cliente_telefono: string
+          costo_entrega: number | null
+          creado_en: string
+          dias: number
+          estado: string
+          fecha_fin: string
+          fecha_inicio: string
+          folio: string
+          hora_fin: string
+          hora_inicio: string
+          id: string
+          lugar_entrega: string
+          modo_disponibilidad: string
+          negocio_id: string
+          origen: string
+          pasajeros: number | null
+          precio_referencia: number | null
+          total_estimado: number | null
+          vehiculo_id: string | null
+          vehiculo_nombre: string
+        }
+        Insert: {
+          actualizado_en?: string
+          cliente_nombre: string
+          cliente_telefono: string
+          costo_entrega?: number | null
+          creado_en?: string
+          dias?: number
+          estado?: string
+          fecha_fin: string
+          fecha_inicio: string
+          folio?: string
+          hora_fin?: string
+          hora_inicio?: string
+          id?: string
+          lugar_entrega?: string
+          modo_disponibilidad?: string
+          negocio_id: string
+          origen?: string
+          pasajeros?: number | null
+          precio_referencia?: number | null
+          total_estimado?: number | null
+          vehiculo_id?: string | null
+          vehiculo_nombre: string
+        }
+        Update: {
+          actualizado_en?: string
+          cliente_nombre?: string
+          cliente_telefono?: string
+          costo_entrega?: number | null
+          creado_en?: string
+          dias?: number
+          estado?: string
+          fecha_fin?: string
+          fecha_inicio?: string
+          folio?: string
+          hora_fin?: string
+          hora_inicio?: string
+          id?: string
+          lugar_entrega?: string
+          modo_disponibilidad?: string
+          negocio_id?: string
+          origen?: string
+          pasajeros?: number | null
+          precio_referencia?: number | null
+          total_estimado?: number | null
+          vehiculo_id?: string | null
+          vehiculo_nombre?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "solicitudes_renta_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "solicitudes_renta_vehiculo_id_fkey"
+            columns: ["vehiculo_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_vehiculos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -1154,6 +1342,111 @@ export type Database = {
           telefono?: string
         }
         Relationships: []
+      }
+      vehiculo_bloqueos: {
+        Row: {
+          creado_en: string
+          fecha: string
+          id: string
+          negocio_id: string
+          unidades: number
+          vehiculo_id: string
+        }
+        Insert: {
+          creado_en?: string
+          fecha: string
+          id?: string
+          negocio_id: string
+          unidades?: number
+          vehiculo_id: string
+        }
+        Update: {
+          creado_en?: string
+          fecha?: string
+          id?: string
+          negocio_id?: string
+          unidades?: number
+          vehiculo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehiculo_bloqueos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehiculo_bloqueos_vehiculo_id_fkey"
+            columns: ["vehiculo_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_vehiculos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehiculo_medios: {
+        Row: {
+          bytes: number | null
+          creado_en: string
+          duration: number | null
+          es_portada: boolean
+          format: string | null
+          id: string
+          negocio_id: string
+          orden: number
+          public_id: string
+          resource_type: string
+          secure_url: string
+          tipo: string
+          vehiculo_id: string
+        }
+        Insert: {
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          format?: string | null
+          id?: string
+          negocio_id: string
+          orden?: number
+          public_id: string
+          resource_type?: string
+          secure_url: string
+          tipo?: string
+          vehiculo_id: string
+        }
+        Update: {
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          format?: string | null
+          id?: string
+          negocio_id?: string
+          orden?: number
+          public_id?: string
+          resource_type?: string
+          secure_url?: string
+          tipo?: string
+          vehiculo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehiculo_medios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehiculo_medios_vehiculo_id_fkey"
+            columns: ["vehiculo_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_vehiculos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
