@@ -24,6 +24,7 @@ import { Route as ExperienciaIdRouteImport } from './routes/experiencia.$id'
 import { Route as MasterLoginRouteImport } from './routes/master.login'
 import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
 import { Route as NegocioLoginRouteImport } from './routes/negocio.login'
+import { Route as VehiculoIdRouteImport } from './routes/vehiculo.$id'
 import { Route as AuthenticatedMiNegocioIndexRouteImport } from './routes/_authenticated/mi-negocio.index'
 import { Route as AuthenticatedMiNegocioAlojamientosRouteImport } from './routes/_authenticated/mi-negocio.alojamientos'
 import { Route as AuthenticatedMiNegocioComerRouteImport } from './routes/_authenticated/mi-negocio.comer'
@@ -117,6 +118,11 @@ const NegocioIdRoute = NegocioIdRouteImport.update({
 const NegocioLoginRoute = NegocioLoginRouteImport.update({
   id: '/negocio/login',
   path: '/negocio/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VehiculoIdRoute = VehiculoIdRouteImport.update({
+  id: '/vehiculo/$id',
+  path: '/vehiculo/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedMiNegocioIndexRoute =
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
+  '/vehiculo/$id': typeof VehiculoIdRoute
   '/mi-negocio/alojamientos': typeof AuthenticatedMiNegocioAlojamientosRoute
   '/mi-negocio/comer': typeof AuthenticatedMiNegocioComerRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
+  '/vehiculo/$id': typeof VehiculoIdRoute
   '/mi-negocio/alojamientos': typeof AuthenticatedMiNegocioAlojamientosRoute
   '/mi-negocio/comer': typeof AuthenticatedMiNegocioComerRoute
   '/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
+  '/vehiculo/$id': typeof VehiculoIdRoute
   '/_authenticated/mi-negocio/alojamientos': typeof AuthenticatedMiNegocioAlojamientosRoute
   '/_authenticated/mi-negocio/comer': typeof AuthenticatedMiNegocioComerRoute
   '/_authenticated/mi-negocio/completar': typeof AuthenticatedMiNegocioCompletarRoute
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
+    | '/vehiculo/$id'
     | '/mi-negocio/alojamientos'
     | '/mi-negocio/comer'
     | '/mi-negocio/completar'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
+    | '/vehiculo/$id'
     | '/mi-negocio/alojamientos'
     | '/mi-negocio/comer'
     | '/mi-negocio/completar'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
+    | '/vehiculo/$id'
     | '/_authenticated/mi-negocio/alojamientos'
     | '/_authenticated/mi-negocio/comer'
     | '/_authenticated/mi-negocio/completar'
@@ -476,6 +488,7 @@ export interface RootRouteChildren {
   MasterLoginRoute: typeof MasterLoginRoute
   NegocioIdRoute: typeof NegocioIdRoute
   NegocioLoginRoute: typeof NegocioLoginRoute
+  VehiculoIdRoute: typeof VehiculoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -583,6 +596,13 @@ declare module '@tanstack/react-router' {
       path: '/negocio/login'
       fullPath: '/negocio/login'
       preLoaderRoute: typeof NegocioLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vehiculo/$id': {
+      id: '/vehiculo/$id'
+      path: '/vehiculo/$id'
+      fullPath: '/vehiculo/$id'
+      preLoaderRoute: typeof VehiculoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/mi-negocio/': {
@@ -802,6 +822,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterLoginRoute: MasterLoginRoute,
   NegocioIdRoute: NegocioIdRoute,
   NegocioLoginRoute: NegocioLoginRoute,
+  VehiculoIdRoute: VehiculoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
