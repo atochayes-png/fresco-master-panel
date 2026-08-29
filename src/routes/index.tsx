@@ -167,7 +167,7 @@ function Inicio() {
                 <span className="text-2xl">{c.emoji}</span>
                 {c.clave}
               </Link>
-             ) : c.tipo === TIPO_DIVERTIRME ? (
+            ) : (
               <Link
                 key={c.clave}
                 to="/divertirme"
@@ -177,17 +177,6 @@ function Inicio() {
                 <span className="text-2xl">{c.emoji}</span>
                 {c.clave}
               </Link>
-            ) : (
-
-
-            <button
-              key={c.clave}
-              onClick={() => irABuscar({ categoria: c.tipo, texto: "" })}
-              className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
-            >
-              <span className="text-2xl">{c.emoji}</span>
-              {c.clave}
-            </button>
             ),
           )}
         </div>
