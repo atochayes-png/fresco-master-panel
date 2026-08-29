@@ -38,6 +38,7 @@ import { Route as AuthenticatedMiNegocioPromocionesRouteImport } from './routes/
 import { Route as AuthenticatedMiNegocioRentaRouteImport } from './routes/_authenticated/mi-negocio.renta'
 import { Route as AuthenticatedMiNegocioReservacionesRouteImport } from './routes/_authenticated/mi-negocio.reservaciones'
 import { Route as AuthenticatedMiNegocioSolicitudesHospedajeRouteImport } from './routes/_authenticated/mi-negocio.solicitudes-hospedaje'
+import { Route as AuthenticatedMiNegocioSolicitudesRentaRouteImport } from './routes/_authenticated/mi-negocio.solicitudes-renta'
 import { Route as AuthenticatedMiNegocioVehiculosRouteImport } from './routes/_authenticated/mi-negocio.vehiculos'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
@@ -202,6 +203,12 @@ const AuthenticatedMiNegocioSolicitudesHospedajeRoute =
     path: '/mi-negocio/solicitudes-hospedaje',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMiNegocioSolicitudesRentaRoute =
+  AuthenticatedMiNegocioSolicitudesRentaRouteImport.update({
+    id: '/mi-negocio/solicitudes-renta',
+    path: '/mi-negocio/solicitudes-renta',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMiNegocioVehiculosRoute =
   AuthenticatedMiNegocioVehiculosRouteImport.update({
     id: '/mi-negocio/vehiculos',
@@ -254,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/mi-negocio/renta': typeof AuthenticatedMiNegocioRentaRoute
   '/mi-negocio/reservaciones': typeof AuthenticatedMiNegocioReservacionesRoute
   '/mi-negocio/solicitudes-hospedaje': typeof AuthenticatedMiNegocioSolicitudesHospedajeRoute
+  '/mi-negocio/solicitudes-renta': typeof AuthenticatedMiNegocioSolicitudesRentaRoute
   '/mi-negocio/vehiculos': typeof AuthenticatedMiNegocioVehiculosRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -288,6 +296,7 @@ export interface FileRoutesByTo {
   '/mi-negocio/renta': typeof AuthenticatedMiNegocioRentaRoute
   '/mi-negocio/reservaciones': typeof AuthenticatedMiNegocioReservacionesRoute
   '/mi-negocio/solicitudes-hospedaje': typeof AuthenticatedMiNegocioSolicitudesHospedajeRoute
+  '/mi-negocio/solicitudes-renta': typeof AuthenticatedMiNegocioSolicitudesRentaRoute
   '/mi-negocio/vehiculos': typeof AuthenticatedMiNegocioVehiculosRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -324,6 +333,7 @@ export interface FileRoutesById {
   '/_authenticated/mi-negocio/renta': typeof AuthenticatedMiNegocioRentaRoute
   '/_authenticated/mi-negocio/reservaciones': typeof AuthenticatedMiNegocioReservacionesRoute
   '/_authenticated/mi-negocio/solicitudes-hospedaje': typeof AuthenticatedMiNegocioSolicitudesHospedajeRoute
+  '/_authenticated/mi-negocio/solicitudes-renta': typeof AuthenticatedMiNegocioSolicitudesRentaRoute
   '/_authenticated/mi-negocio/vehiculos': typeof AuthenticatedMiNegocioVehiculosRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/_authenticated/negocios/nuevo': typeof AuthenticatedNegociosNuevoRoute
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/mi-negocio/renta'
     | '/mi-negocio/reservaciones'
     | '/mi-negocio/solicitudes-hospedaje'
+    | '/mi-negocio/solicitudes-renta'
     | '/mi-negocio/vehiculos'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/mi-negocio/renta'
     | '/mi-negocio/reservaciones'
     | '/mi-negocio/solicitudes-hospedaje'
+    | '/mi-negocio/solicitudes-renta'
     | '/mi-negocio/vehiculos'
     | '/negocios/$id'
     | '/negocios/nuevo'
@@ -429,6 +441,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mi-negocio/renta'
     | '/_authenticated/mi-negocio/reservaciones'
     | '/_authenticated/mi-negocio/solicitudes-hospedaje'
+    | '/_authenticated/mi-negocio/solicitudes-renta'
     | '/_authenticated/mi-negocio/vehiculos'
     | '/_authenticated/negocios/$id'
     | '/_authenticated/negocios/nuevo'
@@ -657,6 +670,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiNegocioSolicitudesHospedajeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mi-negocio/solicitudes-renta': {
+      id: '/_authenticated/mi-negocio/solicitudes-renta'
+      path: '/mi-negocio/solicitudes-renta'
+      fullPath: '/mi-negocio/solicitudes-renta'
+      preLoaderRoute: typeof AuthenticatedMiNegocioSolicitudesRentaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mi-negocio/vehiculos': {
       id: '/_authenticated/mi-negocio/vehiculos'
       path: '/mi-negocio/vehiculos'
@@ -704,6 +724,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMiNegocioRentaRoute: typeof AuthenticatedMiNegocioRentaRoute
   AuthenticatedMiNegocioReservacionesRoute: typeof AuthenticatedMiNegocioReservacionesRoute
   AuthenticatedMiNegocioSolicitudesHospedajeRoute: typeof AuthenticatedMiNegocioSolicitudesHospedajeRoute
+  AuthenticatedMiNegocioSolicitudesRentaRoute: typeof AuthenticatedMiNegocioSolicitudesRentaRoute
   AuthenticatedMiNegocioVehiculosRoute: typeof AuthenticatedMiNegocioVehiculosRoute
   AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
   AuthenticatedNegociosNuevoRoute: typeof AuthenticatedNegociosNuevoRoute
@@ -734,6 +755,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMiNegocioReservacionesRoute,
   AuthenticatedMiNegocioSolicitudesHospedajeRoute:
     AuthenticatedMiNegocioSolicitudesHospedajeRoute,
+  AuthenticatedMiNegocioSolicitudesRentaRoute:
+    AuthenticatedMiNegocioSolicitudesRentaRoute,
   AuthenticatedMiNegocioVehiculosRoute: AuthenticatedMiNegocioVehiculosRoute,
   AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
   AuthenticatedNegociosNuevoRoute: AuthenticatedNegociosNuevoRoute,
