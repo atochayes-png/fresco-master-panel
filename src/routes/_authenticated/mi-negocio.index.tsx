@@ -6,6 +6,7 @@ import {
   CalendarClock,
   Camera,
   ClipboardList,
+  Compass,
   Images,
   Loader2,
   MapPin,
@@ -19,6 +20,7 @@ import {
 
 import { miNegocio } from "@/lib/dueno.functions";
 import { esComer } from "@/lib/comer";
+import { esConocer } from "@/lib/conocer";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -69,6 +71,7 @@ function MiNegocio() {
   const dias = diasRestantes(negocio.fecha_fin);
   const principal = fotos.find((f) => f.ruta === perfil.foto_principal) ?? fotos[0];
   const comer = esComer(negocio.tipo);
+  const conocer = esConocer(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
