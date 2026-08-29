@@ -214,9 +214,12 @@ export type Database = {
       negocio_perfil: {
         Row: {
           actualizado_en: string
+          atiende_local: boolean
+          atiende_recoger: boolean
           capacidad: number | null
           codigo_postal: string | null
           colonia: string | null
+          comida_tipos: string[]
           costo_entrega: number | null
           costo_entrega_tipo: string | null
           creado_en: string
@@ -226,6 +229,7 @@ export type Database = {
           domicilio: boolean | null
           duracion: string | null
           facebook: string | null
+          formas_pago: string[]
           foto_principal: string | null
           instagram: string | null
           latitud: number | null
@@ -245,15 +249,19 @@ export type Database = {
           salida_longitud: number | null
           sitio_web: string | null
           solo_reservacion: boolean
+          tiempo_preparacion: string | null
           tipo_servicio: string | null
           whatsapp_activo: boolean
           whatsapp_numero: string | null
         }
         Insert: {
           actualizado_en?: string
+          atiende_local?: boolean
+          atiende_recoger?: boolean
           capacidad?: number | null
           codigo_postal?: string | null
           colonia?: string | null
+          comida_tipos?: string[]
           costo_entrega?: number | null
           costo_entrega_tipo?: string | null
           creado_en?: string
@@ -263,6 +271,7 @@ export type Database = {
           domicilio?: boolean | null
           duracion?: string | null
           facebook?: string | null
+          formas_pago?: string[]
           foto_principal?: string | null
           instagram?: string | null
           latitud?: number | null
@@ -282,15 +291,19 @@ export type Database = {
           salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
+          tiempo_preparacion?: string | null
           tipo_servicio?: string | null
           whatsapp_activo?: boolean
           whatsapp_numero?: string | null
         }
         Update: {
           actualizado_en?: string
+          atiende_local?: boolean
+          atiende_recoger?: boolean
           capacidad?: number | null
           codigo_postal?: string | null
           colonia?: string | null
+          comida_tipos?: string[]
           costo_entrega?: number | null
           costo_entrega_tipo?: string | null
           creado_en?: string
@@ -300,6 +313,7 @@ export type Database = {
           domicilio?: boolean | null
           duracion?: string | null
           facebook?: string | null
+          formas_pago?: string[]
           foto_principal?: string | null
           instagram?: string | null
           latitud?: number | null
@@ -319,6 +333,7 @@ export type Database = {
           salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
+          tiempo_preparacion?: string | null
           tipo_servicio?: string | null
           whatsapp_activo?: boolean
           whatsapp_numero?: string | null
@@ -336,6 +351,7 @@ export type Database = {
       negocio_productos: {
         Row: {
           actualizado_en: string
+          categoria: string | null
           creado_en: string
           descripcion: string | null
           disponible: boolean
@@ -349,6 +365,7 @@ export type Database = {
         }
         Insert: {
           actualizado_en?: string
+          categoria?: string | null
           creado_en?: string
           descripcion?: string | null
           disponible?: boolean
@@ -362,6 +379,7 @@ export type Database = {
         }
         Update: {
           actualizado_en?: string
+          categoria?: string | null
           creado_en?: string
           descripcion?: string | null
           disponible?: boolean
@@ -376,6 +394,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "negocio_productos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_promociones: {
+        Row: {
+          activa: boolean
+          actualizado_en: string
+          creado_en: string
+          descripcion: string | null
+          fecha_fin: string | null
+          fecha_inicio: string | null
+          foto_public_id: string | null
+          foto_url: string | null
+          id: string
+          negocio_id: string
+          orden: number
+          precio: number | null
+          titulo: string
+        }
+        Insert: {
+          activa?: boolean
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          fecha_fin?: string | null
+          fecha_inicio?: string | null
+          foto_public_id?: string | null
+          foto_url?: string | null
+          id?: string
+          negocio_id: string
+          orden?: number
+          precio?: number | null
+          titulo: string
+        }
+        Update: {
+          activa?: boolean
+          actualizado_en?: string
+          creado_en?: string
+          descripcion?: string | null
+          fecha_fin?: string | null
+          fecha_inicio?: string | null
+          foto_public_id?: string | null
+          foto_url?: string | null
+          id?: string
+          negocio_id?: string
+          orden?: number
+          precio?: number | null
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_promociones_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
@@ -447,6 +521,8 @@ export type Database = {
           direccion: string | null
           estado: string
           folio: string
+          forma_pago: string | null
+          hora_solicitada: string | null
           id: string
           items: Json
           negocio_id: string
@@ -465,6 +541,8 @@ export type Database = {
           direccion?: string | null
           estado?: string
           folio?: string
+          forma_pago?: string | null
+          hora_solicitada?: string | null
           id?: string
           items?: Json
           negocio_id: string
@@ -483,6 +561,8 @@ export type Database = {
           direccion?: string | null
           estado?: string
           folio?: string
+          forma_pago?: string | null
+          hora_solicitada?: string | null
           id?: string
           items?: Json
           negocio_id?: string
