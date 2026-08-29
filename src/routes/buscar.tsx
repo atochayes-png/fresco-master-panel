@@ -168,12 +168,10 @@ function Buscar() {
                               entrega: "",
                             },
                           })
-                        : c.tipo === TIPO_DIVERTIRME
-                          ? void navigate({
-                              to: "/divertirme",
-                              search: { q: busqueda.q, sub: "", municipio: busqueda.municipio },
-                            })
-                          : actualizar({ categoria: c.tipo })
+                        : void navigate({
+                            to: "/divertirme",
+                            search: { q: busqueda.q, sub: "", municipio: busqueda.municipio },
+                          })
               }
 
             />
