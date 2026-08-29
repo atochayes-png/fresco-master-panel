@@ -9,6 +9,8 @@ import { SelectorUbicacion } from "@/components/ubicacion-selector";
 import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
 import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
+import { TIPO_CONOCER } from "@/lib/conocer";
+
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
