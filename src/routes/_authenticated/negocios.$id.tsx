@@ -6,6 +6,8 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { actualizarNegocio, cambiarEstatus, obtenerNegocio } from "@/lib/negocios.functions";
 import { pedidosDeNegocio } from "@/lib/productos.functions";
+import { reservacionesDeNegocio } from "@/lib/conocer.functions";
+import { esConocer } from "@/lib/conocer";
 import { mediosDeNegocio } from "@/lib/medios.functions";
 import { posterVideo, urlImagen } from "@/lib/cloudinary";
 import {
@@ -46,6 +48,12 @@ function Ficha() {
   const { data: pedidos } = useQuery({
     queryKey: ["pedidos-negocio", id],
     queryFn: () => metricas({ data: { negocio_id: id } }),
+  });
+
+  const cargarReservas = useServerFn(reservacionesDeNegocio);
+  const { data: reservas } = useQuery({
+    queryKey: ["reservaciones-negocio", id],
+    queryFn: () => cargarReservas({ data: { negocio_id: id } }),
   });
 
   const cargarMedios = useServerFn(mediosDeNegocio);
@@ -206,6 +214,14 @@ function Ficha() {
               }
             />
           </div>
+
+          {esConocer(negocio.tipo) ? (
+            <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <h2 className="text-base font-semibold">Solicitudes de reservación</h2>
+              <Dato titulo="Este mes" valor={String(reservas?.mes ?? 0)} />
+              <Dato titulo="Total histórico" valor={String(reservas?.total ?? 0)} />
+            </div>
+          ) : null}
 
           <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
             <h2 className="text-base font-semibold">Pedidos generados</h2>
