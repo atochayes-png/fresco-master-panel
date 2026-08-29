@@ -223,6 +223,15 @@ function Ficha() {
             </div>
           ) : null}
 
+          {esHospedaje(negocio.tipo) ? (
+            <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <h2 className="text-base font-semibold">Solicitudes de hospedaje</h2>
+              <Dato titulo="Este mes" valor={String(hospedaje?.mes ?? 0)} />
+              <Dato titulo="Total histórico" valor={String(hospedaje?.total ?? 0)} />
+            </div>
+          ) : null}
+
+
           <div className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
             <h2 className="text-base font-semibold">Pedidos generados</h2>
             <Dato titulo="Este mes" valor={String(pedidos?.mes ?? 0)} />
