@@ -8,6 +8,8 @@ import { actualizarNegocio, cambiarEstatus, obtenerNegocio } from "@/lib/negocio
 import { pedidosDeNegocio } from "@/lib/productos.functions";
 import { reservacionesDeNegocio } from "@/lib/conocer.functions";
 import { esConocer } from "@/lib/conocer";
+import { esHospedaje } from "@/lib/hospedaje";
+import { solicitudesHospedajeDeNegocio } from "@/lib/hospedaje.functions";
 import { mediosDeNegocio } from "@/lib/medios.functions";
 import { posterVideo, urlImagen } from "@/lib/cloudinary";
 import {
@@ -54,6 +56,12 @@ function Ficha() {
   const { data: reservas } = useQuery({
     queryKey: ["reservaciones-negocio", id],
     queryFn: () => cargarReservas({ data: { negocio_id: id } }),
+  });
+
+  const cargarHospedaje = useServerFn(solicitudesHospedajeDeNegocio);
+  const { data: hospedaje } = useQuery({
+    queryKey: ["solicitudes-hospedaje-negocio", id],
+    queryFn: () => cargarHospedaje({ data: { negocio_id: id } }),
   });
 
   const cargarMedios = useServerFn(mediosDeNegocio);
