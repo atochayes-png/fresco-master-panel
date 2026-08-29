@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Loader2, MapPin, Search } from "lucide-react";
 
@@ -8,6 +8,7 @@ import { TarjetaNegocioVista } from "@/components/tarjeta-negocio";
 import { SelectorUbicacion } from "@/components/ubicacion-selector";
 import { buscarNegocios, type TarjetaNegocio } from "@/lib/publico.functions";
 import { CATEGORIAS, ubicacionGuardada, zonaGuardada } from "@/lib/publico";
+import { TIPO_COMER } from "@/lib/comer";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -111,7 +112,18 @@ function Inicio() {
         </form>
 
         <div className="grid grid-cols-2 gap-3">
-          {CATEGORIAS.map((c) => (
+          {CATEGORIAS.map((c) =>
+            c.tipo === TIPO_COMER ? (
+              <Link
+                key={c.clave}
+                to="/comer"
+                search={{ q: "", comida: "", municipio: "" }}
+                className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+              >
+                <span className="text-2xl">{c.emoji}</span>
+                {c.clave}
+              </Link>
+            ) : (
             <button
               key={c.clave}
               onClick={() => irABuscar({ categoria: c.tipo, texto: "" })}
@@ -120,7 +132,8 @@ function Inicio() {
               <span className="text-2xl">{c.emoji}</span>
               {c.clave}
             </button>
-          ))}
+            ),
+          )}
         </div>
 
         <div className="space-y-3 rounded-3xl border border-border bg-card p-4 shadow-sm">

@@ -42,11 +42,18 @@ type Borrador = {
   descripcion: string;
   precio: string;
   disponible: boolean;
+  categoria: string;
   foto_ruta?: string | null;
   foto_url?: string | null;
 };
 
-const VACIO: Borrador = { nombre: "", descripcion: "", precio: "", disponible: true };
+const VACIO: Borrador = {
+  nombre: "",
+  descripcion: "",
+  precio: "",
+  disponible: true,
+  categoria: "",
+};
 
 function Productos() {
   const qc = useQueryClient();
@@ -98,6 +105,7 @@ function Productos() {
           descripcion: borrador.descripcion,
           precio: Number(borrador.precio.replace(/[^\d.]/g, "")) || 0,
           disponible: borrador.disponible,
+          categoria: borrador.categoria,
           foto_ruta: borrador.foto_ruta ?? null,
           foto_url: borrador.foto_url ?? null,
         },
@@ -167,8 +175,11 @@ function Productos() {
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{p.nombre}</p>
                 <p className="text-sm text-primary">{pesos(p.precio)}</p>
+                {p.categoria ? (
+                  <p className="text-xs text-muted-foreground">{p.categoria}</p>
+                ) : null}
                 {!p.disponible ? (
-                  <p className="text-xs text-muted-foreground">No disponible</p>
+                  <p className="text-xs font-semibold text-destructive">AGOTADO</p>
                 ) : null}
               </div>
               <button
@@ -180,6 +191,7 @@ function Productos() {
                     descripcion: p.descripcion ?? "",
                     precio: String(p.precio),
                     disponible: p.disponible,
+                    categoria: p.categoria ?? "",
                     foto_ruta: p.foto_ruta,
                     foto_url: p.foto_url,
                   })
@@ -249,6 +261,34 @@ function Productos() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="cp" className="text-base">
+                Categoría del menú (opcional)
+              </Label>
+              <Input
+                id="cp"
+                list="categorias-menu"
+                placeholder="Ej. Tacos, Bebidas, Postres"
+                value={borrador.categoria}
+                onChange={(e) => setBorrador({ ...borrador, categoria: e.target.value })}
+                className="h-13 text-base"
+              />
+              <datalist id="categorias-menu">
+                {[
+                  "Entradas",
+                  "Panuchos y salbutes",
+                  "Tacos",
+                  "Tortas",
+                  "Hamburguesas",
+                  "Burritas",
+                  "Bebidas",
+                  "Postres",
+                ].map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="fp" className="text-base">
                 Foto (opcional)
               </Label>
@@ -278,7 +318,7 @@ function Productos() {
                 onChange={(e) => setBorrador({ ...borrador, disponible: e.target.checked })}
                 className="size-6 accent-[var(--color-primary)]"
               />
-              Disponible
+              Disponible (desmárcalo si está agotado)
             </label>
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}

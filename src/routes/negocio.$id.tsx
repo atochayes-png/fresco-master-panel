@@ -14,6 +14,8 @@ import {
   Minus,
   Plus,
   Star,
+  Tag,
+  Timer,
   UtensilsCrossed,
 } from "lucide-react";
 
@@ -52,6 +54,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { emojiComida, esComer, nombreComida, nombrePago } from "@/lib/comer";
 
 export const Route = createFileRoute("/negocio/$id")({
   head: () => ({
@@ -223,6 +226,15 @@ function Ficha() {
                 </span>
               ) : null}
             </div>
+            {ficha.comida_tipos.length ? (
+              <div className="flex flex-wrap gap-2 pt-1 text-xs font-semibold">
+                {ficha.comida_tipos.map((c) => (
+                  <span key={c} className="rounded-full bg-secondary px-2.5 py-1">
+                    {emojiComida(c)} {nombreComida(c)}
+                  </span>
+                ))}
+              </div>
+            ) : null}
             {ficha.descripcion ? <p className="pt-1 text-sm">{ficha.descripcion}</p> : null}
           </div>
         </div>
@@ -335,6 +347,70 @@ function Ficha() {
           </Bloque>
         ) : null}
 
+        {ficha.promociones.length ? (
+          <Bloque titulo="Promociones" icono={<Tag className="size-5" />}>
+            <ul className="space-y-3">
+              {ficha.promociones.map((pr) => (
+                <li key={pr.id} className="overflow-hidden rounded-2xl bg-secondary/60">
+                  {pr.foto_url ? (
+                    <img
+                      src={pr.foto_url}
+                      alt={pr.titulo}
+                      loading="lazy"
+                      className="h-36 w-full object-cover"
+                    />
+                  ) : null}
+                  <div className="p-3">
+                    <p className="font-semibold">{pr.titulo}</p>
+                    {pr.descripcion ? (
+                      <p className="text-sm text-muted-foreground">{pr.descripcion}</p>
+                    ) : null}
+                    {pr.precio ? (
+                      <p className="text-sm font-bold text-primary">{pesos(pr.precio)}</p>
+                    ) : null}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Bloque>
+        ) : null}
+
+        {esComer(ficha.tipo) &&
+        (ficha.atiende_local ||
+          ficha.atiende_recoger ||
+          ficha.domicilio ||
+          ficha.tiempo_preparacion ||
+          ficha.formas_pago.length) ? (
+          <Bloque titulo="Cómo te atienden" icono={<Timer className="size-5" />}>
+            <div className="flex flex-wrap gap-2 text-xs font-semibold">
+              {ficha.atiende_local ? (
+                <span className="rounded-full bg-secondary px-2.5 py-1">
+                  Comer en el establecimiento
+                </span>
+              ) : null}
+              {ficha.atiende_recoger ? (
+                <span className="rounded-full bg-secondary px-2.5 py-1">Para recoger</span>
+              ) : null}
+              {ficha.domicilio ? (
+                <span className="rounded-full bg-secondary px-2.5 py-1">A domicilio</span>
+              ) : null}
+            </div>
+            {ficha.tiempo_preparacion ? (
+              <p className="text-sm">
+                Tiempo habitual de preparación:{" "}
+                <span className="font-semibold">{ficha.tiempo_preparacion}</span>. El negocio te
+                confirma el tiempo real.
+              </p>
+            ) : null}
+            {ficha.formas_pago.length ? (
+              <p className="text-sm text-muted-foreground">
+                Formas de pago: {ficha.formas_pago.map(nombrePago).join(", ")}. El pago se hace
+                directamente con el negocio.
+              </p>
+            ) : null}
+          </Bloque>
+        ) : null}
+
         {ficha.menu_url ? (
           <Bloque titulo="Menú / Catálogo" icono={<UtensilsCrossed className="size-5" />}>
             <Button asChild variant="secondary" className="h-12 w-full">
@@ -346,9 +422,19 @@ function Ficha() {
         ) : null}
 
         {ficha.recibe_pedidos && ficha.productos.length ? (
-          <Bloque titulo="Haz tu pedido" icono={<UtensilsCrossed className="size-5" />}>
+          <Bloque
+            titulo={esComer(ficha.tipo) ? "Menú" : "Haz tu pedido"}
+            icono={<UtensilsCrossed className="size-5" />}
+          >
+            {agruparPorCategoria(ficha.productos).map((grupo) => (
+            <div key={grupo.nombre} className="space-y-3">
+            {grupo.nombre ? (
+              <p className="pt-1 text-sm font-bold uppercase text-muted-foreground">
+                {grupo.nombre}
+              </p>
+            ) : null}
             <ul className="space-y-3">
-              {ficha.productos.map((p) => (
+              {grupo.productos.map((p) => (
                 <li key={p.id} className="flex items-center gap-3 rounded-2xl bg-secondary/60 p-3">
                   {p.foto ? (
                     <img src={p.foto} alt={p.nombre} className="size-16 rounded-xl object-cover" />
@@ -384,6 +470,8 @@ function Ficha() {
                 </li>
               ))}
             </ul>
+            </div>
+            ))}
           </Bloque>
         ) : null}
 
@@ -456,6 +544,17 @@ function Ficha() {
       ) : null}
     </MarcoPublico>
   );
+}
+
+function agruparPorCategoria(productos: FichaPublica["productos"]) {
+  const grupos: { nombre: string; productos: FichaPublica["productos"] }[] = [];
+  for (const p of productos) {
+    const nombre = (p.categoria ?? "").trim();
+    const existente = grupos.find((g) => g.nombre === nombre);
+    if (existente) existente.productos.push(p);
+    else grupos.push({ nombre, productos: [p] });
+  }
+  return grupos;
 }
 
 function Redes({ url, icono, texto }: { url: string; icono: React.ReactNode; texto: string }) {
@@ -577,9 +676,18 @@ function Pedido({
 }) {
   const [nombre, setNombre] = useState(nombreGuardado());
   const [telefono, setTelefono] = useState(telefonoGuardado() ?? "");
-  const [tipo, setTipo] = useState<"recoger" | "domicilio">(
-    ficha.domicilio ? "domicilio" : "recoger",
+  const modalidades = (
+    [
+      ficha.atiende_local ? "local" : null,
+      ficha.atiende_recoger || (!ficha.atiende_local && !ficha.domicilio) ? "recoger" : null,
+      ficha.domicilio ? "domicilio" : null,
+    ] as const
+  ).filter(Boolean) as ("local" | "recoger" | "domicilio")[];
+  const [tipo, setTipo] = useState<"local" | "recoger" | "domicilio">(
+    modalidades[0] ?? "recoger",
   );
+  const [pago, setPago] = useState<string>(ficha.formas_pago[0] ?? "");
+  const [hora, setHora] = useState("");
   const [direccion, setDireccion] = useState("");
   const [referencia, setReferencia] = useState("");
   const [punto, setPunto] = useState<{ lat: number; lng: number } | null>(null);
@@ -620,6 +728,8 @@ function Pedido({
           tipo_entrega: tipo,
           direccion,
           referencia,
+          forma_pago: pago || null,
+          hora_solicitada: hora || null,
           items: items.map((i) => ({ id: i.id, cantidad: i.cantidad })),
         },
       });
@@ -639,6 +749,9 @@ function Pedido({
             ? `${direccion}\nUbicación en el mapa: https://www.google.com/maps/search/?api=1&query=${punto.lat},${punto.lng}`
             : direccion,
         referencia,
+        forma_pago: r.forma_pago ?? (pago || null),
+        tiempo_preparacion: r.tiempo_preparacion ?? ficha.tiempo_preparacion,
+        hora_solicitada: hora || null,
       });
       void marcarPedidoEnviado({ data: { id: r.id } });
       onLimpiar();
@@ -730,24 +843,56 @@ function Pedido({
 
           <div className="space-y-2">
             <p className="text-base font-medium">¿Cómo lo quieres?</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={tipo === "recoger" ? "default" : "secondary"}
-                onClick={() => setTipo("recoger")}
-                className="h-13"
-              >
-                Recoger
-              </Button>
-              <Button
-                variant={tipo === "domicilio" ? "default" : "secondary"}
-                onClick={() => setTipo("domicilio")}
-                disabled={!ficha.domicilio}
-                className="h-13"
-              >
-                A domicilio
-              </Button>
+            <div className="grid gap-2">
+              {modalidades.map((m) => (
+                <Button
+                  key={m}
+                  variant={tipo === m ? "default" : "secondary"}
+                  onClick={() => setTipo(m)}
+                  className="h-13 justify-start text-base"
+                >
+                  {m === "local"
+                    ? "Comer en el establecimiento"
+                    : m === "recoger"
+                      ? "Recoger en el establecimiento"
+                      : "Servicio a domicilio"}
+                </Button>
+              ))}
             </div>
           </div>
+
+          {tipo !== "domicilio" ? (
+            <div className="space-y-2">
+              <Label htmlFor="hora" className="text-base">
+                ¿A qué hora lo quieres? (opcional)
+              </Label>
+              <Input
+                id="hora"
+                type="time"
+                value={hora}
+                onChange={(e) => setHora(e.target.value)}
+                className="h-13 text-base"
+              />
+            </div>
+          ) : null}
+
+          {ficha.formas_pago.length ? (
+            <div className="space-y-2">
+              <p className="text-base font-medium">¿Cómo vas a pagar?</p>
+              <div className="grid gap-2">
+                {ficha.formas_pago.map((f) => (
+                  <Button
+                    key={f}
+                    variant={pago === f ? "default" : "secondary"}
+                    onClick={() => setPago(f)}
+                    className="h-13 justify-start text-base"
+                  >
+                    {nombrePago(f)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {tipo === "domicilio" ? (
             <>
@@ -804,6 +949,13 @@ function Pedido({
             </>
           ) : null}
         </div>
+
+        {ficha.tiempo_preparacion ? (
+          <p className="rounded-2xl bg-secondary p-3 text-sm">
+            Tiempo habitual de preparación: <strong>{ficha.tiempo_preparacion}</strong>. El negocio
+            te confirma el tiempo real por WhatsApp.
+          </p>
+        ) : null}
 
         <p className="text-xs text-muted-foreground">
           El pago no se realiza en la aplicación. El precio final, la entrega y la forma de pago se

@@ -11,6 +11,7 @@ export type ProductoRow = {
   foto_ruta: string | null;
   foto_url: string | null;
   orden: number;
+  categoria: string | null;
 };
 
 export type PedidoRow = {
@@ -21,6 +22,7 @@ export type PedidoRow = {
   estado: string;
   cliente_nombre: string;
   tipo_entrega: string;
+  forma_pago: string | null;
 };
 
 async function miNegocioId(supabase: { from: (t: string) => any }, userId: string) {
@@ -54,6 +56,7 @@ export const guardarProducto = createServerFn({ method: "POST" })
       descripcion: string;
       precio: number;
       disponible: boolean;
+      categoria?: string | null;
       foto_ruta?: string | null;
       foto_url?: string | null;
     }) => d,
@@ -68,6 +71,7 @@ export const guardarProducto = createServerFn({ method: "POST" })
       descripcion: data.descripcion?.trim().slice(0, 160) || null,
       precio,
       disponible: data.disponible !== false,
+      categoria: (data.categoria ?? "").trim().slice(0, 40) || null,
       ...(data.foto_ruta ? { foto_ruta: data.foto_ruta, foto_url: data.foto_url ?? null } : {}),
     };
 
@@ -112,7 +116,9 @@ export const misPedidos = createServerFn({ method: "POST" })
     const negocioId = await miNegocioId(context.supabase, context.userId);
     const { data } = await context.supabase
       .from("pedidos")
-      .select("id, folio, creado_en, total_estimado, estado, cliente_nombre, tipo_entrega")
+      .select(
+        "id, folio, creado_en, total_estimado, estado, cliente_nombre, tipo_entrega, forma_pago",
+      )
       .eq("negocio_id", negocioId)
       .order("creado_en", { ascending: false })
       .limit(100);

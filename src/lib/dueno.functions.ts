@@ -35,6 +35,11 @@ export type PerfilRow = {
   tipo_servicio: string | null;
   recibe_pedidos: boolean;
   paso_actual: number;
+  comida_tipos: string[] | null;
+  atiende_local: boolean | null;
+  atiende_recoger: boolean | null;
+  tiempo_preparacion: string | null;
+  formas_pago: string[] | null;
 };
 
 export type HorarioRow = {
