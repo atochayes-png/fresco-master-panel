@@ -15,6 +15,7 @@ import {
   MapPin,
   Phone,
   ShoppingBag,
+  Sparkles,
   Store,
   Tag,
   Timer,
@@ -26,6 +27,7 @@ import { esComer } from "@/lib/comer";
 import { esConocer } from "@/lib/conocer";
 import { esHospedaje } from "@/lib/hospedaje";
 import { esMoverme } from "@/lib/moverme";
+import { esDivertirme } from "@/lib/divertirme";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -79,6 +81,7 @@ function MiNegocio() {
   const conocer = esConocer(negocio.tipo);
   const hospedaje = esHospedaje(negocio.tipo);
   const moverme = esMoverme(negocio.tipo);
+  const divertirme = esDivertirme(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
