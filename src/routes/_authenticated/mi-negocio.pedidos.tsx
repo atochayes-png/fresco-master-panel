@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { misPedidos } from "@/lib/productos.functions";
 import { pesos } from "@/lib/publico";
+import { nombrePago } from "@/lib/comer";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/mi-negocio/pedidos")({
@@ -76,7 +77,12 @@ function Pedidos() {
               <p className="text-sm">{p.cliente_nombre}</p>
               <p className="text-xs text-muted-foreground">
                 {new Date(p.creado_en).toLocaleString("es-MX")} ·{" "}
-                {p.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger"}
+                {p.tipo_entrega === "domicilio"
+                  ? "A domicilio"
+                  : p.tipo_entrega === "local"
+                    ? "En el establecimiento"
+                    : "Recoger"}
+                {p.forma_pago ? ` · ${nombrePago(p.forma_pago)}` : ""}
               </p>
             </li>
           ))}
