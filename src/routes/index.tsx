@@ -12,6 +12,7 @@ import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
 import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
 import { TIPO_MOVERME } from "@/lib/moverme";
+import { TIPO_DIVERTIRME } from "@/lib/divertirme";
 
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
@@ -167,16 +168,15 @@ function Inicio() {
                 {c.clave}
               </Link>
             ) : (
-
-
-            <button
-              key={c.clave}
-              onClick={() => irABuscar({ categoria: c.tipo, texto: "" })}
-              className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
-            >
-              <span className="text-2xl">{c.emoji}</span>
-              {c.clave}
-            </button>
+              <Link
+                key={c.clave}
+                to="/divertirme"
+                search={{ q: "", sub: "", municipio: "" }}
+                className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-left text-base font-bold shadow-sm"
+              >
+                <span className="text-2xl">{c.emoji}</span>
+                {c.clave}
+              </Link>
             ),
           )}
         </div>

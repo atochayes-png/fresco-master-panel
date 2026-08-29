@@ -119,6 +119,72 @@ export type Database = {
           },
         ]
       }
+      contactos_divertirme: {
+        Row: {
+          actualizado_en: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en: string
+          estado: string
+          evento_id: string | null
+          fecha_visita: string | null
+          folio: string
+          hora_visita: string | null
+          id: string
+          negocio_id: string
+          origen: string
+          personas: number | null
+          tipo_contacto: string
+        }
+        Insert: {
+          actualizado_en?: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en?: string
+          estado?: string
+          evento_id?: string | null
+          fecha_visita?: string | null
+          folio?: string
+          hora_visita?: string | null
+          id?: string
+          negocio_id: string
+          origen?: string
+          personas?: number | null
+          tipo_contacto?: string
+        }
+        Update: {
+          actualizado_en?: string
+          cliente_nombre?: string
+          cliente_telefono?: string
+          creado_en?: string
+          estado?: string
+          evento_id?: string | null
+          fecha_visita?: string | null
+          folio?: string
+          hora_visita?: string | null
+          id?: string
+          negocio_id?: string
+          origen?: string
+          personas?: number | null
+          tipo_contacto?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contactos_divertirme_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contactos_divertirme_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiencia_medios: {
         Row: {
           bytes: number | null
@@ -293,6 +359,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "negocio_alojamientos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      negocio_eventos: {
+        Row: {
+          activo: boolean
+          actualizado_en: string
+          cover_monto: number | null
+          creado_en: string
+          descripcion: string | null
+          fecha: string | null
+          foto_public_id: string | null
+          foto_url: string | null
+          hora: string | null
+          id: string
+          negocio_id: string
+          nombre: string
+          orden: number
+        }
+        Insert: {
+          activo?: boolean
+          actualizado_en?: string
+          cover_monto?: number | null
+          creado_en?: string
+          descripcion?: string | null
+          fecha?: string | null
+          foto_public_id?: string | null
+          foto_url?: string | null
+          hora?: string | null
+          id?: string
+          negocio_id: string
+          nombre: string
+          orden?: number
+        }
+        Update: {
+          activo?: boolean
+          actualizado_en?: string
+          cover_monto?: number | null
+          creado_en?: string
+          descripcion?: string | null
+          fecha?: string | null
+          foto_public_id?: string | null
+          foto_url?: string | null
+          hora?: string | null
+          id?: string
+          negocio_id?: string
+          nombre?: string
+          orden?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_eventos_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
@@ -526,6 +648,7 @@ export type Database = {
           acepta_mascotas: boolean
           acepta_ninos: boolean
           actualizado_en: string
+          ambiente: string[]
           atiende_local: boolean
           atiende_recoger: boolean
           capacidad: number | null
@@ -536,15 +659,20 @@ export type Database = {
           comida_tipos: string[]
           costo_entrega: number | null
           costo_entrega_tipo: string | null
+          cover_activo: boolean
+          cover_monto: number | null
+          cover_tipo: string
           creado_en: string
           descripcion: string | null
           direccion: string | null
           distancia_km: number | null
+          divertirme_tipos: string[]
           domicilio: boolean | null
           duracion: string | null
           facebook: string | null
           formas_pago: string[]
           foto_principal: string | null
+          horario_notas: string | null
           instagram: string | null
           latitud: number | null
           longitud: number | null
@@ -572,6 +700,9 @@ export type Database = {
           renta_tarjeta: string
           renta_usa_calendario: boolean
           requiere_anticipo: boolean
+          reserva_recomendada: string
+          restriccion_edad: string
+          restriccion_notas: string | null
           salida_latitud: number | null
           salida_longitud: number | null
           sitio_web: string | null
@@ -586,6 +717,7 @@ export type Database = {
           acepta_mascotas?: boolean
           acepta_ninos?: boolean
           actualizado_en?: string
+          ambiente?: string[]
           atiende_local?: boolean
           atiende_recoger?: boolean
           capacidad?: number | null
@@ -596,15 +728,20 @@ export type Database = {
           comida_tipos?: string[]
           costo_entrega?: number | null
           costo_entrega_tipo?: string | null
+          cover_activo?: boolean
+          cover_monto?: number | null
+          cover_tipo?: string
           creado_en?: string
           descripcion?: string | null
           direccion?: string | null
           distancia_km?: number | null
+          divertirme_tipos?: string[]
           domicilio?: boolean | null
           duracion?: string | null
           facebook?: string | null
           formas_pago?: string[]
           foto_principal?: string | null
+          horario_notas?: string | null
           instagram?: string | null
           latitud?: number | null
           longitud?: number | null
@@ -632,6 +769,9 @@ export type Database = {
           renta_tarjeta?: string
           renta_usa_calendario?: boolean
           requiere_anticipo?: boolean
+          reserva_recomendada?: string
+          restriccion_edad?: string
+          restriccion_notas?: string | null
           salida_latitud?: number | null
           salida_longitud?: number | null
           sitio_web?: string | null
@@ -646,6 +786,7 @@ export type Database = {
           acepta_mascotas?: boolean
           acepta_ninos?: boolean
           actualizado_en?: string
+          ambiente?: string[]
           atiende_local?: boolean
           atiende_recoger?: boolean
           capacidad?: number | null
@@ -656,15 +797,20 @@ export type Database = {
           comida_tipos?: string[]
           costo_entrega?: number | null
           costo_entrega_tipo?: string | null
+          cover_activo?: boolean
+          cover_monto?: number | null
+          cover_tipo?: string
           creado_en?: string
           descripcion?: string | null
           direccion?: string | null
           distancia_km?: number | null
+          divertirme_tipos?: string[]
           domicilio?: boolean | null
           duracion?: string | null
           facebook?: string | null
           formas_pago?: string[]
           foto_principal?: string | null
+          horario_notas?: string | null
           instagram?: string | null
           latitud?: number | null
           longitud?: number | null
@@ -692,6 +838,9 @@ export type Database = {
           renta_tarjeta?: string
           renta_usa_calendario?: boolean
           requiere_anticipo?: boolean
+          reserva_recomendada?: string
+          restriccion_edad?: string
+          restriccion_notas?: string | null
           salida_latitud?: number | null
           salida_longitud?: number | null
           sitio_web?: string | null

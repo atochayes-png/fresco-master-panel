@@ -15,6 +15,7 @@ import {
   MapPin,
   Phone,
   ShoppingBag,
+  Sparkles,
   Store,
   Tag,
   Timer,
@@ -26,6 +27,7 @@ import { esComer } from "@/lib/comer";
 import { esConocer } from "@/lib/conocer";
 import { esHospedaje } from "@/lib/hospedaje";
 import { esMoverme } from "@/lib/moverme";
+import { esDivertirme } from "@/lib/divertirme";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -79,6 +81,7 @@ function MiNegocio() {
   const conocer = esConocer(negocio.tipo);
   const hospedaje = esHospedaje(negocio.tipo);
   const moverme = esMoverme(negocio.tipo);
+  const divertirme = esDivertirme(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
@@ -263,7 +266,47 @@ function MiNegocio() {
               REQUISITOS Y ENTREGA
             </Link>
           </>
+        ) : divertirme ? (
+          <>
+            <Link
+              to="/mi-negocio/divertirme"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Sparkles className="size-6" />
+              </span>
+              AMBIENTE Y ACCESO
+            </Link>
+            <Link
+              to="/mi-negocio/eventos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <CalendarDays className="size-6" />
+              </span>
+              MIS EVENTOS
+            </Link>
+            <Link
+              to="/mi-negocio/promociones"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Tag className="size-6" />
+              </span>
+              PROMOCIONES
+            </Link>
+            <Link
+              to="/mi-negocio/contactos"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <ClipboardList className="size-6" />
+              </span>
+              CONTACTOS DESDE TFY
+            </Link>
+          </>
         ) : (
+
 
           <>
             <Link
