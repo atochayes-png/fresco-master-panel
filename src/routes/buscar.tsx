@@ -18,6 +18,7 @@ import {
 } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
+import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,8 +141,20 @@ function Buscar() {
                         to: "/conocer",
                         search: { q: busqueda.q, categoria: "", municipio: busqueda.municipio },
                       })
-                    : actualizar({ categoria: c.tipo })
+                    : c.tipo === TIPO_HOSPEDAJE
+                      ? void navigate({
+                          to: "/hospedaje",
+                          search: {
+                            q: busqueda.q,
+                            municipio: busqueda.municipio,
+                            entrada: "",
+                            salida: "",
+                            huespedes: 2,
+                          },
+                        })
+                      : actualizar({ categoria: c.tipo })
               }
+
             />
           ))}
         </div>

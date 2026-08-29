@@ -14,6 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
+      alojamiento_bloqueos: {
+        Row: {
+          alojamiento_id: string
+          creado_en: string
+          fecha: string
+          id: string
+          negocio_id: string
+          unidades: number
+        }
+        Insert: {
+          alojamiento_id: string
+          creado_en?: string
+          fecha: string
+          id?: string
+          negocio_id: string
+          unidades?: number
+        }
+        Update: {
+          alojamiento_id?: string
+          creado_en?: string
+          fecha?: string
+          id?: string
+          negocio_id?: string
+          unidades?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alojamiento_bloqueos_alojamiento_id_fkey"
+            columns: ["alojamiento_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_alojamientos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alojamiento_bloqueos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alojamiento_medios: {
+        Row: {
+          alojamiento_id: string
+          bytes: number | null
+          creado_en: string
+          duration: number | null
+          es_portada: boolean
+          format: string | null
+          id: string
+          negocio_id: string
+          orden: number
+          public_id: string
+          resource_type: string
+          secure_url: string
+          tipo: string
+        }
+        Insert: {
+          alojamiento_id: string
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          format?: string | null
+          id?: string
+          negocio_id: string
+          orden?: number
+          public_id: string
+          resource_type?: string
+          secure_url: string
+          tipo?: string
+        }
+        Update: {
+          alojamiento_id?: string
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          format?: string | null
+          id?: string
+          negocio_id?: string
+          orden?: number
+          public_id?: string
+          resource_type?: string
+          secure_url?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alojamiento_medios_alojamiento_id_fkey"
+            columns: ["alojamiento_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_alojamientos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alojamiento_medios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiencia_medios: {
         Row: {
           bytes: number | null
@@ -129,6 +234,71 @@ export type Database = {
           resource_type?: string
         }
         Relationships: []
+      }
+      negocio_alojamientos: {
+        Row: {
+          activo: boolean
+          actualizado_en: string
+          camas: number | null
+          capacidad: number
+          creado_en: string
+          descripcion: string | null
+          id: string
+          negocio_id: string
+          nombre: string
+          orden: number
+          precio: number | null
+          precio_tipo: string
+          servicios: string[]
+          tipo: string
+          tipo_camas: string | null
+          unidades: number
+        }
+        Insert: {
+          activo?: boolean
+          actualizado_en?: string
+          camas?: number | null
+          capacidad?: number
+          creado_en?: string
+          descripcion?: string | null
+          id?: string
+          negocio_id: string
+          nombre: string
+          orden?: number
+          precio?: number | null
+          precio_tipo?: string
+          servicios?: string[]
+          tipo?: string
+          tipo_camas?: string | null
+          unidades?: number
+        }
+        Update: {
+          activo?: boolean
+          actualizado_en?: string
+          camas?: number | null
+          capacidad?: number
+          creado_en?: string
+          descripcion?: string | null
+          id?: string
+          negocio_id?: string
+          nombre?: string
+          orden?: number
+          precio?: number | null
+          precio_tipo?: string
+          servicios?: string[]
+          tipo?: string
+          tipo_camas?: string | null
+          unidades?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_alojamientos_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       negocio_experiencias: {
         Row: {
@@ -353,10 +523,14 @@ export type Database = {
       }
       negocio_perfil: {
         Row: {
+          acepta_mascotas: boolean
+          acepta_ninos: boolean
           actualizado_en: string
           atiende_local: boolean
           atiende_recoger: boolean
           capacidad: number | null
+          checkin: string | null
+          checkout: string | null
           codigo_postal: string | null
           colonia: string | null
           comida_tipos: string[]
@@ -378,6 +552,7 @@ export type Database = {
           menu_url: string | null
           negocio_id: string
           notas_entrega: string | null
+          notas_hospedaje: string | null
           paso_actual: number
           precio_desde: number | null
           precio_noche: number | null
@@ -385,20 +560,26 @@ export type Database = {
           punto_salida: string | null
           recibe_clientes: boolean | null
           recibe_pedidos: boolean
+          requiere_anticipo: boolean
           salida_latitud: number | null
           salida_longitud: number | null
           sitio_web: string | null
           solo_reservacion: boolean
           tiempo_preparacion: string | null
           tipo_servicio: string | null
+          usa_calendario: boolean
           whatsapp_activo: boolean
           whatsapp_numero: string | null
         }
         Insert: {
+          acepta_mascotas?: boolean
+          acepta_ninos?: boolean
           actualizado_en?: string
           atiende_local?: boolean
           atiende_recoger?: boolean
           capacidad?: number | null
+          checkin?: string | null
+          checkout?: string | null
           codigo_postal?: string | null
           colonia?: string | null
           comida_tipos?: string[]
@@ -420,6 +601,7 @@ export type Database = {
           menu_url?: string | null
           negocio_id: string
           notas_entrega?: string | null
+          notas_hospedaje?: string | null
           paso_actual?: number
           precio_desde?: number | null
           precio_noche?: number | null
@@ -427,20 +609,26 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          requiere_anticipo?: boolean
           salida_latitud?: number | null
           salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
           tiempo_preparacion?: string | null
           tipo_servicio?: string | null
+          usa_calendario?: boolean
           whatsapp_activo?: boolean
           whatsapp_numero?: string | null
         }
         Update: {
+          acepta_mascotas?: boolean
+          acepta_ninos?: boolean
           actualizado_en?: string
           atiende_local?: boolean
           atiende_recoger?: boolean
           capacidad?: number | null
+          checkin?: string | null
+          checkout?: string | null
           codigo_postal?: string | null
           colonia?: string | null
           comida_tipos?: string[]
@@ -462,6 +650,7 @@ export type Database = {
           menu_url?: string | null
           negocio_id?: string
           notas_entrega?: string | null
+          notas_hospedaje?: string | null
           paso_actual?: number
           precio_desde?: number | null
           precio_noche?: number | null
@@ -469,12 +658,14 @@ export type Database = {
           punto_salida?: string | null
           recibe_clientes?: boolean | null
           recibe_pedidos?: boolean
+          requiere_anticipo?: boolean
           salida_latitud?: number | null
           salida_longitud?: number | null
           sitio_web?: string | null
           solo_reservacion?: boolean
           tiempo_preparacion?: string | null
           tipo_servicio?: string | null
+          usa_calendario?: boolean
           whatsapp_activo?: boolean
           whatsapp_numero?: string | null
         }
@@ -840,6 +1031,84 @@ export type Database = {
           },
           {
             foreignKeyName: "reservaciones_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      solicitudes_hospedaje: {
+        Row: {
+          actualizado_en: string
+          alojamiento_id: string | null
+          alojamiento_nombre: string
+          check_in: string
+          check_out: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en: string
+          estado: string
+          folio: string
+          huespedes: number
+          id: string
+          modo_disponibilidad: string
+          negocio_id: string
+          noches: number
+          origen: string
+          precio_referencia: number | null
+          total_estimado: number | null
+        }
+        Insert: {
+          actualizado_en?: string
+          alojamiento_id?: string | null
+          alojamiento_nombre: string
+          check_in: string
+          check_out: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en?: string
+          estado?: string
+          folio?: string
+          huespedes?: number
+          id?: string
+          modo_disponibilidad?: string
+          negocio_id: string
+          noches?: number
+          origen?: string
+          precio_referencia?: number | null
+          total_estimado?: number | null
+        }
+        Update: {
+          actualizado_en?: string
+          alojamiento_id?: string | null
+          alojamiento_nombre?: string
+          check_in?: string
+          check_out?: string
+          cliente_nombre?: string
+          cliente_telefono?: string
+          creado_en?: string
+          estado?: string
+          folio?: string
+          huespedes?: number
+          id?: string
+          modo_disponibilidad?: string
+          negocio_id?: string
+          noches?: number
+          origen?: string
+          precio_referencia?: number | null
+          total_estimado?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "solicitudes_hospedaje_alojamiento_id_fkey"
+            columns: ["alojamiento_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_alojamientos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "solicitudes_hospedaje_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
