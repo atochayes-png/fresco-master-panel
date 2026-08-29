@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      experiencia_medios: {
+        Row: {
+          bytes: number | null
+          creado_en: string
+          duration: number | null
+          es_portada: boolean
+          experiencia_id: string
+          format: string | null
+          id: string
+          negocio_id: string
+          orden: number
+          public_id: string
+          resource_type: string
+          secure_url: string
+          tipo: string
+        }
+        Insert: {
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          experiencia_id: string
+          format?: string | null
+          id?: string
+          negocio_id: string
+          orden?: number
+          public_id: string
+          resource_type?: string
+          secure_url: string
+          tipo?: string
+        }
+        Update: {
+          bytes?: number | null
+          creado_en?: string
+          duration?: number | null
+          es_portada?: boolean
+          experiencia_id?: string
+          format?: string | null
+          id?: string
+          negocio_id?: string
+          orden?: number
+          public_id?: string
+          resource_type?: string
+          secure_url?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiencia_medios_experiencia_id_fkey"
+            columns: ["experiencia_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_experiencias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "experiencia_medios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       guardados: {
         Row: {
           creado_en: string
@@ -66,6 +129,83 @@ export type Database = {
           resource_type?: string
         }
         Relationships: []
+      }
+      negocio_experiencias: {
+        Row: {
+          activa: boolean
+          actualizado_en: string
+          capacidad: number | null
+          categoria: string | null
+          creado_en: string
+          descripcion: string | null
+          duracion: string | null
+          extras: Json
+          foto_portada: string | null
+          horarios: string[]
+          id: string
+          negocio_id: string
+          nombre: string
+          orden: number
+          precio: number | null
+          precio_tipo: string
+          punto_salida: string | null
+          requiere_anticipo: boolean
+          salida_latitud: number | null
+          salida_longitud: number | null
+        }
+        Insert: {
+          activa?: boolean
+          actualizado_en?: string
+          capacidad?: number | null
+          categoria?: string | null
+          creado_en?: string
+          descripcion?: string | null
+          duracion?: string | null
+          extras?: Json
+          foto_portada?: string | null
+          horarios?: string[]
+          id?: string
+          negocio_id: string
+          nombre: string
+          orden?: number
+          precio?: number | null
+          precio_tipo?: string
+          punto_salida?: string | null
+          requiere_anticipo?: boolean
+          salida_latitud?: number | null
+          salida_longitud?: number | null
+        }
+        Update: {
+          activa?: boolean
+          actualizado_en?: string
+          capacidad?: number | null
+          categoria?: string | null
+          creado_en?: string
+          descripcion?: string | null
+          duracion?: string | null
+          extras?: Json
+          foto_portada?: string | null
+          horarios?: string[]
+          id?: string
+          negocio_id?: string
+          nombre?: string
+          orden?: number
+          precio?: number | null
+          precio_tipo?: string
+          punto_salida?: string | null
+          requiere_anticipo?: boolean
+          salida_latitud?: number | null
+          salida_longitud?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "negocio_experiencias_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       negocio_fotos: {
         Row: {
@@ -628,6 +768,78 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "resenas_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reservaciones: {
+        Row: {
+          actualizado_en: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en: string
+          estado: string
+          experiencia_id: string | null
+          experiencia_nombre: string
+          extras: Json
+          fecha_solicitada: string | null
+          folio: string
+          horario: string | null
+          id: string
+          negocio_id: string
+          origen: string
+          personas: number
+          total_estimado: number | null
+        }
+        Insert: {
+          actualizado_en?: string
+          cliente_nombre: string
+          cliente_telefono: string
+          creado_en?: string
+          estado?: string
+          experiencia_id?: string | null
+          experiencia_nombre: string
+          extras?: Json
+          fecha_solicitada?: string | null
+          folio?: string
+          horario?: string | null
+          id?: string
+          negocio_id: string
+          origen?: string
+          personas?: number
+          total_estimado?: number | null
+        }
+        Update: {
+          actualizado_en?: string
+          cliente_nombre?: string
+          cliente_telefono?: string
+          creado_en?: string
+          estado?: string
+          experiencia_id?: string | null
+          experiencia_nombre?: string
+          extras?: Json
+          fecha_solicitada?: string | null
+          folio?: string
+          horario?: string | null
+          id?: string
+          negocio_id?: string
+          origen?: string
+          personas?: number
+          total_estimado?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservaciones_experiencia_id_fkey"
+            columns: ["experiencia_id"]
+            isOneToOne: false
+            referencedRelation: "negocio_experiencias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reservaciones_negocio_id_fkey"
             columns: ["negocio_id"]
             isOneToOne: false
             referencedRelation: "negocios"
