@@ -17,6 +17,7 @@ import {
   zonaGuardada,
 } from "@/lib/publico";
 import { TIPO_COMER } from "@/lib/comer";
+import { TIPO_CONOCER } from "@/lib/conocer";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -134,7 +135,12 @@ function Buscar() {
                       to: "/comer",
                       search: { q: busqueda.q, comida: "", municipio: busqueda.municipio },
                     })
-                  : actualizar({ categoria: c.tipo })
+                  : c.tipo === TIPO_CONOCER
+                    ? void navigate({
+                        to: "/conocer",
+                        search: { q: busqueda.q, categoria: "", municipio: busqueda.municipio },
+                      })
+                    : actualizar({ categoria: c.tipo })
               }
             />
           ))}
