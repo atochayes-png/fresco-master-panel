@@ -347,7 +347,8 @@ function Lugar() {
                 .filter((h) => h.abierto)
                 .map((h) => (
                   <p key={h.dia}>
-                    {DIAS[h.dia]}: {hora12(h.apertura)} a {hora12(h.cierre)}
+                    {DIAS.find((d) => d.dia === h.dia)?.nombre ?? ""}: {hora12(h.apertura)} a{" "}
+                    {hora12(h.cierre)}
                   </p>
                 ))
             )}
