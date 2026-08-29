@@ -284,7 +284,7 @@ function Formulario({
   cerrar: () => void;
   ocupado: boolean;
   error: string | null;
-  experiencia?: ExperienciaRow;
+  experiencia?: ExperienciaRow | undefined;
 }) {
   const cambiar = (cambios: Partial<Borrador>) =>
     setBorrador((b) => (b ? { ...b, ...cambios } : b));
