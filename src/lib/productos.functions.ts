@@ -11,6 +11,7 @@ export type ProductoRow = {
   foto_ruta: string | null;
   foto_url: string | null;
   orden: number;
+  categoria: string | null;
 };
 
 export type PedidoRow = {
