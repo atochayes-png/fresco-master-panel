@@ -159,16 +159,25 @@ export function mensajePedido(datos: {
   subtotal: number;
   costo_entrega: number;
   total_estimado: number;
-  tipo_entrega: "recoger" | "domicilio";
+  tipo_entrega: "local" | "recoger" | "domicilio";
   direccion?: string;
   referencia?: string;
+  forma_pago?: string | null;
+  tiempo_preparacion?: string | null;
+  hora_solicitada?: string | null;
 }) {
+  const modalidad =
+    datos.tipo_entrega === "domicilio"
+      ? "Servicio a domicilio"
+      : datos.tipo_entrega === "local"
+        ? "Comer en el establecimiento"
+        : "Recoger en el establecimiento";
+
   const lineas = [
-    "NUEVO PEDIDO",
-    "Tomar el Fresco en Yucatán",
+    "NUEVO PEDIDO — TOMAR EL FRESCO EN YUCATÁN",
     "",
     `Negocio: ${datos.negocio}`,
-    `Pedido: ${datos.folio}`,
+    `Pedido: #${datos.folio}`,
     `Cliente: ${datos.cliente}`,
     `Teléfono: ${datos.telefono}`,
     "",
@@ -179,19 +188,24 @@ export function mensajePedido(datos: {
   ];
   if (datos.costo_entrega > 0) lineas.push(`Entrega: ${pesos(datos.costo_entrega)}`);
   lineas.push(`Total estimado: ${pesos(datos.total_estimado)}`);
-  lineas.push(
-    "",
-    "Entrega:",
-    datos.tipo_entrega === "domicilio" ? "A domicilio" : "Recoger en el negocio",
-  );
+  lineas.push("", "MODALIDAD:", modalidad);
   if (datos.tipo_entrega === "domicilio" && datos.direccion) {
     lineas.push("Dirección:", datos.direccion);
     if (datos.referencia) lineas.push(`Referencia: ${datos.referencia}`);
   }
+  if (datos.tipo_entrega === "recoger" && datos.hora_solicitada) {
+    lineas.push(`Quiere recoger: ${datos.hora_solicitada}`);
+  }
+  if (datos.tiempo_preparacion) {
+    lineas.push("", "Tiempo habitual indicado:", datos.tiempo_preparacion);
+  }
+  if (datos.forma_pago) {
+    lineas.push("", "FORMA DE PAGO:", datos.forma_pago);
+  }
   lineas.push(
     "",
     "Este pedido fue generado desde Tomar el Fresco en Yucatán.",
-    "Por favor confirma directamente con el cliente disponibilidad, entrega y forma de pago.",
+    "Por favor confirma directamente con el cliente disponibilidad y tiempo de preparación.",
   );
   return lineas.join("\n");
 }
