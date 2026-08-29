@@ -320,7 +320,19 @@ export const guardarConfiguracionRenta = createServerFn({ method: "POST" })
   .inputValidator((d: Partial<ConfiguracionRenta>) => d)
   .handler(async ({ data, context }) => {
     const negocioId = await miNegocioId(context.supabase, context.userId);
-    const cambios: Record<string, unknown> = {};
+    const cambios: {
+      renta_usa_calendario?: boolean;
+      renta_edad_minima?: number | null;
+      renta_licencia?: boolean;
+      renta_identificacion?: boolean;
+      renta_deposito?: boolean;
+      renta_tarjeta?: string;
+      renta_requisitos_notas?: string | null;
+      renta_entrega_opciones?: string[];
+      renta_entrega_costo_tipo?: string;
+      renta_entrega_costo?: number | null;
+      renta_notas?: string | null;
+    } = {};
     if (data.renta_usa_calendario !== undefined)
       cambios["renta_usa_calendario"] = data.renta_usa_calendario === true;
     if (data.renta_edad_minima !== undefined)
