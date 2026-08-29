@@ -17,6 +17,7 @@ import { Route as ComerRouteImport } from './routes/comer'
 import { Route as ConocerRouteImport } from './routes/conocer'
 import { Route as GuardadosRouteImport } from './routes/guardados'
 import { Route as AuthenticatedResumenRouteImport } from './routes/_authenticated/resumen'
+import { Route as ExperienciaIdRouteImport } from './routes/experiencia.$id'
 import { Route as MasterLoginRouteImport } from './routes/master.login'
 import { Route as NegocioIdRouteImport } from './routes/negocio.$id'
 import { Route as NegocioLoginRouteImport } from './routes/negocio.login'
@@ -71,6 +72,11 @@ const AuthenticatedResumenRoute = AuthenticatedResumenRouteImport.update({
   id: '/resumen',
   path: '/resumen',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ExperienciaIdRoute = ExperienciaIdRouteImport.update({
+  id: '/experiencia/$id',
+  path: '/experiencia/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MasterLoginRoute = MasterLoginRouteImport.update({
   id: '/master/login',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
+  '/experiencia/$id': typeof ExperienciaIdRoute
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/resumen': typeof AuthenticatedResumenRoute
+  '/experiencia/$id': typeof ExperienciaIdRoute
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/conocer': typeof ConocerRoute
   '/guardados': typeof GuardadosRoute
   '/_authenticated/resumen': typeof AuthenticatedResumenRoute
+  '/experiencia/$id': typeof ExperienciaIdRoute
   '/master/login': typeof MasterLoginRoute
   '/negocio/$id': typeof NegocioIdRoute
   '/negocio/login': typeof NegocioLoginRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/resumen'
+    | '/experiencia/$id'
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/resumen'
+    | '/experiencia/$id'
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/conocer'
     | '/guardados'
     | '/_authenticated/resumen'
+    | '/experiencia/$id'
     | '/master/login'
     | '/negocio/$id'
     | '/negocio/login'
@@ -317,6 +329,7 @@ export interface RootRouteChildren {
   ComerRoute: typeof ComerRoute
   ConocerRoute: typeof ConocerRoute
   GuardadosRoute: typeof GuardadosRoute
+  ExperienciaIdRoute: typeof ExperienciaIdRoute
   MasterLoginRoute: typeof MasterLoginRoute
   NegocioIdRoute: typeof NegocioIdRoute
   NegocioLoginRoute: typeof NegocioLoginRoute
@@ -379,6 +392,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/resumen'
       preLoaderRoute: typeof AuthenticatedResumenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/experiencia/$id': {
+      id: '/experiencia/$id'
+      path: '/experiencia/$id'
+      fullPath: '/experiencia/$id'
+      preLoaderRoute: typeof ExperienciaIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/master/login': {
       id: '/master/login'
@@ -534,6 +554,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComerRoute: ComerRoute,
   ConocerRoute: ConocerRoute,
   GuardadosRoute: GuardadosRoute,
+  ExperienciaIdRoute: ExperienciaIdRoute,
   MasterLoginRoute: MasterLoginRoute,
   NegocioIdRoute: NegocioIdRoute,
   NegocioLoginRoute: NegocioLoginRoute,
