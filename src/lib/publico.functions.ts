@@ -25,6 +25,11 @@ export type TarjetaNegocio = {
   horarios: { dia: number; abierto: boolean; apertura: string | null; cierre: string | null }[];
   estrellas: number | null;
   resenas: number;
+  comida_tipos: string[];
+  atiende_local: boolean;
+  atiende_recoger: boolean;
+  tiempo_preparacion: string | null;
+  formas_pago: string[];
 };
 
 export type FichaPublica = TarjetaNegocio & {
@@ -58,6 +63,14 @@ export type FichaPublica = TarjetaNegocio & {
     descripcion: string | null;
     precio: number;
     foto: string | null;
+    categoria: string | null;
+  }[];
+  promociones: {
+    id: string;
+    titulo: string;
+    descripcion: string | null;
+    foto_url: string | null;
+    precio: number | null;
   }[];
   comentarios: {
     id: string;
@@ -118,6 +131,7 @@ export const buscarNegocios = createServerFn({ method: "POST" })
     (d: {
       texto?: string;
       categoria?: string | null;
+      comida?: string | null;
       municipio?: string | null;
       lat?: number | null;
       lng?: number | null;
@@ -186,6 +200,7 @@ export const buscarNegocios = createServerFn({ method: "POST" })
       const perfil = perfilPorId.get(n.id);
       if (data.categoria && n.tipo !== data.categoria) continue;
       if (data.municipio && n.municipio !== data.municipio) continue;
+      if (data.comida && !(perfil?.comida_tipos ?? []).includes(data.comida)) continue;
 
       const misProductos = (productos ?? []).filter((p) => p.negocio_id === n.id);
       let puntos = palabras.length ? 0 : 1;
@@ -248,6 +263,11 @@ export const buscarNegocios = createServerFn({ method: "POST" })
           .map((h) => ({ dia: h.dia, abierto: h.abierto, apertura: h.apertura, cierre: h.cierre })),
         estrellas: promedio,
         resenas: mias.length,
+        comida_tipos: (perfil?.comida_tipos ?? []) as string[],
+        atiende_local: perfil?.atiende_local === true,
+        atiende_recoger: perfil?.atiende_recoger === true,
+        tiempo_preparacion: perfil?.tiempo_preparacion ?? null,
+        formas_pago: (perfil?.formas_pago ?? []) as string[],
         _puntos: puntos,
         _dist: distancia,
       });
@@ -299,7 +319,7 @@ export const fichaNegocio = createServerFn({ method: "POST" })
         .order("dia"),
       db
         .from("negocio_productos")
-        .select("id, nombre, descripcion, precio, foto_ruta")
+        .select("id, nombre, descripcion, precio, foto_ruta, categoria")
         .eq("negocio_id", n.id)
         .eq("disponible", true)
         .order("orden"),
@@ -336,6 +356,26 @@ export const fichaNegocio = createServerFn({ method: "POST" })
     }));
     const portadaMedio = (mediosFilas ?? []).find((m) => m.es_portada && m.tipo === "image");
 
+    const hoyIso = HOY();
+    const { data: promosFilas } = await db
+      .from("negocio_promociones")
+      .select("id, titulo, descripcion, foto_url, precio, fecha_inicio, fecha_fin, activa, orden")
+      .eq("negocio_id", n.id)
+      .eq("activa", true)
+      .order("orden");
+    const promociones = (promosFilas ?? [])
+      .filter(
+        (p) =>
+          (!p.fecha_inicio || p.fecha_inicio <= hoyIso) && (!p.fecha_fin || p.fecha_fin >= hoyIso),
+      )
+      .map((p) => ({
+        id: p.id,
+        titulo: p.titulo,
+        descripcion: p.descripcion,
+        foto_url: p.foto_url,
+        precio: p.precio != null ? Number(p.precio) : null,
+      }));
+
     const promedio = (resenas ?? []).length
       ? Math.round(
           ((resenas ?? []).reduce((a, r) => a + r.estrellas, 0) / (resenas ?? []).length) * 10,
@@ -370,6 +410,12 @@ export const fichaNegocio = createServerFn({ method: "POST" })
       })),
       estrellas: promedio,
       resenas: (resenas ?? []).length,
+      comida_tipos: (perfil?.comida_tipos ?? []) as string[],
+      atiende_local: perfil?.atiende_local === true,
+      atiende_recoger: perfil?.atiende_recoger === true,
+      tiempo_preparacion: perfil?.tiempo_preparacion ?? null,
+      formas_pago: (perfil?.formas_pago ?? []) as string[],
+      promociones,
       // La dirección exacta sólo se publica si el negocio recibe clientes.
       direccion: perfil?.recibe_clientes ? (perfil.direccion ?? null) : null,
       colonia: perfil?.recibe_clientes ? (perfil.colonia ?? null) : null,
@@ -401,6 +447,7 @@ export const fichaNegocio = createServerFn({ method: "POST" })
         descripcion: p.descripcion,
         precio: Number(p.precio),
         foto: p.foto_ruta ? (firmadas[p.foto_ruta] ?? null) : null,
+        categoria: p.categoria ?? null,
       })),
       comentarios: (resenas ?? []).map((r) => ({
         id: r.id,
