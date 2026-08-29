@@ -536,9 +536,11 @@ export const crearPedido = createServerFn({ method: "POST" })
       negocio_id: string;
       cliente_nombre: string;
       cliente_telefono: string;
-      tipo_entrega: "recoger" | "domicilio";
+      tipo_entrega: "local" | "recoger" | "domicilio";
       direccion?: string;
       referencia?: string;
+      forma_pago?: string | null;
+      hora_solicitada?: string | null;
       items: { id: string; cantidad: number }[];
     }) => d,
   )
@@ -566,13 +568,19 @@ export const crearPedido = createServerFn({ method: "POST" })
     const { data: perfil } = await db
       .from("negocio_perfil")
       .select(
-        "recibe_pedidos, domicilio, costo_entrega, costo_entrega_tipo, whatsapp_numero, whatsapp_activo",
+        "recibe_pedidos, domicilio, atiende_local, atiende_recoger, tiempo_preparacion, formas_pago, costo_entrega, costo_entrega_tipo, whatsapp_numero, whatsapp_activo",
       )
       .eq("negocio_id", negocio.id)
       .maybeSingle();
     if (!perfil?.recibe_pedidos) throw new Error("Este negocio no recibe pedidos por ahora");
     if (data.tipo_entrega === "domicilio" && !perfil.domicilio)
       throw new Error("Este negocio no ofrece entrega a domicilio");
+    if (data.tipo_entrega === "local" && perfil.atiende_local !== true)
+      throw new Error("Este negocio no atiende en el establecimiento");
+
+    const pagosAceptados = (perfil.formas_pago ?? []) as string[];
+    const formaPago =
+      data.forma_pago && pagosAceptados.includes(data.forma_pago) ? data.forma_pago : null;
 
     const { data: productos } = await db
       .from("negocio_productos")
@@ -617,6 +625,8 @@ export const crearPedido = createServerFn({ method: "POST" })
         tipo_entrega: data.tipo_entrega,
         direccion: data.tipo_entrega === "domicilio" ? (data.direccion ?? "").slice(0, 300) : null,
         referencia: (data.referencia ?? "").slice(0, 200) || null,
+        forma_pago: formaPago,
+        hora_solicitada: (data.hora_solicitada ?? "").slice(0, 20) || null,
         items,
         subtotal,
         costo_entrega: entrega,
@@ -640,6 +650,8 @@ export const crearPedido = createServerFn({ method: "POST" })
       subtotal,
       costo_entrega: entrega,
       total_estimado: subtotal + entrega,
+      forma_pago: formaPago,
+      tiempo_preparacion: perfil.tiempo_preparacion ?? null,
     };
   });
 
