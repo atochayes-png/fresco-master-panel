@@ -20,6 +20,7 @@ import { TIPO_COMER } from "@/lib/comer";
 import { TIPO_CONOCER } from "@/lib/conocer";
 import { TIPO_HOSPEDAJE } from "@/lib/hospedaje";
 import { TIPO_MOVERME } from "@/lib/moverme";
+import { TIPO_DIVERTIRME } from "@/lib/divertirme";
 import { MUNICIPIOS_YUCATAN } from "@/lib/dominio";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
