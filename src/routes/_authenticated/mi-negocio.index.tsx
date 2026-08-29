@@ -12,10 +12,13 @@ import {
   Phone,
   ShoppingBag,
   Store,
+  Tag,
+  Timer,
   UtensilsCrossed,
 } from "lucide-react";
 
 import { miNegocio } from "@/lib/dueno.functions";
+import { esComer } from "@/lib/comer";
 import { calcularEstatus, diasRestantes, formatoFecha } from "@/lib/dominio";
 import { EstatusBadge } from "@/components/estatus-negocio";
 import { Button } from "@/components/ui/button";
@@ -65,6 +68,7 @@ function MiNegocio() {
   const estatus = calcularEstatus(negocio);
   const dias = diasRestantes(negocio.fecha_fin);
   const principal = fotos.find((f) => f.ruta === perfil.foto_principal) ?? fotos[0];
+  const comer = esComer(negocio.tipo);
 
   if (negocio.estado_configuracion === "perfil_incompleto") {
     return (
@@ -128,6 +132,28 @@ function MiNegocio() {
         </Link>
         <Acceso paso={4} icono={<UtensilsCrossed className="size-6" />} texto="MENÚ / CATÁLOGO" />
         <Acceso paso={4} icono={<Phone className="size-6" />} texto="CONTACTO" />
+        {comer ? (
+          <>
+            <Link
+              to="/mi-negocio/comer"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Timer className="size-6" />
+              </span>
+              MI COCINA
+            </Link>
+            <Link
+              to="/mi-negocio/promociones"
+              className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
+            >
+              <span className="text-primary">
+                <Tag className="size-6" />
+              </span>
+              PROMOCIONES
+            </Link>
+          </>
+        ) : null}
         <Link
           to="/mi-negocio/productos"
           className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-semibold shadow-sm"
@@ -135,7 +161,7 @@ function MiNegocio() {
           <span className="text-primary">
             <ShoppingBag className="size-6" />
           </span>
-          MIS PRODUCTOS
+          {comer ? "MI MENÚ" : "MIS PRODUCTOS"}
         </Link>
         <Link
           to="/mi-negocio/pedidos"
