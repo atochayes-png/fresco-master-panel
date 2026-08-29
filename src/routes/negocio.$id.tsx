@@ -676,9 +676,18 @@ function Pedido({
 }) {
   const [nombre, setNombre] = useState(nombreGuardado());
   const [telefono, setTelefono] = useState(telefonoGuardado() ?? "");
-  const [tipo, setTipo] = useState<"recoger" | "domicilio">(
-    ficha.domicilio ? "domicilio" : "recoger",
+  const modalidades = (
+    [
+      ficha.atiende_local ? "local" : null,
+      ficha.atiende_recoger || (!ficha.atiende_local && !ficha.domicilio) ? "recoger" : null,
+      ficha.domicilio ? "domicilio" : null,
+    ] as const
+  ).filter(Boolean) as ("local" | "recoger" | "domicilio")[];
+  const [tipo, setTipo] = useState<"local" | "recoger" | "domicilio">(
+    modalidades[0] ?? "recoger",
   );
+  const [pago, setPago] = useState<string>(ficha.formas_pago[0] ?? "");
+  const [hora, setHora] = useState("");
   const [direccion, setDireccion] = useState("");
   const [referencia, setReferencia] = useState("");
   const [punto, setPunto] = useState<{ lat: number; lng: number } | null>(null);
@@ -719,6 +728,8 @@ function Pedido({
           tipo_entrega: tipo,
           direccion,
           referencia,
+          forma_pago: pago || null,
+          hora_solicitada: hora || null,
           items: items.map((i) => ({ id: i.id, cantidad: i.cantidad })),
         },
       });
@@ -738,6 +749,9 @@ function Pedido({
             ? `${direccion}\nUbicación en el mapa: https://www.google.com/maps/search/?api=1&query=${punto.lat},${punto.lng}`
             : direccion,
         referencia,
+        forma_pago: r.forma_pago ?? (pago || null),
+        tiempo_preparacion: r.tiempo_preparacion ?? ficha.tiempo_preparacion,
+        hora_solicitada: hora || null,
       });
       void marcarPedidoEnviado({ data: { id: r.id } });
       onLimpiar();
@@ -829,24 +843,56 @@ function Pedido({
 
           <div className="space-y-2">
             <p className="text-base font-medium">¿Cómo lo quieres?</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={tipo === "recoger" ? "default" : "secondary"}
-                onClick={() => setTipo("recoger")}
-                className="h-13"
-              >
-                Recoger
-              </Button>
-              <Button
-                variant={tipo === "domicilio" ? "default" : "secondary"}
-                onClick={() => setTipo("domicilio")}
-                disabled={!ficha.domicilio}
-                className="h-13"
-              >
-                A domicilio
-              </Button>
+            <div className="grid gap-2">
+              {modalidades.map((m) => (
+                <Button
+                  key={m}
+                  variant={tipo === m ? "default" : "secondary"}
+                  onClick={() => setTipo(m)}
+                  className="h-13 justify-start text-base"
+                >
+                  {m === "local"
+                    ? "Comer en el establecimiento"
+                    : m === "recoger"
+                      ? "Recoger en el establecimiento"
+                      : "Servicio a domicilio"}
+                </Button>
+              ))}
             </div>
           </div>
+
+          {tipo !== "domicilio" ? (
+            <div className="space-y-2">
+              <Label htmlFor="hora" className="text-base">
+                ¿A qué hora lo quieres? (opcional)
+              </Label>
+              <Input
+                id="hora"
+                type="time"
+                value={hora}
+                onChange={(e) => setHora(e.target.value)}
+                className="h-13 text-base"
+              />
+            </div>
+          ) : null}
+
+          {ficha.formas_pago.length ? (
+            <div className="space-y-2">
+              <p className="text-base font-medium">¿Cómo vas a pagar?</p>
+              <div className="grid gap-2">
+                {ficha.formas_pago.map((f) => (
+                  <Button
+                    key={f}
+                    variant={pago === f ? "default" : "secondary"}
+                    onClick={() => setPago(f)}
+                    className="h-13 justify-start text-base"
+                  >
+                    {nombrePago(f)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {tipo === "domicilio" ? (
             <>
@@ -903,6 +949,13 @@ function Pedido({
             </>
           ) : null}
         </div>
+
+        {ficha.tiempo_preparacion ? (
+          <p className="rounded-2xl bg-secondary p-3 text-sm">
+            Tiempo habitual de preparación: <strong>{ficha.tiempo_preparacion}</strong>. El negocio
+            te confirma el tiempo real por WhatsApp.
+          </p>
+        ) : null}
 
         <p className="text-xs text-muted-foreground">
           El pago no se realiza en la aplicación. El precio final, la entrega y la forma de pago se
