@@ -37,6 +37,7 @@ export function MapaPunto({
           disableDefaultUI: true,
           zoomControl: true,
           gestureHandling: "greedy",
+          clickableIcons: false,
         });
         marcador.current = new maps.Marker({
           position: { lat, lng },

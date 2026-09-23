@@ -38,6 +38,7 @@ export function MapaResultados({
           disableDefaultUI: true,
           zoomControl: true,
           gestureHandling: "greedy",
+          clickableIcons: false,
         });
         if (ubicacion) {
           new maps.Marker({
