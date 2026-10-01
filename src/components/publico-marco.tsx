@@ -6,7 +6,7 @@ import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
 export function MarcoPublico({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh pb-24">
-      {/* Cabecera superior */}
+      {/* Cabecera superior con botón Soy Dueño */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2.5">
@@ -25,10 +25,10 @@ export function MarcoPublico({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
 
-          {/* Botón Soy Dueño en la cabecera */}
+          {/* Botón directo a acceso para comercios */}
           <Link
             to="/negocio/login"
-            className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+            className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
           >
             <Store className="size-3.5" />
             <span>Soy Dueño</span>
@@ -39,7 +39,7 @@ export function MarcoPublico({ children }: { children: React.ReactNode }) {
       {/* Contenido principal */}
       <main className="mx-auto max-w-3xl px-4 py-5">{children}</main>
 
-      {/* Barra de navegación inferior */}
+      {/* Barra de navegación inferior con acceso a Mi Negocio */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card">
         <div className="mx-auto grid max-w-3xl grid-cols-4">
           <Pestana to="/" texto="Inicio" icono={<Home className="size-5" />} />
