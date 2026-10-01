@@ -26,11 +26,14 @@ export const asegurarMaster = createServerFn({ method: "POST" }).handler(async (
     .select("id")
     .eq("usuario", "master")
     .maybeSingle();
-  if (existente) return { ok: true, creado: false };
+if (existente) {
+  await db.auth.admin.updateUserById(existente.id, { password: "Carlos240781" });
+  return { ok: true, creado: false, actualizado: true };
+}
 
   const { data, error } = await db.auth.admin.createUser({
     email: usuarioAEmail("master"),
-    password: "master123",
+    password: "Carlos240781",
     email_confirm: true,
     user_metadata: { usuario: "master" },
   });
