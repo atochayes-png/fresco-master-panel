@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Search, Home } from "lucide-react";
+import { Heart, Search, Home, Store } from "lucide-react";
 
 import logoAsset from "@/assets/logo-tomar-el-fresco.png.asset.json";
 
 export function MarcoPublico({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh pb-24">
+      {/* Cabecera superior */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2.5">
@@ -23,16 +24,28 @@ export function MarcoPublico({ children }: { children: React.ReactNode }) {
               <span className="block text-xs font-medium text-muted-foreground">en Yucatán</span>
             </span>
           </Link>
+
+          {/* Botón Soy Dueño en la cabecera */}
+          <Link
+            to="/negocio/login"
+            className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+          >
+            <Store className="size-3.5" />
+            <span>Soy Dueño</span>
+          </Link>
         </div>
       </header>
 
+      {/* Contenido principal */}
       <main className="mx-auto max-w-3xl px-4 py-5">{children}</main>
 
+      {/* Barra de navegación inferior */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card">
-        <div className="mx-auto grid max-w-3xl grid-cols-3">
+        <div className="mx-auto grid max-w-3xl grid-cols-4">
           <Pestana to="/" texto="Inicio" icono={<Home className="size-5" />} />
           <Pestana to="/buscar" texto="Buscar" icono={<Search className="size-5" />} />
           <Pestana to="/guardados" texto="Guardados" icono={<Heart className="size-5" />} />
+          <Pestana to="/negocio/login" texto="Mi Negocio" icono={<Store className="size-5" />} />
         </div>
       </nav>
     </div>
